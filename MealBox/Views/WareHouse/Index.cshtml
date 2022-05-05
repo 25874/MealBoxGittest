@@ -1,0 +1,287 @@
+﻿@model MealBox.Models.WareHouseModel
+@{
+    ViewBag.Title = "Index";
+}
+@section Styles
+    {
+ 
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+    <style>
+        span.error
+        {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+        tr.error 
+        {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+}
+<div class="row">
+    <section class="col-lg-6 connectedSortable">
+        <!-- Custom tabs (Charts with tabs)-->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fa-solid fa-warehouse"></i>
+                    Add WareHouse
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class=" btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div><!-- /.card-header -->
+            <div class="card-body">
+                <table border="1" id="WareHouse" class=" table-bordered table-bordered   table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">WareHouse Name </th>
+                            <th style="text-align:center">City</th>
+                            <th style="text-align:center">Area Lenght</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="WareHouseTbody">
+                        @{
+                            MealBoxesEntities db = new MealBoxesEntities();
+                            var chk = db.tbl_WareHouse.ToList();
+                            if(chk.Count != 0)
+                            {
+                                @Html.Partial("_WareHouseBody", Model.WareHousesList)
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div><!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+        @Html.LabelFor(x => x.CityID)
+        @Html.DropDownListFor(x => x.CityID, null, "--Select---", new { @class = "form-control" })
+        <span class="error">Please Select City</span>
+        @Html.LabelFor(x => x.WarHouseName)
+        @Html.TextBoxFor(x => x.WarHouseName, new { @class = "form-control", @placeholder = "Enter Item Name" })
+        <span class="error">Please insert Ware House Name </span>
+        @Html.LabelFor(x => x.AreaLength)
+        @Html.TextBoxFor(x => x.AreaLength, new { @class = "form-control", @placeholder = "Enter Item Name" })
+        <span class="error">Please insert Area Length </span>
+        @Html.LabelFor(x => x.Description)
+        @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Enter Item Name" })
+        <button type="button" class="btn btn-success Save" value="1" style="margin-top:20px;">Save</button>
+        @Html.HiddenFor(x=> x.WarHouseId)
+    </section>
+    <section class="col-lg-6 connectedSortable">
+        <!-- Custom tabs (Charts with tabs)-->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fa-solid fa-cart-flatbed"></i>
+                    WareHouse Inventory
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class=" btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div><!-- /.card-header -->
+            <div class="card-body">
+                <table border="1" id="WareHouseInventory" class=" table-bordered table-bordered  table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">WareHouse</th>
+                            <th style="text-align:center">Product</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="WareHouseTbody">
+                        @*@{
+                            MealBoxesEntities db = new MealBoxesEntities();
+                            var chk = db.tbl_WareHouse.ToList();
+                            if (chk.Count != 0)
+                            {
+                                @Html.Partial("_WareHouseBody", Model.WareHousesList)
+                            }
+                        }*@
+                    </tbody>
+                </table>
+            </div><!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+        @Html.LabelFor(x => x.WarHouseIdFk)
+        @Html.DropDownListFor(x => x.WarHouseIdFk, null, "--Select---", new { @class = "form-control" })
+        <span class="error">Please Select City</span>
+        @Html.LabelFor(x => x.ProductId)
+        @Html.DropDownListFor(x => x.ProductId, null, "--Select---", new { @class = "form-control" })
+        <span class="error">Please Select City</span>
+        <button type="button" class="btn btn-success Save" value="2" style="margin-top:20px;">Save</button>
+        @Html.HiddenFor(x=> x.WareHouseInventoryId)
+    </section>
+    </div>   
+ @section Scripts
+    {
+
+            <script src="~/plugins/datatables-autofill/js/jquery.dataTables.js"></script>
+            <script type="text/javascript">
+
+                $(document).ready(function () {
+                    $('#WareHouse').DataTable();
+                    $('#WareHouseInventory').DataTable();
+                });
+
+                $('.Save').click(function () {
+
+                    var id = $(this).val();
+                    console.log(id);
+                    var isallvalid = true;
+                    var obj = "";
+                    if (id == 1)
+                    {
+                        if(Validate())
+                        {
+                            var GetDateTime = new Date();
+                            obj =
+                            {
+                                "CityID": $('#CityID').val(),
+                                "WarHouseName": $('#WarHouseName').val(),
+                                "AreaLength": $('#AreaLength').val(),
+                                "Type": id,
+                                "WarHouseId": WarHouseId
+                            }
+                        }
+                    }                    
+                    else if(id == 2)
+                    {
+                        if(Validate2())
+                        {
+                            obj =
+                            {
+                                "WarHouseIdFk": $('#WarHouseIdFk').val(),
+                                "ProductId": $('#ProductId').val(),
+                                "Type": id,
+                                "WareHouseInventoryId": $('#WareHouseInventoryId').val()
+                            }
+                        }
+                    }
+                if (isallvalid) {
+                    $.ajax({
+                        type: 'Post',
+                        url: '/WareHouse/Index',
+                        contentType: "application/json?charset=utf-8",
+                        data: JSON.stringify(obj),
+                        success: function (data) {
+                            debugger;
+                            $('#WareHouse tbody').empty();
+                            WareHouseBody();
+                            Clear();
+                        },
+                    })
+                }
+              })
+
+                function Clear() {
+                    $('input[type="text"]').val("");
+                    $('select').each(function () { $(this).val('') })
+
+                }
+
+                function WareHouseBody() {
+                    debugger;
+                    $.ajax({
+                        type: 'Get',
+                        url: '/WareHouse/WarHouseBody',
+                        contentType: "application/json?charset=utf-8",
+                        dataType: 'html',
+                        success: function (data) {
+                            var dataapend = data.trim();
+                            $("#WareHouseTbody").append(dataapend);
+                        },
+                    })
+                }
+
+
+                $('#WarHouseName').change(function () {
+                    if ($('#WarHouseName').val().trim() != "") {
+                        $('#WarHouseName').siblings('span.error').css('visibility', 'hidden')
+                    }
+                    else {
+                        $('#WarHouseName').siblings('span.error').css('visibility', 'visible')
+                    }
+                })
+
+                $('#CityID').change(function () {
+                    if ($('#CityID').val().trim() != '--Select---') {
+                        $('#CityID').siblings('span.error').css('visibility', 'hidden')
+                    }
+                    else {
+                        $('#CityID').siblings('span.error').css('visibility', 'visible')
+                    }
+                })
+
+
+                $('#AreaLength').change(function () {
+                    if ($('#AreaLength').val().trim() != "") {
+                        $('#AreaLength').siblings('span.error').css('visibility', 'hidden')
+                    }
+                    else {
+                        $('#AreaLength').siblings('span.error').css('visibility', 'visible')
+                    }
+                })
+
+
+                function Validate2()
+                {
+                    var isallvalid = true;
+                    if ($('#WarHouseIdFk option:selected').text() == '--Select---') {
+                        $('#WarHouseIdFk').siblings('span.error').css('visibility', 'visible')
+                        isallvalid = false;
+                    }
+                    else {
+                        $('#WarHouseIdFk').siblings('span.error').css('visibility', 'hidden')
+                    }
+                    if ($('#ProductId option:selected').text() == '--Select---') {
+                        $('#ProductId').siblings('span.error').css('visibility', 'visible')
+                        isallvalid = false;
+                    }
+                    else {
+                        $('#ProductId').siblings('span.error').css('visibility', 'hidden')
+                    }
+                    return isallvalid;
+                }
+
+
+                function Validate() {
+                   
+                    var isallvalid = true;
+                    if ($('#CityID option:selected').text() == '--Select---') {
+                        $('#CityID').siblings('span.error').css('visibility', 'visible')
+                        isallvalid = false;
+                    }
+                    else {
+                        $('#CityID').siblings('span.error').css('visibility', 'hidden')
+                    }
+                    if ($('#WarHouseName').val() == "") {
+                        $('#WarHouseName').siblings('span.error').css('visibility', 'visible')
+                        isallvalid = false;
+                    }
+                    else
+                    {
+                        $('#WarHouseName').siblings('span.error').css('visibility', 'hidden')
+                    }
+                    if ($('#AreaLength').val() == "") {
+                        $('#AreaLength').siblings('span.error').css('visibility', 'visible')
+                        isallvalid = false;
+                    }
+                    else
+                    {
+                        $('#AreaLength').siblings('span.error').css('visibility', 'hidden')
+                    }
+
+                    return isallvalid;
+                }
+
+            </script>
+        }

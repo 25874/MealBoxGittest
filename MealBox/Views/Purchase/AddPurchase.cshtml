@@ -1,0 +1,699 @@
+﻿@model MealBox.Models.PurchaseModel
+
+@{
+    ViewBag.Title = "AddPurchase";
+}
+
+<h2>Add Purchase</h2>
+
+@section Styles
+    {
+    <link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+    <link href="~/plugins/toastr/toastr.min.css" rel="stylesheet" />
+   
+    <style>
+        span.error 
+        {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+        .scrollit {
+            overflow: scroll;
+            height: 100%;
+            width: 100%;
+            margin: 0px auto;
+        }
+
+        tr.er {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+}
+
+@using (Html.BeginForm("AddSupplier", "Managment", FormMethod.Post, new { @id = "AddSupplier" }))
+{
+
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.MPurDate)
+            @Html.TextBoxFor(x => x.MPurDate, new { @class = "form-control", @placeholder = "Enter Item Name" })
+            <span class="error">Please Write Supplier Name..</span>
+        </div>
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.ven_id)
+            @Html.DropDownListFor(x => x.ven_id, null, "---Select---", new { @class = "form-control" })
+            <span class="error">Please Select Vendor..</span>
+        </div>
+        <div class="col-md-4">
+            @Html.Label("PurNo")
+            <input type="text" class="form-control" name="PurNo" id="PurNo" value="@ViewBag.PurNo" readonly="readonly" />
+            <span class="error">Please Write Contact Person...</span>
+        </div>
+    </div>
+    @*<div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(x => x.vchtyp_id)
+                @Html.DropDownList("vchtyp_id", new List<SelectListItem>
+           {
+             new SelectListItem {Text="---Select---",Value = "0"},
+             new SelectListItem {Text="Cash",Value = "11"},
+             new SelectListItem {Text="Bank",Value = "12"},
+             new SelectListItem {Text="Credit",Value = "4"}
+           },new { @class = "form-control" })
+
+                <span class="error">Please Write Supplier Name..</span>
+            </div>
+            <div class="col-md-4">
+                @Html.LabelFor(x => x.PayTyp_id)
+                @Html.DropDownList("PayTyp_id", new List<SelectListItem>
+               {
+                 new SelectListItem {Text="---Select---",Value = "-1"},
+                 new SelectListItem {Text="Cash",Value = "11"},
+               }, new { @class = "form-control" })
+                <span class="error">Please Select Payment Type...</span>
+            </div>
+            <div class="col-md-4" id="CashAmount">
+                <div id="CashDiv">
+                    @Html.LabelFor(x => x.csh_amt)
+                    <input type="text" class="form-control csh_amtch" readonly="readonly" id="csh_amt" />
+                </div>
+                <div id="CheaqDiv" style="display:none;">
+                    <div class="col-md-12">
+                        <label>Bank</label>
+                        @Html.DropDownListFor(x => x.BankId, null, "---Select---", new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-12">
+
+                        <label>Cheque No</label>
+                        @Html.TextBoxFor(x => x.chque_No, new { @class = "form-control", @placeholder = "Enter Item Name" })
+                    </div>
+                    <div class="col-md-12">
+                        <label>Cheque Amount</label>
+                        <input type="text" class="form-control" id="ChequeAmt"/>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-align-center"></i>
+            Add Product
+        </h3>
+        <div class="card-tools">
+            <button type="button" class=" btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div><!-- /.card-header -->
+    <div class="card-body">
+        <div class="scrollit" style="display:block">
+            <table id="AddItem" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="text-align:center">Product</th>
+                        <th style="text-align:center">Qunatity</th>
+                        <th style="text-align:center">Unit Price</th>
+                        <th style="text-align:center">Amount</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="body1">
+                    <tr>
+                        <td>
+                            @Html.DropDownListFor(x => x.ProductID, null, "---Select---", new { @class = "form-control " })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Qty, new { @class = "form-control  CAl " })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Cost, new { @class = "form-control CAl " })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Amount, new { @class = "form-control " })
+                        </td>
+                        <td>
+
+                            <a style="width:100%; height:100%" id="AddItems"><i class="fas fa-cart-plus mr-1"></i></a>
+                        </td>
+                        <td>
+                            <label class="duclab" style="color:red; margin-top:20px; display:none;">Please Select a Deduction</label>
+                        </td>
+                        <td>
+                            @*@Html.HiddenFor(x => x.deductionhid2, new { @class = "form-control" })*@
+                        </td>
+                    </tr>
+                    @if (Model.ItemChild != null)
+                    {
+                        foreach (var item in Model.ItemChild)
+                        {
+                            <tr class="select-row2" ondblclick="update2(this)">
+                                <td class="deductionTypeName">
+                                    <label>@item.ItemName</label>
+                                </td>
+                                <td class="DeductionAmount">
+                                    <label>@item.ItemQty</label>
+                                </td>
+                                <td class="DeductionDate">
+                                    <label class="amount">@item.ItemCost</label>
+                                </td>
+                                <td class="DeductionDate">
+                                    <label>@item.ItemTotalAmount</label>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger cheak delete2 " value="">Delete</button>
+                                </td>
+                                <td>
+                                    <label style="visibility:hidden">@item.ItemId</label>
+                                </td>
+                                <td>
+                                    @Html.HiddenFor(x => x.DpurHid, new { @class = "form-control deductionhid", Value = item.DpurId, @readonly = true })
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div><!-- /.card-body -->
+</div>
+<div class="row">
+    <div class="col-md-4">
+        @Html.LabelFor(x => x.PreviousBalnace)   @*readonly="readonly"*@
+        <input type="text" class="form-control" id="PreviousAmount" value="0" />
+        <span class="error">Please Write Contact Person...</span>
+    </div>
+    <div class="col-md-4" style="float:right;">
+        @Html.LabelFor(x => x.GrossTtal)
+        @Html.TextBoxFor(x => x.GrossTtal, new { @class = "form-control" })
+        <span class="error">Please Write Amount</span>
+    </div>
+    <div class="col-md-4" style="float:right;">
+        @Html.LabelFor(x => x.NetTotal)
+        @Html.TextBoxFor(x => x.NetTotal, new { @class = "form-control", @readonly = "readonly" })
+        <span class="error">Please Write Amount</span>
+        <input type="hidden" id="hNetTotal" /> 
+    </div>
+</div>
+<div class="row">    
+    <div class="col-md-4">
+        <label>Discount</label>
+        <input type="text" id="Discount" class="form-control Dis"/>
+    </div>
+    <div class="col-md-4">
+        @Html.LabelFor(x => x.MPurRmk)
+        @Html.TextAreaFor(x => x.MPurRmk, new { @class = "form-control", @placeholder = "Enter Item Name" })
+        @Html.HiddenFor(x => x.MPurID)
+    </div>
+</div>
+<div class="row">
+    <input type="button" class="btn btn-success" value="Save" id="Save"/>
+    <div class="col-md-3">
+        @Html.ActionLink("Return To List", "PurchaseList")
+    </div>
+    <div class="custom-control custom-switch">
+        @Html.CheckBoxFor(x => x.Effected.HasValue, new { @class = "custom-control-input", @id = "Effected" })
+        <label class="custom-control-label" for="Effected">Inventory Effect</label>
+    </div>
+</div>
+
+    @section Scripts
+    {
+
+        <script src="~/dist/js/sweetalert.js"></script>
+        <script src="~/plugins/toastr/toastr.min.js"></script>
+        <script type="text/javascript">
+
+            $(document).ready(function ()
+            {
+                $('#MPurDate').datepicker({
+                    format: "dd-MM-yyyy",
+                    orientation: "bottom auto",
+                    autoclose: true
+                });
+            })
+
+            $("#ven_id").change(function ()
+            {
+
+                if ($('#ven_id option:selected').text() != "---Select---")
+                {
+
+                    var id = $(this).val();
+
+                    $.ajax({
+                        url: '/Purchase/GetCredit?id=' + id,
+                        method: 'Get',
+                        contentType: 'application/jsonCharset=utf-8',
+                        success: function (data) {
+                            console.log(data);
+                            if (data != null) {
+                                $('#PreviousAmount').val(data);
+                            }
+                        }
+                    })
+                }
+            })
+
+
+            $("#ProductID").change(function () {
+
+                if ($('#ProductID option:selected').text() != "---Select---")
+                {
+
+                    var id = $(this).val();
+
+                    $.ajax({
+                        url: '/Product/Itemprice?id=' + id,
+                        method: 'Get',
+                        contentType: 'application/jsonCharset=utf-8',
+                        success: function (data) {
+                            $('#Cost').val(data.PurchasePrice);
+                            /* $('#Cost').prop('readonly', true);*/
+                            $('#csh_amt').prop('readonly', true);
+                            var quatity = data.Quantity;
+                            var Product = $('#ProductID option:selected').text();
+                            toastr.options =
+                            {
+                                "closeButton": true,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": false,
+                                "positionClass": "toast-top-right",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "300",
+                                "hideDuration": "1000",
+                                "timeOut": 0,
+                                "extendedTimeOut": 0,
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut",
+                                "tapToDismiss": false
+                            }
+                            toastr["info"]("<div><input class='input - small' value='  " + Product + ' Quantity is ' + quatity + "'/><br /><button type='button' class='btn clear'></button></div>")
+
+                        }
+                    })
+                }
+                $('#Cost').val('');
+                //Amount
+                $('#Amount').val('');
+
+                $('#Cost').prop('readonly', false);
+                $('#csh_amt').prop('readonly', false);
+                $('#Qty').val("");
+            })
+
+
+            $("#vchtyp_id").change(function () {
+                debugger;
+                var TypeValue = $(this).val();
+                var PaymentCash = ["Cash"]
+                var PaymentCheak = ["Cheak"]
+                var PaymentCreadit = ["Credit"]
+                if (TypeValue == 11) {
+                    $('#PayTyp_id option[value="11"]').remove();
+                    $('#PayTyp_id option[value="12"]').remove();
+                    $('#PayTyp_id option[value="4"]').remove();
+                    for (var i = 0; i < PaymentCash.length; i++) {
+                        $("#PayTyp_id ").append('<option value=' + 11 + '>' + PaymentCash[i] + '</option>');
+                    }
+                    $('#CheaqDiv').hide();
+                    $('#CashDiv').show();
+                    $('#ChequeAmt').attr('id', 'ChequeAmt');
+                    $('.csh_amtch').attr('id', 'csh_amt');
+                }
+                else if (TypeValue == 12) {
+                    $('#PayTyp_id option[value="11"]').remove();
+                    $('#PayTyp_id option[value="12"]').remove();
+                    $('#PayTyp_id option[value="4"]').remove();
+                    for (var i = 0; i < PaymentCheak.length; i++) {
+                        $("#PayTyp_id ").append('<option value=' + 12 + '>' + PaymentCheak[i] + '</option>');
+                    }
+                }
+                else if (TypeValue == 4) {
+                    $('#PayTyp_id option[value="11"]').remove();
+                    $('#PayTyp_id option[value="12"]').remove();
+                    $('#PayTyp_id option[value="4"]').remove();
+                    for (var i = 0; i < PaymentCheak.length; i++) {
+                        $("#PayTyp_id ").append('<option value=' + 4 + '>' + PaymentCheak[i] + '</option>');
+                    }
+                }
+                else {
+                    $('#PayTyp_id option[value="11"]').remove();
+                    $('#PayTyp_id option[value="22"]').remove();
+                    $('#PayTyp_id option[value="4"]').remove();
+                    $("#PayTyp_id ").prop('selectedIndex', 0);
+                }
+            })
+
+            $('#MPurDate').change(function () {
+
+                if ($('#MPurDate').val().trim() != "") {
+                    $('#MPurDate').siblings('span.error').css('visibility', 'hidden')
+                }
+                else {
+                    $('#MPurDate').siblings('span.error').css('visibility', 'visible')
+                }
+            })
+
+            $('#PayTyp_id').change(function () {
+                debugger;
+
+                if ($('#PayTyp_id option:selected').text() != "---Select---") {
+                    $('#PayTyp_id').siblings('span.error').css('visibility', 'hidden')
+                }
+                else {
+                    $('#PayTyp_id').siblings('span.error').css('visibility', 'visible')
+                }
+
+                if ($('#PayTyp_id option:selected').text() != "---Select---" && $('#vchtyp_id option:selected').text() != "---Select---") {
+                    if ($('#vchtyp_id option:selected').text() == 'Bank') {
+
+                        $('#CheaqDiv').show();
+                        $('#CashDiv').hide();
+                        $('#ChequeAmt').attr('id', 'csh_amt')
+                        $('.csh_amtch').attr('id', 'ChequeAmt')
+
+                        //const ContRemv = document.getElementById('ChequeAmt');
+                        //ContRemv.removeAttribute();
+
+                    }
+                    else if ($('#vchtyp_id option:selected').text() == 'Cash') {
+                        $('#CheaqDiv').hide();
+                        $('#CashDiv').show();
+                        $('#ChequeAmt').attr('id', 'ChequeAmt');
+                        $('.csh_amtch').attr('id', 'csh_amt');
+                    }
+
+                }
+
+            })
+
+            $('#vchtyp_id').change(function () {
+                if ($('#vchtyp_id option:selected').text() != "---Select---") {
+                    $('#vchtyp_id').siblings('span.error').css('visibility', 'hidden')
+                }
+                else {
+                    $('#vchtyp_id').siblings('span.error').css('visibility', 'visible')
+                }
+            })
+
+            $('#ven_id').change(function () {
+                if ($('#ven_id option:selected').text() != "---Select---") {
+                    $('#ven_id').siblings('span.error').css('visibility', 'hidden')
+                }
+                else {
+                    $('#ven_id').siblings('span.error').css('visibility', 'visible')
+                }
+            })
+
+
+            $('#GrossTtal').change(function ()
+            {
+                if ($('#GrossTtal').val().trim() == "")
+                {
+                    $('#GrossTtal').siblings('span.error').css('visibility', 'visible')
+                }
+                else
+                {
+                    $('#GrossTtal').siblings('span.error').css('visibility', 'hidden')
+                }
+            })
+
+
+            //function Balance() {
+            //debugger;
+
+            //var amount = 0;
+
+            ////var PreviousAmount = parseInt($('#PreviousAmount').val());
+            ////var GrossTtal = parseFloat($('#GrossTtal').val());
+            ////var NetTotal = parseFloat($('#NetTotal').val());
+            ////if (PreviousAmount == 0)
+            ////{
+            ////amount = NetTotal - GrossTtal;
+            ////return amount
+            ////}
+            ////else if (PreviousAmount > 0)
+            ////{
+            ////amount = NetTotal - GrossTtal;
+            ////return amount
+            ////}
+            ////else if (PreviousAmount < 0)
+            ////{
+            ////amount = (NetTotal + Math.abs(PreviousAmount)) - GrossTtal;
+            ////}
+            ////}
+
+            function addcal()
+            {
+                debugger;
+                var total = 0;
+                var PreAmt = parseFloat($('#PreviousAmount').val());
+                var Grandtotal = 0;
+
+                $('#AddItem tbody .select-row2 ').each(function (index, ele) {
+                    total += parseFloat($(this).closest('tr').find('td').eq(3).find('input').val());
+                })
+
+                var ftotal = parseFloat(total);
+
+                if (PreAmt > 0) {
+                    Grandtotal = ftotal + Math.abs(PreAmt);
+                }
+                else
+                {
+                    Grandtotal = ftotal - PreAmt;
+                }
+
+                //$('#csh_amt').val(ftotal.toFixed(2))
+                $('#GrossTtal').val(ftotal.toFixed(2))
+                $('#NetTotal').val(Grandtotal.toFixed(2))
+                $('#hNetTotal').val(Grandtotal.toFixed(2))
+
+            }
+
+            var listdel1 = [];
+
+            $('.delete2').click(function () {
+                debugger;
+
+                listdel1.push({
+                    "DpurId": $(this).closest('tr').find('td').eq(6).find('input').val()
+                })
+
+                $(this).closest('tr').remove();
+
+                addcal();
+            })
+
+            $('#Save').click(function () {
+                debugger;
+                var isallvalid = true;
+
+                isallvalid = Validate();
+
+                if (isallvalid)
+                {
+
+                    /*   var bal = Balance();*/
+
+                    var list1 = [];
+
+                    $('#AddItem tbody .select-row2').each(function (index, ele) {
+
+                        list1.push({
+                            "ItemQty": $(this).closest('tr').find('td').eq(1).find('input').val(),
+                            "ItemCost": $(this).closest('tr').find('td').eq(2).find('input').val(),
+                            "ItemTotalAmount": $(this).closest('tr').find('td').eq(3).find('input').val(),
+                            "ItemId": $(this).find('td:eq(5)').text(),
+                            "DpurId": $(this).closest('tr').find('td').eq(4).find('input').val()
+                        })
+
+                        $(this).closest('tr').remove();
+                    })
+
+                    var obj =
+                    {
+                        "MPurDate": $('#MPurDate').val(),
+                        "ven_id": $('#ven_id').val(),
+                        "vchtyp_id": $('#vchtyp_id').val(),
+                        "PayTyp_id": $('#PayTyp_id').val(),
+                        "csh_amt": $('#csh_amt').val(),
+                        "GrossTtal": $('#GrossTtal').val(),
+                        "NetTotal": $('#NetTotal').val(),
+                        "MPurID": $('#MPurID').val(),
+                        "Effected": $('#Effected').prop('checked'),
+                        "PurNo": $('#PurNo').val(),
+                        "PreviousBalnace": $('#PreviousAmount').val(),
+                        "ItemChild": list1,
+                        "chque_No": $('#chque_No').val(),
+                        "CashBnk_id": $('#BankId').val(),
+                        "Discount": $('#Discount').val(),
+                        "deleteItems": listdel1
+                    }
+
+                    $.ajax({
+                        type: 'Post',
+                        url: '/Purchase/AddPurchase',
+                        contentType: "application/json?charset=utf-8",
+                        data: JSON.stringify(obj),
+                        success: function (data) {
+                            Clear();
+                            swal("", "Data Has Been Save", "success");
+
+                        },
+                    })
+
+                }
+            })
+
+            function Clear() {
+
+                $('input[type="text"]').val('')
+                $('select').each(function () {
+                    $(this).val('')
+                }
+                )
+            }
+
+            function Validate() {
+
+                var isallvalid = true;
+
+                if ($('#ven_id option:selected').text() == "---Select---") {
+                    $('#ven_id').siblings('span.error').css('visibility', 'visible')
+                    isallvalid = false;
+                }
+                else {
+                    $('#ven_id').siblings('span.error').css('visibility', 'hidden')
+                }
+
+                if ($('#vchtyp_id option:selected').text() == "---Select---") {
+                    $('#vchtyp_id').siblings('span.error').css('visibility', 'visible')
+                    isallvalid = false;
+                }
+                else {
+                    $('#vchtyp_id').siblings('span.error').css('visibility', 'hidden')
+                }
+                if ($('#PayTyp_id option:selected').text() == "---Select---") {
+                    $('#PayTyp_id').siblings('span.error').css('visibility', 'visible')
+                    isallvalid = false;
+                }
+                else {
+                    $('#PayTyp_id').siblings('span.error').css('visibility', 'hidden')
+                }
+                if ($('#MPurDate').val() == "") {
+                    $('#MPurDate').siblings('span.error').css('visibility', 'visible')
+                    isallvalid = false;
+                }
+                else {
+                    $('#MPurDate').siblings('span.error').css('visibility', 'hidden')
+                }
+                if ($('#GrossTtal').val() == "") {
+                    $('#GrossTtal').siblings('span.error').css('visibility', 'visible')
+                    isallvalid = false;
+                }
+                else {
+                    $('#GrossTtal').siblings('span.error').css('visibility', 'hidden')
+                }
+
+                return isallvalid;
+            }
+            /* var row2 = "<tr class='select-row2' ondblclick='update(this)'><td width='25%'><label> " + Alwnam + "</label></td><td width='25%'><label> " + Alwamt + "</label></td><td><input type ='button' class='btn btn-danger remove delete2' value='Delete'></td><td><input type='hidden' class='form-control AlwId ' value=" + AlwId + "  ></td><td><input type='hidden' class='form-control empalw ' value='" + empalw + "'></td></tr>"*/
+            $('#AddItems').click(function () {
+                debugger;
+                if ($('#ProductID option:selected').text() != "---Select---") {
+                    var ProductID = $('#ProductID').val();
+                    var ProductIDname = $('#ProductID option:selected').text();
+                    var Cost = $('#Cost').val();
+                    var Qty = $('#Qty').val();
+                    ////  Total
+                    var Amount = $('#Amount').val();
+                    var DpurIdadd = $('#DpurHid').val();                                                                                                                                                                                                                ////  Total<td><input type ='button' class='btn btn-danger remove delete2' value='Delete'>
+                    var row = "<tr class='select-row2'><td width='25%'><input type class='form-control' value=' " + ProductIDname + "'></td><td width='25%'><input type='text' class='form-control' value='  " + Qty + "'></td><td width='25%'><input class='form-control' type='text' value=' " + Cost + "'></td><td width='25%'><input class='form-control' type='text' value=' " + Amount + "'></td><td><a style='width: 100%; height:100%' class='delete2' id='AddItems'><i class='fas fa-trash - alt'></i></a></td><td width='25%'><label style='visibility:hidden'> " + ProductID + "</label></td></td><td><input type='hidden' class='form-control AlwId ' value= '" + DpurIdadd + "'></td></tr>"
+                    $('#body1').append(row);
+                    $('#ProductID').prop('selectedIndex', 0);
+                    $('#Cost').val("")
+                    $('#Qty').val("")
+                    ////  Total
+                    $('#Amount').val("")
+                    addcal();
+                }
+                else {
+                    toastr.options.positionClass = "toast-bottom-full-width";
+                    toastr.warning("", "SomeThing is Misssing");
+                }
+            })
+
+            $('.CAl').keyup(function () {
+                debugger;
+                var Qty = $('#Qty').val();
+                if (Qty != "" && $('#ProductID option:selected').text() != "---Select---") {
+
+                    var Price = $('#Cost').val();
+                    var Total = parseFloat(Qty) * parseFloat(Price);
+                    ////  Total
+                    if (isNaN(Total)) {
+                        $('#Amount').val('')
+                        /*$('#csh_amt').val(parseFloat(Total))*/
+                    }
+                    else {
+                        $('#Amount').val(parseFloat(Total))
+                    }
+                }
+                else {
+                    ////  Total
+                    $('#Amount').val('');
+
+                }
+            });
+
+
+            $('.Dis').keyup(function () {
+
+                debugger;
+
+                var Dis = $('#Discount').val()
+
+                var NetTotal = $('#NetTotal').val();
+
+                var hNetTotal =  $('#hNetTotal').val();
+
+                if (NetTotal != "" )
+                {
+                    var bal = parseFloat(hNetTotal) - parseFloat(Dis);
+                    if (isNaN(bal))
+                    {
+
+                        var Amount = parseFloat(hNetTotal)
+                        $('#NetTotal').val(Amount)
+                    }
+                    else
+                    {
+                        $('#NetTotal').val(bal)
+
+                    }
+                 }
+            })
+
+            $('#AddItem tbody ').on('click', '.delete2', function () {
+                debugger;
+                $(this).closest('tr').remove();
+                addcal();
+
+            });
+
+        </script>
+
+    }

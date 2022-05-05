@@ -1,0 +1,14 @@
+﻿@model List<MealBox.Models.SubHeadModel>
+@foreach(var item in Model)
+{
+<tr id="row">
+    <td>@(item.HeadGeneratedIdCodeID != null ? item.HeadGeneratedIdCodeID : null)</td>
+    <td>@(item.HeadName != null ? item.HeadName : null)</td>
+    <td>@(item.SubHeadGeneratedIdCode != null ? item.SubHeadGeneratedIdCode : null)</td>
+    <td>@(item.SubHeadName != null ? item.SubHeadName : null)</td>
+    <td><button style="width:100%; height:100%;" type="button" onclick="Edit(this.id)" id="subhead" class="btn btn-success " value="@item.SubHeadID">Edit</button></td>
+</tr>
+}
+
+
+

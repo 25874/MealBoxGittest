@@ -1,0 +1,10 @@
+﻿@model  List<MealBox.Models.Postable>
+@foreach (var item in Model)
+{
+<tr id="row">
+    <td>@(item.BillNo != null ? item.BillNo : null)</td>
+    <td>@(item.CellNo != null ? item.CellNo : null)</td>
+    <td>@(item.BiilDate != null ? item.BiilDate : null)</td>
+    <td><input type="button" value="Invoice" onclick="window.open('@Url.Action("PosInvoice","Sales" ,new { id = item.BillNo})')" /></td>
+</tr>
+}

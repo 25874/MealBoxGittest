@@ -1,0 +1,292 @@
+﻿@model MealBox.Models.ProductModel
+@{
+    ViewBag.Title = "AddItem";
+    //Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+
+    <link href="~/Scripts/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+
+    <link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+
+    <style>
+
+        span.error {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+
+        tr.error {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+
+}
+
+<h2>Enter Item</h2>
+
+@using (Html.BeginForm("AddItem", "Master", FormMethod.Post, new { @id = "AddItem" }))
+{
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.ProductName)
+            @Html.TextBoxFor(x => x.ProductName, new { @class = "form-control", @placeholder = "Enter Item Name" })
+            <span class="error"> Please Write Items Name...</span>
+            @Html.HiddenFor(x => x.ProductID)
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.ProductTypeID)
+            @Html.DropDownListFor(x => x.ProductTypeID, null, "---Select---", new { @class = "form-control" })
+            <span class="error">Please Select Items Type...</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Unit)
+            @Html.DropDownList("Unit", new List<SelectListItem>
+               {
+                new SelectListItem{ Text= "---Select---" , Value="0"  },
+                new SelectListItem{ Text= "Pieces" ,Value="1"},
+               }, new { @class = "form-control num" })
+            <span class="error">Please Select Units...</span>
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.PurchasePrice)
+            @Html.TextBoxFor(x => x.PurchasePrice, new { @class = "form-control num" })
+            <span class="error">Please Write Purchase Price...</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.SalePrice)
+            @Html.TextBoxFor(x => x.SalePrice, new { @class = "form-control num" })
+            <span class="error">Please Insert SalePrice</span>
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.PckSize)
+            @Html.TextBoxFor(x => x.PckSize, new { @class = "form-control num" })
+            <span class="error">Please Write Package Size...</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.stk_carton)
+            @Html.TextBoxFor(x => x.stk_carton, new { @class = "form-control num" })
+            <span class="error">Please Write Packets in Cartons...</span>
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Limit)
+            @Html.TextBoxFor(x => x.Limit, new { @class = "form-control num" })
+            <span class="error">Please Write Limit of Product</span>
+        </div>
+    </div>
+    <div class="row">
+
+        <input type="button" class="btn btn-success" value="Save" id="Save" />
+        <div class="col-md-3">
+            @Html.ActionLink("Return To List", "ItemList")
+        </div>
+    </div>
+}
+
+
+@section
+    scripts
+        {
+   
+    <script src="~/dist/js/sweetalert.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $(".num").keypress(function (e) {
+                debugger;
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    return false;
+                }
+
+
+                $('#MPurDate').datepicker({
+                    format: "dd-MM-yyyy",
+                    orientation: "bottom auto",
+                    autoclose: true
+                });
+
+
+            });
+        });
+
+        $('#Save').click(function () {
+            debugger;
+            var isallvalid = true;
+            isallvalid = Validate();
+            if (isallvalid) {
+                var GetDateTime = new Date();
+                var obj = {
+                    "ProductName": $('#ProductName').val(),
+                    "ProductID": $('#ProductID').val(),
+                    "ProductTypeID": $('#ProductTypeID').val(),
+                    "Unit": $('#Unit').val(),
+                    "PckSize": $('#PckSize').val(),
+                    "PurchasePrice": $('#PurchasePrice').val(),
+                    "SalePrice": $('#SalePrice').val(),
+                    "PckSize": $('#PckSize').val(),
+                    "stk_carton": $('#stk_carton').val(),
+                    "Limit": $('#Limit').val(),
+                    "CreatedAt": GetDateTime.toLocaleString()
+                }
+                $.ajax({
+                    type: 'Post',
+                    url: '/Product/AddItem',
+                    contentType: "application/json?charset=utf-8",
+                    data: JSON.stringify(obj),
+                    success: function (data) {
+                        Clear();
+
+                        swal("", "Data Has Been save", "success")
+                    },
+                })
+            }
+        })
+
+        $('#ProductName').change(function () {
+            if ($('#ProductName').val().trim() != "") {
+                $('#ProductName').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#ProductName').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#PurchasePrice').change(function () {
+            if ($('#PurchasePrice').val().trim() != "") {
+                $('#PurchasePrice').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#PurchasePrice').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#ProductTypeID').change(function () {
+            if ($('#ProductTypeID option:selected').text() == "---Select---") {
+                $('#ProductTypeID').siblings('span.error').css('visibility', 'visible')
+            }
+            else {
+                $('#ProductTypeID').siblings('span.error').css('visibility', 'hidden')
+            }
+        })
+
+        $('#Unit').change(function () {
+            if ($('#Unit option:selected').text() == "---Select---") {
+                $('#Unit').siblings('span.error').css('visibility', 'visible')
+            }
+            else {
+                $('#Unit').siblings('span.error').css('visibility', 'hidden')
+            }
+        })
+
+        $('#Limit').change(function () {
+            if ($('#Limit option:selected').text() == "---Select---") {
+                $('#Limit').siblings('span.error').css('visibility', 'visible')
+            }
+            else {
+                $('#Limit').siblings('span.error').css('visibility', 'hidden')
+            }
+        })
+
+
+        $('#SalePrice').change(function () {
+            if ($('#SalePrice').val().trim() != "") {
+                $('#SalePrice').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#SalePrice').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#stk_carton').change(function () {
+            if ($('#stk_carton').val().trim() != "") {
+                $('#stk_carton').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#stk_carton').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+
+        function Clear() {
+            $('input[type="text"]').val("");
+            $('select').each(function () { $(this).val('') })
+
+        }
+
+        function Validate() {
+            debugger;
+            var isallvalid = true;
+            if ($('#ProductName').val().trim() == "") {
+                $('#ProductName').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#ProductName').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#ProductTypeID option:selected').text() == "---Select---") {
+                $('#ProductTypeID').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#ProductTypeID').siblings('span.error').css('visibility', 'hidden')
+            }
+
+            if ($('#Unit option:selected').text() == "---Select---") {
+                $('#Unit').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#Unit').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#PurchasePrice').val().trim() == "") {
+                $('#PurchasePrice').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#PurchasePrice').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#SalePrice').val().trim() == "") {
+                $('#SalePrice').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#SalePrice').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#PckSize').val().trim() == "") {
+                $('#PckSize').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#PckSize').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#stk_carton').val().trim() == "") {
+                $('#stk_carton').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#stk_carton').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#Limit').val().trim() == "") {
+                $('#Limit').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#Limit').siblings('span.error').css('visibility', 'hidden')
+            }
+
+            return isallvalid;
+        }
+
+    </script>
+}

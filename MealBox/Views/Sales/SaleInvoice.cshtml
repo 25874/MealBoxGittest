@@ -1,0 +1,162 @@
+﻿@model MealBox.Models.SalesModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width" />
+    <title>View</title>
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+</head>
+<body>
+    <div class="container">
+        <div style="float:left; margin-top:30px;">
+
+            @foreach (var item in Model.SaleInvoice.Select(s => new { s.Msal_sono }).Distinct())
+            {
+                foreach (var Item2 in Model.SaleInvoice.Where(w => w.Msal_sono == item.Msal_sono).Select(s => new { Phone = s.PhoneNo, Name = s.CustomerName, addres = s.Address, city = s.CityName }).Distinct())
+                {
+                    <h2 style="color:royalblue">@Item2.Name</h2>
+                    <br />
+                    <label>Addres :</label> @Item2.addres
+                    <br />
+                    <label>City :</label> @Item2.city
+                    <br />
+                    <label>Contact #</label>@Item2.Phone
+                }
+            }
+        </div>
+        <div style="float: right; margin-top:30px;">
+            <h2 style="color:royalblue">Sale Invoice</h2>
+            <br />
+            @foreach (var item3 in Model.SaleInvoice.Select(s => new { s.Msal_sono }).Distinct())
+            {
+                foreach (var Item4 in Model.SaleInvoice.Where(w => w.Msal_sono == item3.Msal_sono).Select(s => new { Purno = s.Msal_sono, SaleDate = s.MSal_dat, CustomerId = s.CustomerID }).Distinct())
+                {
+
+                    <label>Date</label><textbox> @Item4.SaleDate.Value.ToString("dddd, dd MMMM yyyy")</textbox>
+                    <br />
+                    <label>Invoice #</label> @Item4.Purno
+                    <br />
+                    <label>Customer ID</label> @Item4.CustomerId
+                }
+            }
+        </div>
+        <table id="PurchaseInvoice" class="table table-striped" border="1">
+            <thead>
+                <tr style="background-color:royalblue">
+                    <th style="text-align:center; color:white ">Description</th>
+                    <th style="text-align: center; color:white ">Qty</th>
+                    <th style="text-align: center; color: white ">UnitPrice</th>
+                    <th style="text-align: center; color: white ">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SaleInvoice)
+                {
+                    <tr class="select-row2">
+                        <td>@item.ProductName</td>
+                        <td>@item.DSal_Itmqty</td>
+                        <td>@item.Dsal_salcst</td>
+                        <td>@item.Amt</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>
+                        Total Product is <label id="TotProd"></label> 
+                    </td>
+                    <td>
+                        Total Quantity is <label id="Totqty"></label>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <div style="float:left">
+            <table>
+                <thead style="background-color:royalblue">
+                    <tr>
+                        <th style="color: white">Other Commets</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color:black">Total Payment Due in 30 Days</td>
+                    </tr>
+                    <tr>
+                        <td style="color:black">Please Include The Invoice Number on Your Cheak</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="float:right">
+            <table>
+                <tr>
+                    <td>Sub Total </td>
+                    <td><input type="text" class="form-control" readonly="readonly" id="TotProd" /></td>
+                </tr>
+                <tr>
+                    <td>Previous Balance</td>
+                    <td><input type="text" class="form-control" readonly="readonly" id="Totqty" /></td>
+                </tr>
+                <tr>
+                    <td>Discount Amount</td>
+                    <td><input type="text" class="form-control" readonly="readonly" id="TotAmt" /></td>
+                </tr>
+                <tr>
+                    <td>Total Amount</td>
+                    <td><input type="text" class="form-control" readonly="readonly" id="TotAmt" /></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/adminlte.min.js"></script>
+</body>
+
+<script type="text/javascript">
+
+    $(document).ready(function ()
+    {
+        var RowCount = $('#PurchaseInvoice >tbody > .select-row2').length;
+        console.log(RowCount);
+
+        $('#TotProd').text(RowCount);
+
+        var total = 0;
+        $('#PurchaseInvoice tbody .select-row2 ').each(function (index, ele) {
+            total += parseFloat($(this).find('td:eq(1)').text());
+        })
+        $('#Totqty').text(total);
+
+        var total2 = 0;
+        $('#PurchaseInvoice tbody .select-row2 ').each(function (index, ele) {
+            total2 += parseFloat($(this).find('td:eq(3)').text());
+        })
+
+
+        $('#TotAmt').text(total2);
+        console.log(RowCount);
+
+    })
+
+
+</script>
+
+</html>
+

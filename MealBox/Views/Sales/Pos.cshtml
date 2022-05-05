@@ -1,0 +1,708 @@
+﻿@model MealBox.Models.PosModel
+@{
+    ViewBag.Title = "Pos";
+    Layout = "~/Views/Shared/View.cshtml";
+}
+<h2>Pos</h2>
+@section Styles
+    {
+    <link href="~/plugins/toastr/toastr.min.css" rel="stylesheet" />
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+    <style>
+        span.error 
+        {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+        tr.er 
+        {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="form-group col-md-1">
+                <a class="btn btn-primary" href="@Url.Action("AddCustomer","Managment")" style="margin-top:30px;">Add Customer</a>
+            </div>
+            <div class="form-group col-md-1">
+                <button class="btn btn-primary" id="HoldMod" style="margin-top:30px;">Hold</button>
+            </div>
+            <div class="form-group col-md-10">
+                <table class="table table-striped">
+                    <tr>
+                        <td>Bill</td>
+                        <td><span id="billNo">@ViewBag.BillNO</span></td>
+                        <td>Date</td>
+                        <td><span id="billDate">@DateTime.Now.Date.ToString("MM/dd/yyyy")</span></td>
+                        <td>Time</td>
+                        <td><span></span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(x => x.CustomerName)
+                @Html.TextBoxFor(x => x.CustomerName, new { @class = "form-control" })
+                <span class="error">Please Insert Customer Name</span>
+                <label id="CusID"></label>
+                <label id="accno"></label>
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(x => x.CellNo)
+                @Html.TextBoxFor(x => x.CellNo, new { @class = "form-control" })
+                <span class="error">Please Insert Cell NO </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(x => x.ItemCode)
+                @Html.DropDownListFor(x => x.ItemCode, null, "---Select---", new { @class = "form-control select2 Code" })
+                <span class="error">Please Select an Item </span>
+            </div>
+            <div class="col-md-4">
+                @Html.LabelFor(x => x.ItemName)
+                @Html.DropDownListFor(x => x.ItemName, null, "---Select---", new { @class = "form-control select2 Code" })
+                <span class="error">Please Write Contact Person...</span>
+            </div>
+        </div>
+        <table id="AddPos" class="table-bordered container-fluid" border="1" style="margin-top:30px;">
+            <thead>
+                <tr>
+                    <th style="text-align:center">Product</th>
+                    <th style="text-align:center">Item Qty</th>
+                    <th style="text-align:center">Unit Price</th>
+                    <th style="text-align:center">Toatal Amount</th>
+                    <th style="text-align:center">Action</th>
+                </tr>
+            </thead>
+            <tbody id="Posbody">
+            </tbody>
+        </table>
+        <div class="row" style="margin-top:100px;">
+            <div class="col-md-6">
+                <lebel>Total Items</lebel>
+                <input type="text" class="form-control" id="ItewmQuantity" />
+            </div>
+            <div class="col-md-6">
+                <lebel>Total Items</lebel>
+                <input type="text" id="ProductQuantity" class="form-control" />
+            </div>
+            <input type="hidden" id="htotalAmount" />
+        </div>
+        <table class="table table-bordered " border="1" style="margin-top:40px;">
+            <tbody>
+                <tr>
+                    <td>
+                        17
+                        @Html.CheckBoxFor(x => x.C17Per.HasValue)
+                    </td>
+                    <td><input type="text" id="17Textbox" class="form-control" readonly="readonly" /></td>
+                    <td>@Html.CheckBoxFor(x => x.C3Per.HasValue)3</td>
+                    <td>
+                        <input type="text" id="3Textbox" class="form-control" readonly="readonly" />
+                    </td>
+                    <td>Discount Amount</td>
+                    <td>
+                        @Html.TextBoxFor(x => x.DiscountAmount, new { @class = "form-control Dis " })
+                    </td>
+                </tr>
+                <tr>
+                    <td>Amount Paid</td>
+                    <td>
+                        @Html.TextBoxFor(x => x.AmountPaid, new { @class = "form-control AmtP", @value = 0 })
+                    </td>
+                    <td>Balance</td>
+                    <td>@Html.TextBoxFor(x => x.Balance, new { @class = "form-control", @readonly = "readonly" })</td>
+                    <td>Total</td>
+                    <td>@Html.TextBoxFor(x => x.TotalAmount, new { @class = "form-control", @readonly = "readonly" })</td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-primary" id="holdbtn" style="margin-top:10px;">Hold</button>
+        <button class="btn btn-danger" id="Savebtn" style="margin-top:10px;">Save</button>
+        <input type="hidden" id="tab0" />
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <table id="PosRen">
+            <thead>
+                <tr>
+                    <th>Bill No</th>
+                    <th>Cell NO</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="Renbody">
+                @{
+                   
+                    //if (chk3.Count != 0)
+                    //{
+                    @Html.Partial("_PostRen", Model.postables)
+                  }
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Modal
+    {
+    <div id="HoldModal" class="modal fade" tabindex="-1">
+        <div class="modal-lg  modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Customer</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="dvCreate"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-success" style="margin-top:15px;" value="Save" id="Save" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts
+    {
+
+    <script src="~/plugins/datatables-autofill/js/jquery.dataTables.js"></script>
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $('.select2').select2();
+            $('#ItemCode').select2('open');
+            $('#PosRen').DataTable();
+            WalkinCustomer();
+
+        })
+
+        document.addEventListener('keyup', function (event) {
+
+            debugger;
+            var code = event.keyCode || event.which;
+
+            if (code === 9) {
+                if ($('#ItemCode option:selected').text() != "---Select---") {
+
+                    const ProdNamRev = document.getElementById('ProductName');
+
+                    if (ProdNamRev) {
+                        ProdNamRev.removeAttribute('id');
+                    }
+
+                    const ItemPriceRev = document.getElementById('ItemPrice');
+                    if (ItemPriceRev) {
+                        ItemPriceRev.removeAttribute('id');
+                    }
+
+                    const QtyRev = document.getElementById('Qty');
+                    if (QtyRev) {
+                        QtyRev.removeAttribute('id');
+                    }
+
+                    const AmountRev = document.getElementById('Amount');
+                    if (AmountRev)
+                    {
+                        AmountRev.removeAttribute('id');
+                    }
+                    var ItemPrice = "";
+                    var ProductName = "";
+                    var id = $('#ItemCode').val();
+                    $.ajax({
+                        url: '/Product/Itemprice?id=' + id,
+                        method: 'Get',
+                        contentType: 'application/jsonCharset=utf-8',
+                        success: function (data) {
+                            debugger;
+                            ItemPrice = data.PurchasePrice;
+                            ProductName = data.ProductName;
+                            $('#ItemCode').select2('destroy');
+                            $('#ItemCode').prop('selectedIndex', 0);
+                            var row = "<tr class='select-row2'><td><input type='text' class='form-control' id='ProductName' value=' " + ProductName + "'></td><td><input type='text' id='Qty' class='form-control Qty CAl' ></td><td><input class='form-control CAl' type='text' id='ItemPrice' value=' " + ItemPrice + "'></td><td><input class='form-control'  value='' id='Amount'  type='text' ></td><td><input type ='button' class='btn btn-danger remove delete' value='Delete'></td><td><label style='visibility:hidden'> " + id + "</label></td></tr>"
+                            $('#Posbody').append(row);
+                            setTimeout(function () {
+                                $("#Qty").focus();
+                            }, 1);
+                        }
+                    })
+                }
+
+                else if ($('#ProductName').val() != '' && $('#ItemPrice').val() != '' && $('#tab0').val() == 0)
+                {
+                    $('.select2').select2();
+                    $('#ItemCode').select2('open');
+                }
+                else if ($('#tab0').val() == 0 && $('#AmountPaid').val() == 1)
+                {
+
+                    setTimeout(function ()
+                    {
+                        $("#DiscountAmount").focus();
+                    }, 1);
+                }
+            }
+            else if (code === 27)
+            {
+                if ($('#ProductName').val() != '' && $('#ItemPrice').val() != '') {
+                    setTimeout(function () {
+                        $("#C17Per_HasValue").focus();
+                    }, 1);
+                    $('#tab0').val('1');
+                }
+            }
+            else if ($('#ProductName').val() != '' && $('#ItemPrice').val() != '' && $('#DiscountAmount').val() == '') {
+
+                var Qty = $('#Qty').val();
+                var Price = $('#ItemPrice').val();
+                var Total = parseFloat(Qty) * parseFloat(Price);
+                ////  Total
+                if (isNaN(Total)) {
+                    $('#Amount').val('')
+                    /*$('#csh_amt').val(parseFloat(Total))*/
+                }
+                else {
+                    $('#Amount').val(parseFloat(Total));
+                    $('#TotalAmount').val(parseFloat(Total));
+                    addcal();
+                    calItem();
+                }
+            }
+        });
+
+
+        function WalkinCustomer()
+        {
+            debugger;
+            $.ajax({
+                type: 'Get',
+                url: '/Sales/WalkinCutomer',
+                contentType: "application/json?charset=utf-8",
+                success: function (result) {
+                    console.log(result);
+                    debugger;
+                    $('#CustomerName').val(result.AccountName);
+                    $('#accno').text(result.AccountCode)
+                    $('#CusID').text(result.Personid)
+                    console.log(result.length);
+                    
+                }
+            })
+        }
+
+        $('#Savebtn').click(function () {
+
+            debugger;
+            //Clear();
+            var list = [];
+            var isallvalid = true;
+            isallvalid = ValidateHold();
+            if (isallvalid) {
+                $('#AddPos tbody .select-row2').each(function (index, ele)
+                {
+                    list.push({
+                        "ItemQty": $(this).closest('tr').find('td').eq(1).find('input').val(),
+                        "ItemCost": $(this).closest('tr').find('td').eq(2).find('input').val(),
+                        "ItemTotalAmount": $(this).closest('tr').find('td').eq(3).find('input').val(),
+                        "ItemId": $(this).find('td:eq(5)').text(),
+                        "DpurId": $(this).closest('tr').find('td').eq(4).find('input').val()
+                    })
+                })
+                var obj =
+                {
+                    "posChildren": list,
+                    "CustomerName": $('#CustomerName').val(),
+                    "CellNo": $('#CellNo').val(),
+                    "DiscountAmount": $('#DiscountAmount').val(),
+                    "AmountPaid": $('#AmountPaid').val(),
+                    "Balance": $('#Balance').val(),
+                    "AmountPaid": $('#AmountPaid').val(),
+                    "C17Per": $('#C17Per_HasValue').prop('checked'),
+                    "BillNo": $('#billNo').text(),
+                    "C3Per": $('#C3Per_HasValue').prop('checked'),
+                    "TotalAmount": $('#TotalAmount').val(),
+                    "per7amt": $('#17Textbox').val(),
+                    "Per3Amt": $('#3Textbox').val(),
+                    "Amount": $('#htotalAmount').val(),
+                    "EmployeeId": $('#CusID').text(),
+                    "Accno": $('#accno').text()
+                }
+                $.ajax({
+                    url: '/Sales/Pos',
+                    type: 'Post',
+                    data: JSON.stringify(obj),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function () {
+
+                        debugger;
+
+                        var Billno = $('#billNo').text();
+
+                        toastr["success"]("Order Has Been Processs ")
+                        toastr.options =
+                        {
+                            "progressBar": true,
+                        }
+                        $('#PosRen tbody').empty();
+                        PosBody();
+                        Clear();
+                        $('#AddPos tbody').empty();
+                        /*("<div><input type='text' value=" + Billno + "/></div>")*/
+                    }
+                })
+            }
+        })
+
+        $('#ItemCode').change(function () {
+            if ($('#ItemCode option:selected').text() != "---Select---") {
+                $('#ItemCode').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#ItemCode').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+
+        function ValidateHold() {
+            debugger;
+            var isallvalid = true;
+            var cheaklenght = $('#AddPos >tbody > .select-row2').length;
+            if (cheaklenght == 0) {
+                isallvalid = false;
+                $('#ItemCode').siblings('span.error').css('visibility', 'visible')
+            }
+            if ($('#Qty').val() == "") {
+                toastr.options.positionClass = "toast-bottom-full-width";
+                toastr.warning("Info Message", "SomeThing is Misssing");
+                isallvalid = false;
+            }
+
+
+            return isallvalid
+        }
+
+
+        $('#HoldMod').click(function () {
+            debugger;
+            $.ajax({
+                type: 'Get',
+                url: '/Sales/BillView',
+                contentType: "application/json",
+                dataType: 'html',
+                success: function (data) {
+                    debugger;
+                    $('#dvCreate').html(data);
+                    $("#HoldModal").modal();
+
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+        });
+
+        //sajid
+        $('.CAl').keyup(function () {
+            debugger;
+            var TotalAmount = $('#htotalAmount').val();
+            if (TotalAmount != "") {
+
+                var disamt = $('#sdisamt').val();
+                var Total = parseFloat(TotalAmount) - parseFloat(disamt);
+
+                if (isNaN(Total)) {
+                    $('#Amount').val('')
+
+                }
+                else {
+                    $('#Amount').val(parseFloat(Total))
+                }
+            }
+            else {
+                ////  Total
+                $('#Amount').val('');
+                $('#csh_amt').val('');
+            }
+
+        });
+
+
+        $('.Dis').keyup(function () {
+            debugger;
+            var DisAmount = parseFloat($('#DiscountAmount').val());
+
+            if (DisAmount != "")
+            {
+
+                var cheak17 = $('#C17Per_HasValue').prop('checked');
+                var cheak3 = $('#C3Per_HasValue').prop('checked');
+                var TotalAmount = parseFloat($('#htotalAmount').val());
+                if (isNaN(DisAmount))
+                {
+                    if (cheak3 == false && cheak17 == false) {
+                        var Total = parseFloat(TotalAmount)
+                        $('#TotalAmount').val(Total);
+                    }
+                    else if (cheak3 == false && cheak17 == false) {
+                        var Total = parseFloat($('#3Textbox').val())
+                        $('#TotalAmount').val(Total);
+                    }
+                    else if (cheak3 == true && cheak17 == false) {
+                        var Total = TotalAmount + parseFloat($('#3Textbox').val());
+                        $('#TotalAmount').val(Total);
+                    }
+                    else if (cheak3 == false && cheak17 == true) {
+                        var Total = TotalAmount + parseFloat($('#17Textbox').val())
+                        $('#TotalAmount').val(Total);
+                    }
+                }
+                else
+                {
+
+                    if (cheak3 == false && cheak17 == false) {
+                        var Total = parseFloat(TotalAmount) - parseFloat(DisAmount);
+                        $('#TotalAmount').val(Total);
+                    }
+                    else if (cheak3 == true && cheak17 == false) {
+                        var GrandAmount = TotalAmount + parseFloat($('#3Textbox').val());
+                        var Amount = GrandAmount - DisAmount;
+                        $('#TotalAmount').val(Amount);
+                    }
+                    else if (cheak3 == false && cheak17 == true) {
+                        var GrandAmount = TotalAmount + parseFloat($('#17Textbox').val());
+                        var Amount = GrandAmount - DisAmount;
+                        $('#TotalAmount').val(parseFloat(Amount))
+                    }
+                    else if (cheak3 == true && cheak17 == true)
+                    {
+                        var GrandAmount = TotalAmount + parseFloat($('#17Textbox').val()) + parseFloat($('#3Textbox').val());
+                        var Amount = GrandAmount - DisAmount;
+                        $('#TotalAmount').val(parseFloat(Amount))
+                    }   
+                }
+            }
+        });
+
+        $('.AmtP').keyup(function () {
+
+            debugger;
+            var Amt = parseFloat($('#AmountPaid').val());
+            Balance
+            if(Amt != "")
+            {
+                if (isNaN(Amt))
+                {
+                    $('#AmountPaid').val('');
+                }
+                else
+                {
+                    var Disamt = parseFloat($('#TotalAmount').val()) - parseFloat($('#AmountPaid').val())
+                    $('#Balance').val(Disamt);
+                }
+            }
+            })
+
+        function Clear() {
+
+            $('input[type="text"]').val('')
+            $('select').each(function () {
+                $(this).val('')
+            }
+            )
+            $('#AddPos >tbody > .select-row2').length;
+        }
+
+        function addcal() {
+            debugger;
+            var total = 0;
+            $('#AddPos tbody .select-row2 ').each(function (index, ele) {
+                total += parseFloat($(this).closest('tr').find('td').eq('3').find('input').val());
+            })
+            var ftotal = parseFloat(total);
+            $('#TotalAmount').val(ftotal.toFixed(2))
+            $('#htotalAmount').val(ftotal.toFixed(2))
+        }
+
+        function calItem() {
+            debugger;
+            var total = 0;
+            $('#AddPos tbody .select-row2 ').each(function (index, ele) {
+                total += parseFloat($(this).closest('tr').find('td').eq('1').find('input').val());
+            })
+            var ftotal = parseFloat(total);
+            $('#ItewmQuantity').val(ftotal);
+            var RowCount = $('#AddPos >tbody > .select-row2').length;
+            $('#ProductQuantity').val(RowCount);
+        }
+
+
+        $('#AddPos tbody ').on('click', '.delete', function () {
+
+            $(this).closest('tr').remove();
+            addcal();
+            calItem();
+        });
+
+
+        $('#C17Per_HasValue').click(function () {
+            debugger;
+            var cheak17 = $('#C17Per_HasValue').prop('checked')
+            var cheak3 = $('#C3Per_HasValue').prop('checked')
+            if ($('#TotalAmount').val() != '') {
+
+                if (cheak17 == true && cheak3 == false) {
+                    var Amount17 = 0;
+                    var Amount17For = 0;
+                    var totalAmount = 0;
+                    $('#AddPos tbody .select-row2 ').each(function (index, ele) {
+                        Amount17 += parseFloat($(this).closest('tr').find('td').eq('3').find('input').val());
+                        Amount17For = (Amount17 * 17) / 100
+                    })
+                    totalAmount = Amount17 + Amount17For
+                    $('#17Textbox').val(Amount17For);
+                    $('#3Textbox').val('');
+                    $('#TotalAmount').val(totalAmount)
+                }
+                else if (cheak17 == true && cheak3 == true) {
+                    var Amount3 = 0;
+                    var Amount3For = 0;
+                    var totalAmount3 = 0;
+
+                    $('#AddPos tbody .select-row2 ').each(function (index, ele) {
+                        Amount3 += parseFloat($(this).closest('tr').find('td').eq('3').find('input').val());
+                        Amount3For = (Amount3 * 3) / 100
+                    })
+                    totalAmount3 = $('#TotalAmount').val() + Amount3For
+                    $('#3Textbox').val(Amount3For);
+                    $('#TotalAmount').val(totalAmount3)
+
+                }
+                else if (cheak17 == false && cheak3 == true) {
+                    var Amount3 = 0;
+                    var Amount3For = 0;
+                    var totalAmount = 0;
+                    $('#AddPos tbody .select-row2 ').each(function (index, ele) {
+                        Amount3 += parseFloat($(this).closest('tr').find('td').eq('3').find('input').val());
+                        Amount3For = (Amount17 * 3) / 100
+                    })
+                    totalAmount = Amount3 + Amount3For
+                    $('#3Textbox').val(totalAmount);
+                    $('#3Textbox').val('');
+                    $('#TotalAmount').val(totalAmount)
+                }
+                else if (cheak3 == false && cheak17 == false) {
+                    var Amount = parseFloat($('#htotalAmount').val());
+                    $('#TotalAmount').val(Amount.toFixed(2));
+                    $('#3Textbox').val('');
+                    $('#17Textbox').val('');
+                }
+                else {
+                    var Amount = parseFloat($('#htotalAmount').val());
+                    $('#TotalAmount').val(Amount.toFixed(2));
+                    $('#17Textbox').val('');
+                }
+            }
+
+        })
+
+        $('#C3Per_HasValue').click(function () {
+            debugger;
+
+            var cheak17 = $('#C17Per_HasValue').prop('checked')
+            var cheak3 = $('#C3Per_HasValue').prop('checked')
+
+            if ($('#TotalAmount').val() != '') {
+
+                if (cheak3 == true && cheak17 == false) {
+                    var Amount3 = 0;
+                    var Amount3For = 0;
+                    var totalAmount = 0;
+
+                    $('#AddPos tbody .select-row2 ').each(function (index, ele) {
+                        Amount3 += parseFloat($(this).closest('tr').find('td').eq('3').find('input').val());
+                        Amount3For = (Amount3 * 3) / 100
+                    })
+
+                    totalAmount = Amount3 + Amount3For
+                    $('#3Textbox').val(Amount3For);
+                    $('#17Textbox').val('');
+                    $('#TotalAmount').val(totalAmount)
+
+                }
+
+                else if (cheak17 == true && cheak3 == true) {
+                    var Amount3 = 0;
+                    var Amount3For = 0;
+                    var totalAmount3 = 0;
+
+
+                    $('#AddPos tbody .select-row2 ').each(function (index, ele) {
+                        Amount3 += parseFloat($(this).closest('tr').find('td').eq('3').find('input').val());
+                        Amount3For = (Amount3 * 3) / 100
+                    })
+                    totalAmount3 = parseFloat($('#TotalAmount').val()) + Amount3For
+                    $('#3Textbox').val(Amount3For);
+                    $('#TotalAmount').val(totalAmount3)
+
+                }
+
+                else if (cheak3 == false && cheak17 == true) {
+                    var Amount17 = 0;
+                    var Amount17For = 0;
+                    var totalAmount = 0;
+                    $('#AddPos tbody .select-row2 ').each(function (index, ele) {
+                        Amount17 += parseFloat($(this).closest('tr').find('td').eq('3').find('input').val());
+                        Amount17For = (Amount17 * 17) / 100
+                    })
+                    totalAmount = Amount17 + Amount17For
+                    $('#17Textbox').val(Amount17For);
+                    $('#3Textbox').val('');
+                    $('#TotalAmount').val(totalAmount)
+                }
+                else if (cheak3 == false && cheak17 == false) {
+                    var Amount = parseFloat($('#htotalAmount').val());
+                    $('#TotalAmount').val(Amount.toFixed(2));
+                    $('#3Textbox').val('');
+                    $('#17Textbox').val('');
+
+                }
+                else {
+                    var Amount = parseFloat($('#htotalAmount').val());
+                    $('#TotalAmount').val(Amount.toFixed(2));
+                    $('#3Textbox').val('');
+                }
+            }
+
+        })
+
+        function PosBody() {
+
+            $.ajax({
+                type: 'Get',
+                url: '/Sales/PosBody',
+                contentType: "application/json?charset=utf-8",
+                dataType: 'html',
+                success: function (data) {
+                    var dataapend = data.trim();
+                    $("#Renbody").append(dataapend);
+
+                },
+            })
+        }
+
+
+    </script>
+}

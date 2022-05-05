@@ -1,0 +1,61 @@
+﻿@model List<MealBox.Models.AreaModel>
+
+@{
+    ViewBag.Title = "CountryList";
+}
+
+<h2>CountryList</h2>
+
+<div class="card-header">
+    <a style="float:right;" type="button" class="btn btn-success" href="@Url.Action("AddProvince","Managment")">Add Province</a>
+</div>
+
+
+
+@section Styles {
+
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+
+}
+
+
+
+<table id="mytable" class="table-bordered ">
+    <thead>
+        <tr>
+            <th style="text-align:center"></th>
+            <th style="text-align:center">Supplier Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+
+        {
+            <tr>
+                <td></td>
+                <td>@item.ProvinceName</td>
+                <td><a style="width:100%; height:100%" class="btn btn-success" href="@Url.Action("AddProvince","Managment", new { id = @item.PrivinceId})"><span>Edit</span></a></td>
+            </tr>
+
+        }
+
+    </tbody>
+</table>
+
+@section Scripts
+    {
+
+    <script src="~/plugins/datatables-autofill/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $('#mytable').DataTable();
+        });
+
+
+    </script>
+
+}

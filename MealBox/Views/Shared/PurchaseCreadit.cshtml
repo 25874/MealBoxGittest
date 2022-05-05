@@ -1,0 +1,85 @@
+﻿@model List<Sp_PurchaseCreadit_Result>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width" />
+    <title>View</title>
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <img id="Imglogo" src="../dist/img/" style="height:100px;width:100px;" />
+                <h3><span id="lblcom"></span> </h3>
+                <h5></h5>
+                <div class="row">&nbsp;</div>
+                <div class="left">
+                    <p><span id="lblSmalcomp">Naina s</span></p>
+                    <p><b>Address</b></p>
+                    <p><span id="lbl_brnam" style="font-weight:bold;">MI Company</span></p>
+                    <p><span id="lbl_Add">Karachi</span></p>
+                    <p>Phone: <span id="lbl_Ph">021</span> Mobile: <span id="lbl_Mob">0222</span></p>
+                </div>
+                <div class="row">&nbsp;</div>
+                <button class="btn-info" onclick="printDiv('printMe')">Print</button>
+            </div>
+            <div class="col">
+                &nbsp;
+            </div>
+            <div class="col">
+                <div class="right">
+                    <h1><i><span id="lbl_rptnam">Purchase Creadit</span></i></h1>
+                    <div class="row">&nbsp;</div>
+                    <p><span id="lbldat" style="font-weight:bold;">Date:</span><span id="lbl_dat">3/17/2022</span></p>
+                </div>
+                <div class="row">&nbsp;</div>
+                <h5>Export to Excel</h5>
+                <a id="LinkButton1" href="javascript:__doPostBack(&#39;LinkButton1&#39;,&#39;&#39;)">Convert to Excel</a>
+            </div>
+        </div>
+        <div>
+            <table class="table table-bordered container " border="1">
+                <thead>
+                    <tr>
+                        <th>SupplierId</th>
+                        <th>Supplier Name</th>
+                        <th>Amount</th>                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.supplierId</td>
+                            <td>@item.suppliername</td>
+                            <td>@item.CredAmt</td>                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/adminlte.min.js"></script>
+</body>
+
+
+</html>

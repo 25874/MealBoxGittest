@@ -1,0 +1,268 @@
+﻿@model MealBox.Models.PurchaseModel
+@{
+    ViewBag.Title = "PurchaseReturn";
+}
+
+<h2>PurchaseReturn</h2>
+
+
+@section Styles
+    {
+    <link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+    <link href="~/plugins/toastr/toastr.min.css" rel="stylesheet" />
+
+    <style>
+        span.error 
+        {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+
+        .scrollit {
+            overflow: scroll;
+            height: 100%;
+            width: 100%;
+            margin: 0px auto;
+        }
+
+        tr.er 
+        {
+            background-color: rgba(255,0,0,0.35);
+        }
+    
+    </style>
+}
+    
+
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.LabelFor(x => x.InvoiceNum)
+        @Html.DropDownListFor(x => x.InvoiceNum, null, "---Select---", new { @class = "form-control" })
+        <span class="error">Please Select InvoiceNumber..</span>
+    </div>
+    <div class="col-md-3">
+        @Html.LabelFor(x => x.Accno)
+        @Html.DropDownListFor(x => x.Accno, null, "---Select---", new { @class = "form-control" })
+        <span class="error">Please Select Accno..</span>
+    </div>
+    <div class="col-md-3">
+        @Html.LabelFor(x => x.ReturnType)
+        @Html.DropDownList("ReturnType", new List<SelectListItem>
+          {
+            new SelectListItem {Text="---Select---",Value = "-1"},
+            new SelectListItem {Text="Exchange",Value = "1"},
+            new SelectListItem {Text="Defected",Value = "3"},
+            new SelectListItem {Text="Rejected",Value = "4"},
+            new SelectListItem {Text="Returned",Value = "4"},
+          }, new { @class = "form-control" })
+        <span class="error">Please Select Returntype..</span>
+    </div>
+    <div class="col-md-3">
+        <label>Sale Date</label>
+        <input type="text" id="PurchaseReturnDate" class="form-control" />
+    </div>
+</div>
+
+
+<div class="card" style="margin-top:50px;">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fa-solid fa-align-justify"></i>
+            Add Product
+        </h3>
+        <div class="card-tools">
+            <button type="button" class=" btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div><!-- /.card-header -->
+    <div class="card-body">
+        <table id="AddPurchaseReturn" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="text-align:center">Product</th>
+                    <th style="text-align:center">Qunatity</th>
+                    <th style="text-align:center">Unit Price</th>
+                    <th style="text-align:center">Amount</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="body1">
+                <tr>
+                    <td>
+                        @Html.DropDownListFor(x => x.ProductID, null, "---Select---", new { @class = "form-control " })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(x => x.Qty, new { @class = "form-control CAl  " })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(x => x.Cost, new { @class = "form-control" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(x => x.Amount, new { @class = "form-control " })
+                    </td>
+                    <td>
+                        <a style="width:100%; height:100%" id="AddItems"><i class="fa-solid fa-cart-plus"></i>Add</a>
+                    </td>
+                    <td>
+                        <label class="duclab" style="color:red; margin-top:20px; display:none;">Please Select a Deduction</label>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row" style="margin-top:50px;">
+    <div class="col-md-4">
+        @Html.LabelFor(x => x.PurchaseTotal)
+        @Html.TextBoxFor(x => x.PurchaseTotal, new { @class = "form-control", @placeholder = "Enter Item Name" })
+    </div>
+</div>
+
+<div class="row" style="margin-top:30px;">
+    <input type="button" class="btn btn-success" value="Save" id="Save" />
+    <div class="col-md-3">
+        @Html.ActionLink("Return To List", "SalesList")
+    </div>
+    @*@Html.HiddenFor(x => x.MSaleid)*@
+</div>
+
+@section Scripts
+    {
+
+    <script type="text/javascript">
+
+
+        $('#InvoiceNum').change(function () {
+
+            debugger;
+
+            var id = $(this).val();
+
+            if ($('#InvoiceNum option:selected').text() != '---Select---') {
+                $('#AddPurchaseReturn tbody .select-row2 ').each(function (index, ele)
+                {
+                    $(this).remove();
+                })
+                $.ajax({
+                    type: 'Get',
+                    url: '/Purchase/PurchaseReturn?id=' + id,
+                    contentType: 'application/jsonCharset=utf-8',
+                    success: function (result) {
+                        debugger;
+
+                        var jsonobj = $.parseJSON(result)
+
+                        console.log(jsonobj);
+
+                        var Jsondate = jsonobj.MPurDate;
+
+
+
+                        var mydate = new Date(parseInt(Jsondate.substr(6)));
+
+                        console.log(mydate);
+
+                        $('#PurchaseReturnDate').val(mydate.toLocaleDateString());
+
+                        var accno = jsonobj.Accno;
+                        var Amt = jsonobj.Amount;
+                        $('#Accno').val(accno);
+                        $('#PurchaseTotal').val(Amt);
+
+                        // $('#Accno[value = 00311').attr("selected", true);
+
+                        $.each(jsonobj.ItemChild, function (i)
+                        {
+                            var templateString = '<tr class="select-row2"><td><input type="text" class="form-control" value="' + jsonobj.ItemChild[i].ItemName + '"></td><td><input type="text" class="form-control" value="' + jsonobj.ItemChild[i].ItemQty + '"></td><td><input type="text" class="form-control" value="' + jsonobj.ItemChild[i].ItemCost + '"></td><td><input type="text" class="form-control" value="' + jsonobj.ItemChild[i].ItemTotalAmount + '"></td><td><a style="width: 100%; height: 100%" class="delete2" id="AddItems"><i class="fas fa-trash -alt"></i></a>Delete</td><td><label style="visibility:hidden"> ' + jsonobj.ItemChild[i].ItemId + '</label></td><td><label style="visibility:hidden"> ' + jsonobj.ItemChild[i].MPurID + '</label></td><td><label style="visibility:hidden"> ' + jsonobj.ItemChild[i].DPurID + '</label></td></tr>';
+                            $('#body1').append(templateString);
+
+                        })
+
+                    },
+
+                })
+            }
+
+        })
+
+        var listdel1 = [];
+        var amt = "";
+        $('#AddPurchaseReturn tbody ').on('click', '.delete2', function () {
+
+            debugger;
+
+            $('#AddItem tbody .select-row2').each(function (index, ele) {
+                list1.push({
+                    "ItemQty": $(this).closest('tr').find('td').eq(1).find('input').val(),
+                    "ItemCost": $(this).closest('tr').find('td').eq(2).find('input').val(),
+                    "ItemTotalAmount": $(this).closest('tr').find('td').eq(3).find('input').val(),
+                    "ItemId": $(this).find('td:eq(5)').text(),
+                    "DpurId": $(this).closest('tr').find('td').eq(4).find('input').val()
+                })
+                $(this).closest('tr').remove();
+            })
+
+            listdel1.push({
+                "ItemQty": $(this).closest('tr').find('td').eq('1').find('input').val(),
+                "ItemCost": $(this).closest('tr').find('td').eq('2').find('input').val(),
+                "ItemId": $(this).closest('tr').find('td:eq(5)').text(),
+                "ItemTotalAmount": $(this).closest('tr').find('td').eq('3').find('input').val(),
+            })
+
+            amt = $('#PurchaseTotal').val();
+            $(this).closest('tr').remove();
+            addcal();
+
+        });
+
+        function addcal()
+        {
+            debugger;
+            var total = 0;
+            var PreAmt = parseFloat($('#PreBalance').val());
+            var Grandtotal = 0;
+
+            $('#AddPurchaseReturn tbody .select-row2 ').each(function (index, ele) {
+                total += parseFloat($(this).closest('tr').find('td').eq('3').find('input').val());
+            })
+
+            var ftotal = parseFloat(total);
+
+
+            $('#PurchaseTotal').val(ftotal.toFixed(2))
+
+
+        }
+
+        function Clear()
+        {
+            $('input[type="text"]').val('')
+            $('select').each(function () { $(this).val('') }
+            )
+
+            $('#AddPurchaseReturn tbody .select-row2 ').each(function (index, ele)
+            {
+                $(this).remove();
+            })
+        }
+
+
+        $(document).ready(function () {
+
+        $('#PurchaseReturnDate').datepicker({
+            format: "dd-MM-yyyy",
+            orientation: "bottom auto",
+            autoclose: true
+        });
+
+        })
+
+    </script>
+}

@@ -1,0 +1,10 @@
+﻿@model List<MealBoxes.Models.WareHouse>
+@foreach (var item in Model)
+{
+<tr id="row">
+    <td>@(item.WarHouseName != null ? item.WarHouseName : null)</td>
+    <td>@(item.CityName != null ? item.CityName : null)</td>
+    <td>@(item.AreaLength != null ? item.AreaLength : null)</td>
+    <td><button style="width:100%; height:100%;" type="button" onclick="Edit(this.id)" id="head" class="btn btn-success " value="@item.WarHouseId">Edit</button></td>
+</tr>
+}

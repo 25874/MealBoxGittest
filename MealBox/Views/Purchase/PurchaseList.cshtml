@@ -1,0 +1,66 @@
+﻿@model List<MealBox.Models.PurchaseModel>
+
+@{
+    ViewBag.Title = "PurchaseList";
+}
+
+<h2>PurchaseList</h2>
+
+
+@section Styles {
+
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+
+}
+
+<div class="card-header">
+
+    <a style="float:right;" type="button" class="btn btn-success" href="@Url.Action("AddPurchase","Purchase" )">Add Purchase</a>
+
+</div>
+
+<table id="mytable" class="table-bordered ">
+    <thead>
+        <tr>
+            <th style="text-align:center">Purchase No</th>
+            <th style="text-align:center">Supplier Name</th>
+            <th style="text-align:center">Purchase Date</th>
+            <th style="text-align:center">Purchase Quantity</th>
+            <th style="text-align:center">Purchase Product</th>
+            <th style="text-align:center">Inventory Effect</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>    
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.PurNo</td>
+            <td>@item.VndrNam</td>
+            <td>@item.MPurDate.Value.ToShortDateString()</td>
+            <td>@item.Qty</td>
+            <td>@item.ProductName</td>
+            <td>@(item.Effected == true ? "Yes" : "No")</td>
+            <td><a style="width:100%; height:100%" class="btn btn-success" href="@Url.Action("AddPurchase","Purchase", new { id = @item.MPurID})"><span>Edit</span></a></td>
+            <td><a style="width:100%; height:100%" href="@Url.Action("PurchaseInvoice","Purchase", new { id = @item.MPurID})"><span>Invoice</span></a></td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts
+    {
+
+    <script src="~/plugins/datatables-autofill/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $('#mytable').DataTable();
+        });
+
+
+    </script>
+
+}

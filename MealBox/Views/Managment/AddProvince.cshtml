@@ -1,0 +1,111 @@
+﻿@model MealBox.Models.AreaModel
+
+@{
+    ViewBag.Title = "AddCountry";
+}
+
+<h2>Add Province</h2>
+
+
+
+@section Styles {
+
+    <link href="~/Scripts/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+    <style>
+        span.error {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+
+        tr.error {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+
+}
+
+@using (Html.BeginForm("AddItem", "Master", FormMethod.Post, new { @id = "AddItem" }))
+{
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.ProvinceName)
+            @Html.TextBoxFor(x => x.ProvinceName, new { @class = "form-control", @placeholder = "Enter Item Name" })
+            <span class="error"> Please Write Country Name...</span>
+            @Html.HiddenFor(x => x.PrivinceId)
+        </div>
+    </div>
+    <div class="row">
+        <input type="button" class="btn btn-success" value="Save" id="Save" />
+        <div class="col-md-3">
+            @Html.ActionLink("Return To List", "ProvinceList")
+        </div>
+    </div>
+}
+
+
+@section
+       scripts
+        {
+    <script src="~/dist/js/sweetalert.js"></script>
+    <script type="text/javascript">
+        $('#Save').click(function () {
+            debugger;
+            var isallvalid = true;
+            isallvalid = Validate();
+            if (isallvalid) {
+                var obj = {
+                    "ProvinceName": $('#ProvinceName').val(),
+                    "PrivinceId": $('#PrivinceId').val()
+                }
+                $.ajax({
+                    type: 'Post',
+                    url: '/Managment/AddProvince',
+                    contentType: "application/json?charset=utf-8",
+                    data: JSON.stringify(obj),
+                    success: function (data) {
+                        Clear();
+                        swal("", "Data Has Been Save!", "success");
+
+                    },
+                })
+            }
+        })
+
+        $('#ProvinceName').change(function () {
+            if ($('#ProvinceName').val().trim() != "") {
+                $('#ProvinceName').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#ProvinceName').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        function Clear() {
+            $('input[type="text"]').val("");
+            $('select').each(function () {
+                $(this).val('')
+            })
+        }
+
+
+        function Validate() {
+            debugger;
+            var isallvalid = true;
+            if ($('#ProvinceName').val() == "") {
+                $('#ProvinceName').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#ProvinceName').siblings('span.error').css('visibility', 'hidden')
+            }
+            return isallvalid;
+        }
+
+    </script>
+}
+
+
+
