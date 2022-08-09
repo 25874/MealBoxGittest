@@ -1,0 +1,150 @@
+﻿@model MealBoxCloud.Models.DSRModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width" />
+    <title>View</title>
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+</head>
+<body>
+        <div class="container">
+            <div style="float:left; margin-top:30px;">
+                <h2 style="color:white">Order Booking</h2>
+                <br>
+                @foreach (var item in Model.DsrInvoice.Select(s => new { s.Mdsr }).Distinct())
+                {
+                    foreach (var Item2 in Model.DsrInvoice.Where(w => w.Mdsr == item.Mdsr).Select(s => new { SalesManN = s.SalesManName, CustomerName = s.CustomerName, CustomerNo = s.CustPhone, CustomerId = s.CustomerID }).Distinct())
+                    {
+                        <label>Customer No </label> @Item2.CustomerNo
+                        <br />
+                        <label>Customer ID</label> @Item2.CustomerId
+                        <br />
+                        <label>Customer Name</label> @Item2.CustomerName
+                    }
+                }
+            </div>
+            <div style="float: right; margin-top:30px;">
+                <h2 style="color:royalblue">Order Booking</h2>
+                <br/>
+                @foreach (var item3 in Model.DsrInvoice.Select(s => new { s.Mdsr }).Distinct())
+                {
+                    foreach (var Item4 in Model.DsrInvoice.Where(w => w.Mdsr == item3.Mdsr).Select(s => new { Mdsr = s.Mdsr, dsrDate = s.dsrdat ,CustomerId = s.CustomerID , BookerName = s.BookerName, }).Distinct())
+                    {
+                        <label>Date</label><textbox>@Item4.dsrDate.Value.ToString("dddd, dd MMMM yyyy")</textbox>
+                        <br />
+                        <label>Dsr No#</label>@Item4.Mdsr
+                        <br />
+                        <label>BookerName</label> @Item4.BookerName
+                    }
+                }
+            </div>
+            <table id="DsrInvoice" class="table table-striped" border="1">
+                <thead>
+                    <tr style="background-color:royalblue">
+                        <th style="text-align:center; color:white ">Description</th>
+                        <th style="text-align: center; color:white ">Qty</th>
+                        <th style="text-align: center; color: white ">UnitPrice</th>
+                        <th style="text-align: center; color: white ">Sale Return</th>
+                        <th style="text-align: center; color: white ">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item5 in Model.DsrInvoice)
+                    { 
+                        <tr class="select-row2">
+                            <td>@item5.ProductName</td>
+                            <td>@item5.Qty</td>
+                            <td>@item5.salrat</td>
+                            <td>@item5.Amt</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>
+                            Total Product is <label id="TotProd"></label>
+                        </td>
+                        <td>
+                            Total Quantity is <label id="Totqty"></label>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div style="float:left">
+                <table>
+                    <thead style="background-color:royalblue">
+                        <tr>
+                            <th style="color: white">Other Commets</th>
+                        </tr>
+                        @foreach (var item6 in Model.DsrInvoice.Select(s => new { s.Mdsr }).Distinct())
+                        {
+                            foreach (var Item7 in Model.DsrInvoice.Where(w => w.Mdsr == item6.Mdsr).Select(s => new { DsrRemarks = s.DsrRemarks }).Distinct())
+                            {
+                                <tr>
+                                    <td><input type="text" readonly="readonly" value="@Item7.DsrRemarks" /></td>
+                                </tr>
+                            }
+                        }
+                            </thead>
+                    <tbody>
+                        
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div style="float:right">
+                <table>
+                    <tr>
+                        <td>Total Amount</td>
+                        <td><input type="text" class="form-control" readonly="readonly" id="TotAmt" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/adminlte.min.js"></script>
+</body>
+
+<script type="text/javascript">
+
+    $(document).ready(function ()
+    {
+        var RowCount = $('#DsrInvoice >tbody > .select-row2').length;
+        console.log(RowCount);
+        $('#TotProd').text(RowCount);
+
+        var total = 0;
+        $('#DsrInvoice tbody .select-row2 ').each(function (index, ele)
+        {
+            total += parseFloat($(this).find('td:eq(1)').text());
+        })
+        $('#Totqty').text(total);
+
+        var total2 = 0;
+        $('#DsrInvoice tbody .select-row2 ').each(function (index, ele)
+        {
+            total2 += parseFloat($(this).find('td:eq(3)').text());
+        })
+
+        $('#TotAmt').val(total2);
+        console.log(total2);
+
+    })
+
+</script>
+
+</html>

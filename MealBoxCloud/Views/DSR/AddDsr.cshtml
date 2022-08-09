@@ -1,0 +1,766 @@
+﻿@model MealBoxCloud.Models.DSRModel
+
+@{
+    ViewBag.Title = "AddDsr";
+    var id2 =  Convert.ToInt32(@Session["UserTypeId"]);
+    var id3 = Convert.ToInt32(@Session["EmployeeId"]);
+}
+
+@section Styles
+    {
+  
+    <style>
+        span.error 
+        {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+
+        tr.er 
+        {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+    <link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+
+}
+
+
+<h2>AddDsr</h2>
+
+<div class="col-md-3">
+    @Html.LabelFor(x => x.DsrDate)
+    @Html.TextBoxFor(x => x.DsrDate, Model.DsrDate.GetValueOrDefault().ToString("dd-MMM-yyyy"), new { @class = "form-control" })
+    <span class="error">Please Insert Dsr Date</span>
+</div>
+
+@if (id2 == 2 || id2 ==1)
+{
+    <dib class="row">
+        <div class="col-md-3">
+            @Html.LabelFor(x => x.areaid)
+            @Html.DropDownListFor(x => x.areaid, null, "---Select---", new { @class = "form-control select2" })
+            <span class="error">Please Select Area Name..</span>
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(x => x.CustomerID)
+            @Html.DropDownListFor(x => x.CustomerID, null, "---Select---", new { @class = "form-control select2" })
+            <span class="error">Please Select Customer Name..</span>
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(x => x.BookeriD)
+            @Html.DropDownListFor(x => x.BookeriD, null, "---Select---", new { @class = "form-control" })
+            <span class="error">Please Select Salesman Name..</span>
+        </div>
+        <div class="col-md-3">
+            @Html.LabelFor(x => x.Paytype)
+            @Html.DropDownList("Paytype", new List<SelectListItem>
+           {
+             new SelectListItem {Text="---Select---", Value = "0"},
+             new SelectListItem {Text="Cash",Value = "11"},
+             new SelectListItem {Text="Bank",Value = "12"}
+           }, new { @class = "form-control" })
+            <span class="error">Please Select Payment Type...</span>
+        </div>
+    </dib>
+}
+
+<div class="row">
+    <div class="col-md-2">
+        @Html.LabelFor(x => x.ProductID)
+                 @Html.DropDownListFor(x => x.ProductID, null, "---Select---", new { @class = "form-control ProductID select2 " })
+        <span class="error">Please Select Product Name..</span>
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(x => x.untid)
+        @Html.DropDownListFor(x => x.untid, null, "---Select---", new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(x => x.Qty)
+        @Html.TextBoxFor(x => x.Qty, new { @class = "form-control CAl " })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(x => x.salrat)
+        @Html.TextBoxFor(x => x.salrat, new { @class = "form-control CAl " })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(x => x.Amt)
+        @Html.TextBoxFor(x => x.Amt, new { @class = "form-control " })
+    </div>
+    <div class="col-md-2">
+        <label>Recovery</label>
+        @Html.TextBoxFor(x => x.furout, new { @class = "form-control" })
+        <span class="error">Please Insert Amount Name..</span>
+    </div>
+</div>
+<div class="row">
+    <button type="button" class="btn btn-success" id="AddItems">Add</button>
+</div>
+
+<table id="DsrItem" class="table-bordered container-fluid" style="margin-top:70px;">
+    <thead>
+        <tr>
+            <th style="text-align:center; background-color:aquamarine">
+                Product
+            </th>
+            <th style="text-align: center; background-color: aquamarine">
+                Unit
+            </th>
+            <th style="text-align: center; background-color: aquamarine">
+                Qty
+            </th>
+            <th style="text-align: center; background-color: aquamarine">
+                SalRate
+            </th>
+            <th style="text-align: center; background-color: aquamarine">
+                salrturn
+            </th>
+            <th style="text-align: center; background-color: aquamarine">
+                Amount
+            </th>
+            <th style="text-align: center; background-color: aquamarine">
+                Action
+            </th>
+            <th></th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody id="body1">
+        @if (Model.dsrChild != null)
+        {
+            foreach (var item in Model.dsrChild)
+            {
+                <tr class="select-row2">
+                    <td class="deductionTypeName">
+                        <input type="text" value=" @item.ChildProductName"  style="/*background-color: darkgray;*/ font-weight: bold;" class="form-control read" />
+                    </td>
+                    <td class="DeductionAmount">
+                        <input type="text" value="@item.ChildUnitName"  style="/*background-color: darkgray;*/ font-weight: bold; " class="form-control read" />
+                    </td>
+                    <td class="DeductionDate">
+                        <input type="text" value="@item.ChildQty" style="/*background-color: darkgray;*/ font-weight: bold;" class="form-control read qtycal" />
+                    </td>
+                    <td class="DeductionDate">
+                        <input type="text" value="@item.Childsalrat" style="/*background-color: darkgray;*/ font-weight: bold;" class="form-control read" />
+                    </td>
+                    <td class="DeductionDate">
+                        <input type="text" value="@item.Childsalrturn" style="/*background-color: darkgray;*/ font-weight: bold;" class="form-control read2" />
+                    </td>
+                    <td class="DeductionDate">
+                        <input type="text" value="@item.ChildAmt" style="/*background-color: darkgray;*/ font-weight: bold;" class="form-control read" />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger cheak delete2 " value="">Delete</button>
+                    </td>
+                    <td>
+                        <label style="visibility:hidden">@item.Childuntid</label>
+                    </td>
+                    <td>
+                        <label style="visibility:hidden">@item.ChildProductID</label>
+                    </td>
+                    <td>
+                        <input type="hidden"  value="@item.Ddsridchild"/>   
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div class="row" style="margin-top:100px;">
+
+    @*<div class="col-md-3">
+            @Html.LabelFor(x => x.TotalAfterDiscount)
+            @Html.TextBoxFor(x => x.TotalAfterDiscount, new { @class = "form-control" })
+        </div>*@
+    <div class="col-md-3">
+        @Html.LabelFor(x => x.ttlamt)
+        @Html.TextBoxFor(x => x.ttlamt, new { @class = "form-control" })
+    </div>
+</div>
+<div class="row">
+    @Html.LabelFor(x => x.dsrrmk)
+    @Html.TextAreaFor(x => x.dsrrmk, new { @class = "form-control" })
+    <input type="hidden" value=@Session["UserTypeId"] id="Session" />
+    <input type="hidden" value=@Session["EmployeeId"] id="EmployeeId"/>
+    @Html.HiddenFor(x=> x.DsriD)
+    @*<input type="hidden" value=@ViewBag.ViewBag.MdsrId id="MdsrId" />*@
+</div>
+
+<div class="row" style="margin-top:20px;">
+    <input type="button" class="btn btn-success" value="Save" id="Save" />
+    <div class="col-md-3">
+        @Html.ActionLink("Return To List", "DsrList")
+    </div>
+</div>
+
+@section Scripts
+    {
+
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+    <script src="~/dist/js/sweetalert.js"></script>
+    <script type="text/javascript">
+
+
+
+        $('#DsrItem tbody .select-row2').on('keyup', '.qtycal', function () {
+            debugger;
+            var qty = $(this).closest('tr').find('td').eq(2).find('input').val();
+            var Price = $(this).closest('tr').find('td').eq(3).find('input').val();
+            var res = "";
+            if (qty != "") {
+                res = qty * Price;
+                $(this).closest('tr').find('td').eq(5).find('input').val(res);
+                addcal();
+            }
+
+        });
+
+
+
+        $(document).ready(function ()
+        {
+            debugger;
+
+            $('.select2').select2();
+
+            $('#DsrDate').datepicker({
+                format: "dd-MM-yyyy",
+                orientation: "bottom auto",
+                autoclose: true
+            });
+
+            var EmployeeType = $('#Session').val();
+
+            if (EmployeeType == 2)
+            {
+                $('#furout').attr('disabled', true);
+
+                $('#dsrrmk').attr('disabled', true);
+
+                $('.read2').attr('disabled', true);
+            }
+            else if (EmployeeType == 3)
+            {
+                $('#Qty').attr('disabled', true);
+                $('#ProductID').attr('disabled', true);
+                $('#DsrDate').attr('disabled', true);
+                $('#salrat').attr('disabled', true);
+                $('#Amt').attr('disabled', true);
+                $('#untid').attr('disabled', true);
+                $('#AddItems').attr('disabled', true);
+                $('.read').attr('disabled', true);
+                $('.delete2').attr('disabled', true);
+            }
+
+        })
+
+        $('#areaid').change(function () {
+            var id = $(this).val();
+
+            debugger;
+            if ($('#areaid option:selected').text() == "---Select---")
+            {
+               var fill = '<option value="-1" >Select</option>'
+               /*$('#EmployeeId').html(fill)*/
+               /*$('#EmployeeTypeId').siblings('span.error').css('visibility', 'visible')*/
+           }
+           else {
+                $.ajax({
+                    type: 'Get',
+                    url: '@Url.Action("Customerddl", "DSR")' ,
+                    contentType: "application/json?charset=utf-8",
+                    data: { id: id },
+                    success: function (result) {
+                        console.log(result);
+                        debugger;
+                        var fill = '<option value="-1" >---Select---</option>'
+                        for (var i = 0; i < result.length; i++) {
+                            fill += '<option value="' + result[i].CustomerId + '">' + result[i].CustomerName + '</option>';
+                        }
+                        $('#CustomerID').html(fill)
+                    }
+                })
+            }
+        })
+
+
+
+
+        $("#ProductID").change(function ()
+        {
+
+            if ($('#ProductID option:selected').text() != "---Select---")
+            {
+                var id = $(this).val();
+                $.ajax({
+                    url: '/Product/Itemprice?id=' + id,
+                    method: 'Get',
+                    contentType: 'application/jsonCharset=utf-8',
+                    success: function (data) {
+                        /*console.log(data);*/
+                        $('#salrat').val(data.SalePrice);
+                        $('#Cost').prop('readonly', true);
+                        $('#untid').val(data.UnitId).select();
+                    }
+                })
+            }
+        })
+
+        $(".ProductID").change(function () {
+            debugger;
+
+            if ($('#ProductID option:selected').text() != "---Select---")
+            {
+                $('#ProductID').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#ProductID').siblings('span.error').css('visibility', 'visible')
+            }
+
+            if ($('#ProductID option:selected').text() != "---Select---") {
+                var id = $(this).val();
+                $.ajax({
+                    url: '/Inventory/GetQuantityAvail?id=' + id,
+                    method: 'Get',
+                    contentType: 'application/jsonCharset=utf-8',
+                    success: function (data)
+                    {
+                        console.log(data);
+                        var quatity = data.RemainingQuantity;
+                        var Product = $('#ProductID option:selected').text();
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": 0,
+                            "extendedTimeOut": 0,
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "tapToDismiss": false
+                        }
+                        toastr["info"]("<div><input class='input - small' value='  " + Product + ' Quantity is ' + quatity + "'/><br /><button type='button' class='btn clear'></button></div>")
+
+                    }
+                })
+            }
+        })
+
+        function addcal() {
+            debugger;
+            var total = 0;
+
+            var DiscountFormula = parseFloat($('#Discount').val()) / 100;
+
+            $('#DsrItem tbody .select-row2 ').each(function (index, ele)
+            {
+                total += parseFloat($(this).closest('tr').find('td').eq(5).find('input').val());
+            })
+
+            var ftotal = parseFloat(total);
+
+            if (!isNaN(ftotal))
+            {
+                //var Discount = ftotal * DiscountFormula;
+
+                //$('#TotalAfterDiscount').val(Discount.toFixed(2))
+
+                //var DiscountAmount = ftotal - Discount;
+
+                $('#ttlamt').val(ftotal.toFixed(2))
+            }
+            else {
+                /*   $('#TotalAfterDiscount').val('');*/
+                $('#ttlamt').val('');
+            }
+        }
+
+        
+
+        $("#CustomerID").change(function ()
+        {
+            debugger;
+            if($('#CustomerID option:selected').text() != "---Select---")
+            {
+
+                var id = $(this).val();
+                $.ajax({
+                    url: '/Managment/SaleDis?id=' + id,
+                    method: 'Get',
+                    contentType: 'application/jsonCharset=utf-8',
+                    success: function (data)
+                    {
+                        //console.log(data);
+                        $('#Discount').val(data.SaleDes);
+
+                    }
+                })
+            }
+
+        })
+
+
+
+
+        $('.CAl').keyup(function ()
+        {
+            debugger;
+            var Qty = $('#Qty').val();
+            if (Qty != "" && $('#ProductID option:selected').text() != "---Select---")
+            {
+
+                var Price = $('#salrat').val();
+                var Total = parseFloat(Qty) * parseFloat(Price);
+                ////  Total
+                if (isNaN(Total))
+                {
+                    $('#Amt').val('')
+                    /*$('#csh_amt').val(parseFloat(Total))*/
+                }
+                else {
+                    $('#Amt').val(parseFloat(Total))
+                }
+            }
+            else
+            {
+                ////  Total
+                $('#Amt').val('');
+                $('#csh_amt').val('');
+            }
+        });
+
+
+
+        function Clear()
+        {
+
+            $('input[type="text"]').val('')
+            $('select').each(function ()
+            {
+                $(this).val('')
+            }
+            )
+            $('#Effected').prop('checked', false);
+        }
+
+
+
+
+        $('#AddItems').click(function ()
+        {
+
+            if ($('#ProductID option:selected').text() != "---Select---")
+            {
+                var ProductID = $('#ProductID').val();
+                var ProductIDname = $('#ProductID option:selected').text();
+                var untid = $('#untid').val();
+                var untidName = $('#untid option:selected').text()
+                var saleper = $('#saleper').val();
+                var Qty = $('#Qty').val();
+                var salrat = $('#salrat').val();
+                /*var salrturn = $('#salrturn').val();*/
+                var Amt = $('#Amt').val();
+                ////  Total
+                var Amount = $('#Amount').val();
+                var DpurIdadd = $('#DpurHid').val(); 0                                                                                                                                                //  1                                                                                                                                      2                                                                                                                                      3////  Total                                                                                                                                                                                                                                                              5                                                                                                  6                                                   7                                                           8
+
+                var row = "<tr class='select-row2'><td width='15%'><input type class='form-control' style='background-color: darkgray; font-weight:bold;' value=' " + ProductIDname + "'></td><td width='15%'><input type='text' class='form-control' style='background-color: darkgray; font-weight:bold;'  value='  " + untidName + "'><td width='15%'><input class='form-control' style='background-color: darkgray; font-weight:bold;' type='text' value=' " + Qty + "'></td><td width='15%'><input class='form-control' style='background-color: darkgray; font-weight:bold;' type='text' value=' " + salrat + "'></td><td width='15%'><input class='form-control' style='background-color: darkgray; font-weight:bold; ' type='text' value=''></td><td width='15%'><input style='background-color: darkgray; font-weight:bold; ' class='form-control' type='text' value=' " + Amt + "'></td><td width='15%'><input  type='button' class='btn btn-danger remove delete2'; value='Delete'><td><label style='visibility:hidden'> " + untid + "</label><td><label style='visibility:hidden '> " + ProductID + "</label></td></td><td><input type='hidden'  class='form-control AlwId ' value='" + DpurIdadd + "'></td></tr>"
+                $('#body1').append(row);
+                $('#ProductID').prop('selectedIndex', 0);
+                $('#untid').prop('selectedIndex', 0);
+                $('#salrat').val("")
+                $('#Qty').val("")
+                $('#Amt').val("")
+                addcal();
+            }
+            else
+            {
+                toastr.options.positionClass = "toast-bottom-full-width";
+                toastr.warning("Info Message", "SomeThing is Misssing");
+            }
+        })
+
+        function Clear()
+        {
+            $('input[type="text"]').val('')
+            $('select').each(function ()
+            {
+                $(this).val('')
+            }
+            )
+        }
+
+        $('#areaid').change(function ()
+        {
+            if ($('#areaid option:selected').text() != "---Select---")
+            {
+                $('#areaid').siblings('span.error').css('visibility', 'hidden')
+            }
+            else
+            {
+                $('#areaid').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#salrturn').change(function ()
+        {
+            if ($('#salrturn').val() != "")
+            {
+                $('#salrturn').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#salrturn').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#DsrDate').change(function ()
+        {
+            if ($('#DsrDate').val() != "")
+            {
+                $('#DsrDate').siblings('span.error').css('visibility', 'hidden')
+            }
+            else
+            {
+                $('#DsrDate').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+
+        $('#furout').change(function ()
+        {
+            if ($('#furout').val() != "") {
+                $('#furout').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#furout').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#DsrDate').change(function ()
+        {
+            if ($('#DsrDate').val() != "")
+            {
+                $('#DsrDate').siblings('span.error').css('visibility', 'hidden')
+            }
+            else
+            {
+                $('#DsrDate').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+
+        $('#CustomerID').change(function ()
+        {
+            if ($('#CustomerID option:selected').text() != "---Select---")
+            {
+                $('#CustomerID').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#CustomerID').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#BookeriD').change(function ()
+        {
+            if ($('#BookeriD option:selected').text() != "---Select---")
+            {
+                $('#BookeriD').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#BookeriD').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+
+        var listdel1 = [];
+
+        $('.delete2').click(function ()
+        {
+            debugger;
+
+            listdel1.push({
+                "Ddsriddelte": $(this).closest('tr').find('td').eq(9).find('input').val()
+            })
+
+
+            $(this).closest('tr').remove();
+            addcal();
+
+        })
+
+
+        $('#Save').click(function ()
+        {
+            debugger;
+            var isallvalid = true;
+            var list1 = [];
+            var obj = "";
+
+
+            if ($('#Session').val() == 2)
+            {
+                isallvalid = ValidateBooker();
+                if (isallvalid)
+                {
+
+                    $('#DsrItem tbody .select-row2').each(function (index, ele)
+                    {
+                        list1.push({
+                            "ChildProductID": $(this).find('td:eq(8)').text().trim(),
+                            "Childuntid": $(this).find('td:eq(7)').text().trim(),
+                            "ChildQty": $(this).closest('tr').find('td').eq(2).find('input').val(),
+                            "Childsalrat": $(this).closest('tr').find('td').eq(3).find('input').val(),
+                            "Childsalrturn": $(this).closest('tr').find('td').eq(4).find('input').val(),
+                            "ChildAmt": $(this).closest('tr').find('td').eq(5).find('input').val(),
+                            "Ddsridchild": $(this).closest('tr').find('td').eq(9).find('input').val()
+                        })
+
+                        $(this).closest('tr').remove();
+                    })
+
+                    obj =
+                    {
+                        "areaid": $('#areaid').val(),
+                        "CustomerID": $('#CustomerID').val(),
+                        "Paytype": $('#Paytype').val(),
+                        "DsrDate": $('#DsrDate').val(),
+                        "ttlamt": $('#ttlamt').val(),
+                        "BookeriD": $('#BookeriD').val(),
+                        "DsriD": $('#DsriD').val(),
+                        "dsrChild": list1,
+                        "deleteItemChildren": listdel1
+                    }
+                }
+            }
+            else if ($('#Session').val() == 3)
+            {
+                isallvalid = SalesMan();
+                if (isallvalid)
+                {
+                    $('#DsrItem tbody .select-row2').each(function (index, ele)
+                    {
+                        list1.push({
+                            "ChildProductID": $(this).find('td:eq(8)').text().trim(),
+                            "Childuntid": $(this).find('td:eq(7)').text().trim(),
+                            "ChildQty": $(this).closest('tr').find('td').eq(2).find('input').val(),
+                            "Childsalrat": $(this).closest('tr').find('td').eq(3).find('input').val(),
+                            "Childsalrturn": $(this).closest('tr').find('td').eq(4).find('input').val(),
+                            "ChildAmt": $(this).closest('tr').find('td').eq(5).find('input').val(),
+                            "Ddsridchild": $(this).closest('tr').find('td').eq(9).find('input').val()
+                        })
+                    })
+
+
+                    obj =
+                    {
+                        "Salesman": $('#EmployeeId').val(),
+                        "furout": $('#furout').val(),
+                        "DsriD": $('#DsriD').val(),
+                        "DsrDate": $('#DsrDate').val(),
+                        "dsrrmk": $('#dsrrmk').val(),
+                        "dsrChild": list1,
+                        "deleteItemChildren": listdel1
+                    }
+                }
+            }
+            if(isallvalid)
+            {
+                $.ajax({
+                    type: 'Post',
+                    url: '/DSR/AddDsr',
+                    contentType: "application/json?charset=utf-8",
+                    data: JSON.stringify(obj),
+                    success: function (data) {
+                        Clear();
+                        toastr.options.positionClass = "toast-bottom-full-width";
+                        toastr.success("", "Data Has Been Save");
+
+                    },
+                })
+
+            }
+        })
+        function SalesMan()
+        {
+            debugger;
+            var isallvalid = true;
+            if ($('#furout').val() == "") {
+                $('#furout').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#furout').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#salrturn').val() == "") {
+                $('#salrturn').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#salrturn').siblings('span.error').css('visibility', 'hidden')
+            }
+            return isallvalid;
+        }
+
+        function ValidateBooker()
+        {
+
+            var isallvalid = true;
+
+            if ($('#areaid option:selected').text() == "---Select---")
+            {
+                $('#areaid').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#areaid').siblings('span.error').css('visibility', 'hidden')
+            }
+
+            if ($('#CustomerID option:selected').text() == "---Select---") {
+                $('#CustomerID').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#CustomerID').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#BookeriD option:selected').text() == "---Select---") {
+                $('#BookeriD').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#BookeriD').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#DsrDate').val() == "") {
+                $('#DsrDate').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#DsrDate').siblings('span.error').css('visibility', 'hidden')
+            }
+
+            return isallvalid;
+        }
+
+
+        function Clear()
+        {
+            $('input[type="text"]').val("");
+            $('select').each(function ()
+            {
+                $(this).val('')
+            }
+           )
+        }
+
+
+    </script>
+}

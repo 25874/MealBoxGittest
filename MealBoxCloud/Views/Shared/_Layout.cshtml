@@ -294,6 +294,67 @@
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon -alt"></i>
                                 <p>
+                                    Scm
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="@Url.Action("AddDsr", "DSR", new { Empid = Session["EmployeeId"] })" class="nav-link active">
+                                        <i class="far fa-money-bill-alt"></i>
+                                        <p>Add DSR</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        
+                            
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="@Url.Action("VerifyDsr", "DSR", new { Empid = Session["EmployeeId"] })" class="nav-link active">
+                                            <i class="far fa-money-bill-alt"></i>
+                                            <p>Verify DSR</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="@Url.Action("FinalDsr", "DSR", new { Empid = Session["EmployeeId"] })" class="nav-link active">
+                                            <i class="far fa-money-bill-alt"></i>
+                                            <p>Final DSR DSR</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon -alt"></i>
+                                <p>
+                                    Sticker Mangemet
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Index", "Sticker", new { Empid = Session["EmployeeId"] })" class="nav-link active">
+                                        <i class="far fa-money-bill-alt"></i>
+                                        <p>Retail Sticker</p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Index", "Sticker", new { Empid = Session["EmployeeId"] })" class="nav-link active">
+                                        <i class="far fa-money-bill-alt"></i>
+                                        <p>Sticker</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon -alt"></i>
+                                <p>
                                     Account Mangemet
                                     <i class="right fas fa-angle-left"></i>
                                 </p>

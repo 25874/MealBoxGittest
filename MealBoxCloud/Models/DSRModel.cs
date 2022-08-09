@@ -15,6 +15,8 @@ namespace MealBoxCloud.Models
         public ICollection<VerifyBooking_Result> verifyBooking_Results { get; set; }
 
         public ICollection<ViewFinalDsr_Result> ViewFinalDsr_ { get; set; }
+
+
         public Nullable<int> CustomerID { get; set;}
         public Nullable<int> Salesman { get; set;}
         public Nullable<int> areaid { get; set;}

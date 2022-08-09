@@ -1,0 +1,67 @@
+﻿@model List<MealBoxCloud.Models.DSRModel> 
+@{
+    ViewBag.Title = "DsrList";
+
+    var id2 = Convert.ToInt32(@Session["UserTypeId"]);
+
+}
+
+<h2>DsrList</h2>
+
+@{
+    ViewBag.Title = "SalesList";
+
+}
+
+@section Styles {
+
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+
+}
+
+<div class="card-header">
+
+    <a style="float:right;" type="button" class="btn btn-success" href="@Url.Action("AddDsr","DSR")">Add Order</a>
+
+</div>
+
+<table id="mytable" class="table-bordered table-striped ">
+    <thead>
+        <tr>
+            <th style="text-align:center">Purchase Date</th>
+            <th style="text-align:center">Booker Name</th>
+            <th style="text-align:center">Customer Name</th>
+            <th style="text-align:center">Area Name</th>
+            
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.Purchasedate.Value.ToString("dd/MM/yyyy")</td>
+            <td>@item.BookerName</td>
+            <td>@item.CustomerName</td>
+            <td>@item.AreaName</td>
+            
+            <td><a style="width:100%; height:100%" class="btn btn-success" href="@Url.Action("AddDsr","DSR", new { id = @item.MdsrId})"><span>Edit</span></a></td>
+            <td><a style="width:100%; height:100%" href="@Url.Action("DsrView","DSR", new { id = @item.MdsrId})"><span>Dsr Invoice</span></a></td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts
+    {
+
+    <script src="~/plugins/datatables-autofill/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $('#mytable').DataTable();
+        });
+    </script>
+
+}

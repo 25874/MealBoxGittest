@@ -1815,6 +1815,7 @@
     <Compile Include="Class\Dal.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
+    <Compile Include="Controllers\DSRController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManagmentController.cs" />
@@ -1877,6 +1878,7 @@
     <Compile Include="Models\PurchaseModel.cs" />
     <Compile Include="Models\ReportModel.cs" />
     <Compile Include="Models\SalesModel.cs" />
+    <Compile Include="Models\StickerModel.cs" />
     <Compile Include="Models\SupplierModel.cs" />
     <Compile Include="Models\Transactionmodel.cs" />
     <Compile Include="Models\WareHouseModel.cs" />
@@ -1907,12 +1909,14 @@
     </Compile>
     <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\DashBoardService.cs" />
+    <Compile Include="Services\DSRServices.cs" />
     <Compile Include="Services\InventoryService.cs" />
     <Compile Include="Services\ManagmentService.cs" />
     <Compile Include="Services\ProductServices.cs" />
     <Compile Include="Services\PurchaseService.cs" />
     <Compile Include="Services\ReportService.cs" />
     <Compile Include="Services\SaleService.cs" />
+    <Compile Include="Services\StickerService.cs" />
     <Compile Include="Services\WareHouseService.cs" />
     <Compile Include="SP_BookingSheet_Result.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -2311,6 +2315,18 @@
     <Content Include="Views\Account\_SubHeadAccount.cshtml" />
     <Content Include="Views\Account\Transaction.cshtml" />
     <Content Include="Views\Sales\SaleReturn.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\DSR\AddDsr.cshtml" />
+    <Content Include="Views\DSR\BookingSheet.cshtml" />
+    <Content Include="Views\DSR\DsrList.cshtml" />
+    <Content Include="Views\DSR\DsrView.cshtml" />
+    <Content Include="Views\DSR\FinalDsr.cshtml" />
+    <Content Include="Views\DSR\VerifyBookingSheet.cshtml" />
+    <Content Include="Views\DSR\VerifyDsr.cshtml" />
+    <Content Include="Views\Sticker\Index.cshtml" />
+    <Content Include="Views\Sticker\StickerList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
