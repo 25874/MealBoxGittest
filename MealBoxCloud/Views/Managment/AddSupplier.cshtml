@@ -1,0 +1,353 @@
+﻿@model MealBoxCloud.Models.SupplierModel
+@{
+    ViewBag.Title = "AddSupplier";
+}
+
+@section Styles {
+
+    <link href="~/Scripts/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+    <link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+    <style>
+        span.error {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+
+        tr.error {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+
+}
+
+<h2>Enter Supplier</h2>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.suppliername)
+            @Html.TextBoxFor(x => x.suppliername, new { @class = "form-control"  })
+            <span class="error">Please Write Supplier Name..</span>
+            @Html.HiddenFor(x => x.supplierId)
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.contactperson)
+            @Html.TextBoxFor(x => x.contactperson, new { @class = "form-control" })
+            <span class="error">Please Write Contact Person...</span>
+            @Html.ValidationMessageFor(x => x.contactperson, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.BackUpContact)
+            @Html.TextBoxFor(x => x.BackUpContact, new { @class = "form-control num" })
+            <span class="error">Please Write BackUp Contact...</span>
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.City_)
+            @Html.DropDownListFor(x => x.City_, null, "---Select---", new { @class = "form-control" })
+            <span class="error">Please Select City...</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.phoneno)
+            @Html.TextBoxFor(x => x.phoneno, new { @class = "form-control num" })
+            <span class="error">Please Write PhoneNo...</span>
+            @Html.ValidationMessageFor(x => x.phoneno, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.mobile)
+            @Html.TextBoxFor(x => x.mobile, new { @class = "form-control num" })
+            <span class="error">Please Write Mobile No...</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.faxno)
+            @Html.TextBoxFor(x => x.faxno, new { @class = "form-control" })
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.postalcode)
+            @Html.TextBoxFor(x => x.postalcode, new { @class = "form-control" })
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.designation)
+            @Html.TextBoxFor(x => x.designation, new { @class = "form-control" })
+            <span class="error">Please Write Packets in Cartons...</span>
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.AddressOne)
+            @Html.TextBoxFor(x => x.AddressOne, new { @class = "form-control" })
+            <span class="error">Please Write Address One...</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.AddressTwo)
+            @Html.TextBoxFor(x => x.AddressTwo, new { @class = "form-control" })
+
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.CNIC)
+            @Html.TextBoxFor(x => x.CNIC, new { @class = "form-control num" })
+            @Html.ValidationMessageFor(x => x.CNIC, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Url)
+            @Html.TextBoxFor(x => x.Url, new { @class = "form-control" })
+
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.BusinessNature)
+            @Html.TextBoxFor(x => x.BusinessNature, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Email)
+            @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Previous Balance")
+            @Html.TextBoxFor(x => x.prebal, new { @class = "form-control num" })
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Limit)
+            @Html.TextBoxFor(x => x.Limit, new { @class = "form-control num" })
+        </div>
+    </div>
+    <div class="row" style="margin-top:20px;margin-left:10px;">
+        <input type="button" class="btn btn-success" value="Create" id="Save" />
+
+
+        <div class="col-md-3">
+
+            @Html.ActionLink("Return To List", "SupplierList")
+        </div>
+    </div>
+
+
+@section
+    scripts
+        {
+
+    @*<script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
+
+    <script src="~/dist/js/sweetalert.js"></script>
+    
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+
+            $(".num").keypress(function (e) {
+                debugger;
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    return false;
+                }
+            });
+
+
+        });
+
+
+        $('#Save').click(function () {
+            debugger;
+            var isallvalid = true;
+            isallvalid = Validate();
+            if (isallvalid) {
+
+                var obj = {
+                    "suppliername": $('#suppliername').val(),
+                    "supplierId": $('#supplierId').val(),
+                    "contactperson": $('#contactperson').val(),
+                    "BackUpContact": $('#BackUpContact').val(),
+                    "phoneno": $('#phoneno').val(),
+                    "mobile": $('#mobile').val(),
+                    "faxno": $('#faxno').val(),
+                    "postalcode": $('#postalcode').val(),
+                    "designation": $('#designation').val(),
+                    "AddressOne": $('#AddressOne').val(),
+                    "AddressOne": $('#AddressOne').val(),
+                    "AddressTwo": $('#AddressTwo').val(),
+                    "CNIC": $('#CNIC').val(),
+                    "BusinessNature": $('#BusinessNature').val(),
+                    "Email": $('#Email').val(),
+                    "prebal": $('#prebal').val(),
+                    "City_": $('#City_').val(),
+                    "Limit": $('#Limit').val()
+
+                }
+                $.ajax({
+                    type: 'Post',
+                    url: '/Managment/AddSupplier',
+                    contentType: "application/json?charset=utf-8",
+                    data: JSON.stringify(obj),
+                    success: function (data) {
+                        Clear();
+                        swal("", "Data Has Been Save", "success")
+                    },
+                })
+            }
+        })
+
+
+
+
+        $('#suppliername').change(function () {
+            if ($('#suppliername').val().trim() != "") {
+                $('#suppliername').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#suppliername').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#contactperson').change(function () {
+            if ($('#contactperson').val().trim() != "") {
+                $('#contactperson').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#contactperson').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#BackUpContact').change(function () {
+            if ($('#BackUpContact').val().trim() != "") {
+                $('#BackUpContact').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#BackUpContact').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#City_').change(function () {
+            if ($('#City_').val().trim() != "") {
+                $('#City_').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#City_').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#phoneno').change(function () {
+            if ($('#phoneno').val().trim() != "") {
+                $('#phoneno').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#phoneno').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#mobile').change(function () {
+            if ($('#mobile').val().trim() != "") {
+                $('#mobile').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#mobile').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#AddressOne').change(function () {
+            if ($('#AddressOne').val().trim() != "") {
+                $('#AddressOne').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#mobile').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#City_').change(function () {
+            if ($('#City_ option:selected').text() == "---Select---") {
+                $('#City_').siblings('span.error').css('visibility', 'visible')
+            }
+            else {
+                $('#City_').siblings('span.error').css('visibility', 'hidden')
+            }
+        })
+
+        function Clear() {
+
+            $('Input[type = "text"]').val("");
+            $('select').each(function () { $(this).val('') })
+        }
+
+        function Validate() {
+            debugger;
+            var isallvalid = true;
+            if ($('#suppliername').val().trim() == "") {
+                $('#suppliername').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#suppliername').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#contactperson').val().trim() == "") {
+                $('#contactperson').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#contactperson').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#BackUpContact').val().trim() == "") {
+                $('#BackUpContact').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#BackUpContact').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#City_ option:selected').text() == "---Select---") {
+                $('#City_').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#City_').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#City_ option:selected').text() == "---Select---") {
+                $('#City_').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#City_').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#phoneno').val().trim() == "") {
+                $('#phoneno').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#phoneno').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#mobile').val().trim() == "") {
+                $('#mobile').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#mobile').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#AddressOne').val().trim() == "") {
+                $('#AddressOne').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#AddressOne').siblings('span.error').css('visibility', 'hidden')
+            }
+            return isallvalid;
+        }
+    </script>
+
+}

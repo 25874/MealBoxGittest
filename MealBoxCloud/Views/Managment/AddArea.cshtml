@@ -1,0 +1,201 @@
+﻿@model MealBoxCloud.Models.AreaModel
+@{
+    ViewBag.Title = "Area";
+}
+
+@section Styles {
+
+    <link href="~/Scripts/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+    
+    <link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+    <style>
+        span.error
+        {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+
+        tr.error {
+
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+
+}
+
+<h2>Enter Area</h2>
+
+@using (Html.BeginForm("AddArea", "Managment", FormMethod.Post, new { @id = "AddSupplier" }))
+{
+<div class="row">
+    <div class="col-md-6">
+        @Html.Label("Province")
+        @Html.DropDownListFor(x => x.ProvinceIdFk, null, "---Select---", new { @class = "form-control" })
+        <span class="error">Please Write Provice Name..</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        @Html.Label("City")
+        @Html.DropDownListFor(x => x.CityIdFk, null, "---Select---", new { @class = "form-control" })
+        <span class="error">Please Select City Name..</span>
+    </div>
+</div>  
+    <div class="row">
+        <div class="col-md-6">
+            @Html.Label("Area")
+            @Html.TextBoxFor(x => x.area_, new { @class = "form-control" })
+            <span class="error">Please Write Area Name..</span>
+            @Html.HiddenFor(x => x.areaid)
+        </div>
+    </div>
+    <div class="row" style="margin-top:30px;">
+        <input type="button" class="btn btn-success" value="Save" id="Save" />
+        <div class="col-md-3">
+            @Html.ActionLink("Return To List", "AreaList")
+        </div>
+    </div>
+}
+
+@section
+    scripts
+
+    {
+    <script src="~/dist/js/sweetalert.js"></script>
+    <script type="text/javascript">
+
+        $('#Save').click(function ()
+        {
+            debugger;
+            var isallvalid = true;
+            isallvalid = Validate();
+            if (isallvalid) {
+                var GetDateTime = new Date();
+                var obj =
+                {
+                    "area_": $('#area_').val(),
+                    "areaid": $('#areaid').val(),
+                    "ProvinceIdFk": $('#ProvinceIdFk').val(),
+                    "CityIdFk": $('#CityIdFk').val(),
+                    "CompanyId": 0,
+                    "BranchId": 0
+                }
+                $.ajax({
+                    type: 'Post',
+                    url: '/Managment/AddArea',
+                    contentType: "application/json?charset=utf-8",
+                    data: JSON.stringify(obj),
+                    success: function (data)
+                    {
+                        Clear();
+                        swal("", "Data Has Been Save", "success");
+                    },
+                })
+            }
+        })
+
+        $('#ProvinceIdFk').change(function ()
+        {
+            var id = $(this).val();
+
+            debugger;
+            if ($('#ProvinceIdFk option:selected').text() == "---Select---")
+            {
+               var fill = '<option value="-1" >Select</option>'
+                $('##ProvinceIdFk').html(fill)
+               /*$('#EmployeeTypeId').siblings('span.error').css('visibility', 'visible')*/
+           }
+           else {
+                $.ajax({
+                    type: 'Get',
+                    url: '@Url.Action("Cityddl", "Managment")' ,
+                    contentType: "application/json?charset=utf-8",
+                    data: { id: id },
+                    success: function (result)
+                    {
+                        console.log(result);
+                        debugger;
+                        var fill = '<option value="-1" >---Select---</option>'
+                        for (var i = 0; i < result.length; i++) {
+                            fill += '<option value="' + result[i].CityId + '">' + result[i].City + '</option>';
+                        }
+                        $('#CityIdFk').html(fill)
+                    }
+                })
+            }
+        })
+
+
+        $('#area_').change(function () {
+            if ($('#area_').val() != "")
+            {
+                $('#area_').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#area_').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#ProvinceIdFk').change(function ()
+        {
+            if ($('#ProvinceIdFk').val() != "") {
+                $('#ProvinceIdFk').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#ProvinceIdFk').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+
+        $('#CityIdFk').change(function ()
+        {
+            if ($('#CityIdFk').val() != "") {
+                $('#CityIdFk').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#CityIdFk').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+
+        function Clear() {
+            $('input[type="text"]').val("");
+            $('select').each(function () { $(this).val('') })
+
+        }
+
+        function Validate() {
+            debugger;
+            var isallvalid = true;
+            if ($('#ProvinceIdFk option:selected').text() == "---Select---")
+            {
+                $('#ProvinceIdFk').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else
+            {
+                $('#ProvinceIdFk').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#CityIdFk option:selected').text() == "---Select---") {
+                $('#CityIdFk').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#CityIdFk').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#area_').val() == "")
+            {
+                $('#area_').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else
+            {
+                $('#area_').siblings('span.error').css('visibility', 'hidden')
+            }
+            return isallvalid;
+        }
+    </script>
+}
+

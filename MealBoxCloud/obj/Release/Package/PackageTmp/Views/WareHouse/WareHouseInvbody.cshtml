@@ -1,0 +1,9 @@
+﻿@model List<MealBoxCloud.Models.WareHouseInv>
+@foreach (var item in Model)
+{
+    <tr id="row">
+        <td>@(item.WarHouseName != null ? item.WarHouseName : null)</td>
+        <td>@(item.ProductName != null ? item.ProductName : null)</td>
+        <td>@(item.Qty )</td>
+    </tr>
+}

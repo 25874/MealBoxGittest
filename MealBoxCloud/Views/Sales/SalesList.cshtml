@@ -1,0 +1,58 @@
+﻿@model List<MealBoxCloud.Models.SalesModel>
+
+<h2>Sales List</h2>
+
+@{
+    ViewBag.Title = "SalesList";
+
+}
+
+@section Styles {
+
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+
+}
+
+<div class="card-header">
+
+    <a style="float:right;" type="button" class="btn btn-success" href="@Url.Action("AddSales","Sales")">Add Sales</a>
+
+</div>
+
+<table id="mytable" class="table-bordered ">
+    <thead>
+        <tr>
+            <th style="text-align:center">Customer Name</th>
+            <th style="text-align:center">Sale Invoice</th>
+            <th style="text-align:center">Date</th>
+            <th></th>
+            <th></th> 
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.MSal_sono</td>
+            <td>@item.CustomerName</td>
+            <td>@item.MSal_dat.Value.ToString("dd/MM/yyyy")</td>
+            <td><a style="width:100%; height:100%" class="btn btn-success" href="@Url.Action("AddSales","Sales", new { id = @item.MSaleid})"><span>Edit</span></a></td>
+            <td><a style="width:100%; height:100%" href="@Url.Action("SaleInvoice","Sales", new { id = @item.MSaleid})"><span>Invoice</span></a></td>
+            @*<td><input type="button" onclick="window.open('@Url.Action("Testing","Sales")')" /></td>*@
+        </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts
+    {
+
+    <script src="~/plugins/datatables-autofill/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $('#mytable').DataTable();
+        });
+    </script>
+
+}

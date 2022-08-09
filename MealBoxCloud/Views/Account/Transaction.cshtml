@@ -1,0 +1,610 @@
+﻿@model MealBoxCloud.Models.Transactionmodel
+@{
+    ViewBag.Title = "Transaction";
+}
+
+@section Styles {
+
+    <link href="~/Scripts/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+
+    <link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+
+    <style>
+        span.error 
+        {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+        tr.error 
+        {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+
+}
+
+
+<h1>Transaction</h1>
+
+<h2>Opening Balance</h2>
+<label id="openblnc"></label>
+
+<label>Amount Variation</label>
+
+<div class="col-md-3">
+
+    <textbox class="form-control" readonly="readonly" id="AmtVar"></textbox>
+
+
+</div>
+
+<div class="row" style="margin-top:30px;">
+    <button type="button" value="Pay" id="Payment" class="btn  bg-gradient-primary PayRec " style="margin-left:200px;">Payment</button>
+        <button type="button" value="Rec" id="Recieve" class="btn bg-gradient-secondary PayRec">Recieve</button>
+        <button type="button" value="Cash" id="CashBook" class="btn bg-gradient-info ">CashBook</button>
+</div>
+
+@*<div class="btn-group btn-group-toggle" data-toggle="buttons">
+    <label class="btn btn-block bg-gradient-primary">
+        <input type="radio" name="options" class="PayRec" id="option_b1" autocomplete="off" checked="">Payment
+    </label>
+    <label class="btn bg-gradient-secondary">
+        <input type="radio" name="options" class="PayRec" id="option_b2" autocomplete="off"> Recieve
+    </label>
+    <label class="btn btn-block bg-gradient-info">
+        <input type="radio" name="options"  id="option_b3" value="" autocomplete="off"> CashBook
+    </label>
+</div>*@
+
+
+<div id="cash">
+    <p>_______________________________________________________________________________________________________________________________________________________________________________________________________________</p>
+    <div>
+        <label id="Cashlab" style="display:none">CashBook</label>
+
+        <label id="TotalExpense" style="float:right; margin-right:40px;">Total Expense</label>
+    </div>
+    <div>
+        <label style="float:left;display:none" id="Terlab">Total Earning</label>
+    </div>
+</div>
+<div id="PayRecdiv" style="display:none">
+    <label id="paylab" style="display:none">Payment</label>
+    <label id="Reclab" style="display:none">Recieve</label>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.expensesdat)
+            @Html.TextBoxFor(x => x.expensesdat, new { @class = "form-control", @autocomplete = "off" })
+            <span class="error">Please Write Contact Person...</span>
+        </div>
+    </div>
+    <div class="row" id="PayAccountdiv">
+        <div class="col-md-6">
+
+            @Html.LabelFor(x => x.PayAccount)
+            @Html.DropDownListFor(x => x.PayAccount, null, "---Select---", new { @class = "form-control PayAccountc select2 " })
+            <span class="error">Please Write Contact Person...</span>
+        </div>
+        <div class="col-md-6">
+            <label>Purchase Invoice</label>
+            @Html.DropDownListFor(x => x.PurchaseReturn, null, "---Select---", new { @class = "form-control  select2 " })
+        </div>
+    </div>
+    <div class="row" id="RecievAccountDiv">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.RecAccount)
+            @Html.DropDownListFor(x => x.RecAccount, null, "---Select---", new { @class = "form-control PayAccountc select2 " })
+            <span class="error">Please Write Contact Person...</span>
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Sale Invoice")
+            @Html.DropDownListFor(x => x.SaleReturn, null, "---Select---", new { @class = "form-control  select2 " })
+            <span class="error">Please Write Contact Person...</span>
+        </div>
+        
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label>Method</label>
+            @Html.DropDownList("Method", new List<SelectListItem>
+           {
+             new SelectListItem {Text="---Select---",Value = "0"},
+             new SelectListItem {Text="Cash",Value = "11"},
+             new SelectListItem {Text="Bank",Value = "12"},
+           }, new { @class = "form-control" })
+        <span class="error">Please Write Contact Person...</span>
+        </div>
+        <div class="col-md-6">
+            <label>Payment Type</label>
+            @Html.DropDownList("typeofpay", new List<SelectListItem>
+               {
+                 new SelectListItem {Text="---Select---",Value = "-1"},
+                 new SelectListItem {Text="Cash",Value = "11"},
+               }, new { @class = "form-control" })
+        
+        </div>
+    </div>
+    <div id="Bank" style="display:none;">
+        <table id="Banktable" class="table-bordered container-fluid" style="margin-top:70px;">
+            <thead>
+                <tr>
+                    <th style="text-align:center;">
+                        Bank
+                    </th>
+                    <th style="text-align: center;">
+                        Cheque No
+                    </th>
+                    <th style="text-align: center;">
+                        Amount
+                    </th>
+                    <th style="text-align: center;">
+                        Date
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="Bankbody">
+                <tr>
+                    <td>@Html.DropDownListFor(x => x.CashBnk_id, null, "---Select---",new { @class = "form-control " })</td>
+                    <td>@Html.TextBoxFor(x => x.ChqNO, new { @class = "form-control" })</td>
+                    <td>@Html.TextBoxFor(x => x.bankamt, new { @class = "form-control" })</td>
+                    <td>@Html.TextBoxFor(x => x.ChqDat, new { @class = "form-control" })</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row" style="margin-top:30px;">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Amountpaid)
+            @Html.TextBoxFor(x => x.Amountpaid, new { @class = "form-control" })
+            <span class="error">Please Write Contact Person...</span>
+        </div>
+    </div>
+    <label>Balance</label>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.prevbal)
+            @Html.TextBoxFor(x => x.prevbal, new { @class = "form-control" })
+        </div>
+        <input type="hidden" id="Amttype" />
+    </div>
+    <div class="row">
+        <label>Expense Remarks</label>
+        @Html.TextAreaFor(x => x.Expenseremarks, new { @class = "form-control" })
+    </div>
+    <input type="button" style="margin-top:20px;" id="Save" value="Save" class="btn btn-info" />
+</div>
+
+@section Scripts
+    {
+
+    <link href="~/Scripts/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+
+    <script src="~/dist/js/sweetalert.js"></script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function ()
+        {
+
+            $('#expensesdat').datepicker({
+                format: "dd-MM-yyyy",
+                orientation: "bottom auto",
+                autoclose: true
+            });
+
+            $('#ChqDat').datepicker({
+                format: "dd-MM-yyyy",
+                orientation: "bottom auto",
+                autoclose: true
+            });
+
+
+
+            OpeningBalance();
+
+            $('.select2').select2();
+        })
+
+        $("#PayAccount").change(function ()
+        {
+
+            if ($('#PayAccount option:selected').text() != "---Select---")
+            {
+
+                var id = "";
+
+                id = $('.PayAccountc').val().trim();
+
+                id = id.substring(id.indexOf('-') + 1);
+
+                $.ajax({
+                    url: '/Purchase/GetCredit?id=' + id.trim(),
+                    method: 'Get',
+                    contentType: 'application/jsonCharset=utf-8',
+                    success: function (data) {
+                        console.log(data);
+                        if (data != null) {
+                            $('#prevbal').val(data);
+                        }
+                    }
+                })
+            }
+        })
+
+        $("#RecAccount").change(function ()
+        {
+
+            if ($('#RecAccount option:selected').text() != "---Select---")
+            {
+
+                var id = "";
+
+                id = $('#RecAccount').val().trim();
+
+                id = id.substring(id.indexOf('-') + 1);
+
+                $.ajax({
+                    url: '/Sales/GetSaleCredit?id=' + id,
+                    method: 'Get',
+                    contentType: 'application/jsonCharset=utf-8',
+                    success: function (data)
+                    {
+                        console.log(data);
+                        if (data != null) {
+                            $('#prevbal').val(data);
+                        }
+                    }
+                })
+            }
+        })
+
+        //$("#RecAccount").change(function () 
+        //{
+
+        //    if ($('#RecAccount option:selected').text() != "---Select---") {
+
+        //        var id = "";
+
+        //        id = $('#RecAccount').val().trim();
+
+        //        id = id.substring(id.indexOf('-') + 1);
+
+        //        //$.ajax({
+        //            //url: '/Purchase/GetCredit?id=' + id.trim(),
+        //            //method: 'Get',
+        //            //contentType: 'application/jsonCharset=utf-8',
+        //            //success: function (data) {
+        //                //console.log(data);
+        //                //if (data != null) {
+        //                    //$('#PreviousBalance').val(data);
+        //                //}
+        //            //}
+        //        //})
+        //    //}
+        ////})
+
+
+        function Validate()
+        {
+            
+            var isallvalid = true;
+
+            if ($('#expensesdat').val() == "")
+            {
+                $('#expensesdat').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else
+            {
+                $('#expensesdat').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#PayAccount option:selected').text() == '---Select---')
+            {
+                $('#PayAccount').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else
+            {
+                $('#PayAccount').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#Method option:selected').text() == '---Select---' || $('#Method option:selected').text() == '')
+            {
+                $('#Method').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#Method').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#Amountpaid').val() == "")
+            {
+                $('#Amountpaid').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#Amountpaid').siblings('span.error').css('visibility', 'hidden')
+            }
+
+            return isallvalid;
+        }
+
+        function PayaccDDl()
+        {
+            
+            $.ajax({
+                type: 'Get',
+                url: '/Account/PayAccouvtddl',
+                contentType: "application/json?charset=utf-8",
+                success: function (result)
+                {
+                    console.log(result);
+                    
+                    console.log(result.length);
+                    var fill = '<option value="-1" >---Select---</option>'
+                    for (var i = 0; i < result.length; i++)
+                    {
+                        fill += '<option value="' + result[i].AccNo + ' - ' + result[i].EmpId + ' ">' + result[i].AccName + '</option>';
+                    }
+                    $('.PayAccountc').html(fill);
+                }
+            })
+        }
+
+
+        function RecvaccDDl()
+        {
+            
+            $.ajax({
+                type: 'Get',
+                url: '/Account/RecAccouvtddl',
+                contentType: "application/json?charset=utf-8",
+                success: function (result) {
+                    console.log(result);
+                    
+                    console.log(result.length);
+                    var fill = '<option value="-1" >---Select---</option>'
+                    for (var i = 0; i < result.length; i++) {
+                        fill += '<option value="' + result[i].AccNo + ' - ' + result[i].EmpId + ' ">' + result[i].AccName + '</option>';
+                    }
+                    $('#RecAccount').html(fill);
+                }
+            })
+        }
+
+        function SaleDDl() {
+            
+            $.ajax({
+                type: 'Get',
+                url: '/Account/Saleddl',
+                contentType: "application/json?charset=utf-8",
+                success: function (result) {
+                    console.log(result);
+                    
+                    console.log(result.length);
+                    var fill = '<option value="-1" >---Select---</option>'
+                    for (var i = 0; i < result.length; i++) {
+                        fill += '<option value="' + result[i].SaleId + ' ">' + result[i].SaleNo + '</option>';
+                    }
+                    $('#SaleReturn').html(fill);
+                }
+            })
+        }
+
+        function PurchaseDDl()
+        {
+            
+            $.ajax({
+                type: 'Get',
+                url: '/Account/Purddl',
+                contentType: "application/json?charset=utf-8",
+                success: function (result) {
+                    console.log(result);
+                    
+                    console.log(result.length);
+                    var fill = '<option value="-1" >---Select---</option>'
+                    for (var i = 0; i < result.length; i++) {
+                        fill += '<option value="' + result[i].PurchaseId + ' ">' + result[i].PurchaseNo + '</option>';
+                    }
+                    $('#PurchaseReturn').html(fill);
+                }
+            })
+        }
+
+
+
+        function OpeningBalance()   
+        {
+            
+            $.ajax({
+                type: 'Get',
+                url: '/Account/OpeningBalance',
+                contentType: "application/json?charset=utf-8",
+                success: function (result) {
+                    console.log(result);
+                    
+                    console.log(result.length);
+
+                    $('#AmtVar').text(result);
+                }
+            })
+        }
+
+        $('.PayRec').click(function ()
+        {
+            
+            var cheak = $(this).val();
+            $('')
+            if (cheak === 'Pay')
+            {
+
+                $('#Amttype').val(cheak);
+                $('#PayRecdiv').show();
+                $('#paylab').show();
+                $('#Reclab').hide();
+                $('#Cashlab').hide();
+                $('#PayAccountdiv').show();
+                $('#SaleReturn').show();
+                $('#RecievAccountDiv').hide();
+                Clear()
+                PayaccDDl();
+                PurchaseDDl();
+                SaleDDl();
+                $('#Bank').hide();
+
+            }
+            else if (cheak === 'Rec')
+            {
+                $('#Amttype').val(cheak);
+                $('#PayRecdiv').show();
+                $('#Reclab').show();
+                $('#paylab').hide();
+                $('#RecievAccountDiv').show();
+                $('#PayAccountdiv').hide();
+                Clear()
+                RecvaccDDl();
+                $('#Bank').hide();
+            }
+
+        })
+
+        $('#Save').click(function ()
+        {
+            
+            var type = $('#Amttype').val();
+            var Empid = "";
+            var EmpaccNO = "";
+            var isallvalid = true;
+            isallvalid = Validate();
+            if (isallvalid)
+            { 
+            if (type === 'Pay')
+            {
+                var Acc = $('.PayAccountc').val();
+                Acc = Acc.split('-')
+                Empid = Acc[1];
+                EmpaccNO = Acc[0];
+            }
+            else {
+                var Acc = $('#RecAccount').val();
+                Acc = Acc.split('-')
+                Empid = Acc[1];
+                EmpaccNO = Acc[0];
+            }
+            var obj =
+            {
+                "expensesdat": $('#expensesdat').val(),
+                "typeofpay": $('#typeofpay option:selected').text(),
+                "Amountpaid": $('#Amountpaid').val(),
+                "prevbal": $('#prevbal').val(),
+                "Expenseremarks": $('#Expenseremarks').val(),
+                "type": type,
+                "EmployeeId": Empid.trim(),
+                "Accno": EmpaccNO.trim(),
+                "opening_balance": $('#AmtVar').text(),
+                "CashBnk_id": $('#CashBnk_id').val(),
+                "CashBnk_nam": $('#CashBnk_id option:selected').text(),
+                "ChqDat": $('#ChqDat').val(),
+                "ChqNO": $('#ChqNO').val()
+            }
+            $.ajax({
+                type: 'Post',
+                url: '/Account/Transaction',
+                contentType: "application/json?charset=utf-8",
+                data: JSON.stringify(obj),
+                success: function (data) {
+                    Clear();
+                    swal("", "Transaction Has Been Done", "success");
+                    OpeningBalance();
+                },
+              })
+          }
+        })
+
+
+        function Clear() {
+            $('input[type="text"]').val("");
+            $('select').each(function () {
+                $(this).val('')
+            })
+        }
+
+        $('#CashBook').click(function ()
+        {
+            $('#PayRecdiv').hide();
+            $('#cash').show();
+            $('#Cashlab').show();
+        })
+
+        $("#Method").change(function () {
+            
+            var TypeValue = $(this).val();
+            var PaymentCash = ["Cash"]
+            var PaymentCheak = ["Cheak"]
+            if (TypeValue == 11) {
+                $('#typeofpay option[value="11"]').remove();
+                $('#typeofpay option[value="12"]').remove();
+
+                for (var i = 0; i < PaymentCash.length; i++) {
+
+                    $("#typeofpay ").append('<option value=' + 11 + '>' + PaymentCash[i] + '</option>');
+                }
+                $('#Bank').hide();
+                /*$('#ChequeAmt').attr('id', 'ChequeAmt');*/
+                /*$('.csh_amtch').attr('id', 'csh_amt');*/
+            }
+            else if (TypeValue == 12) {
+
+                $('#typeofpay option[value="11"]').remove();
+                $('#typeofpay option[value="12"]').remove();
+
+                for (var i = 0; i < PaymentCheak.length; i++) {
+                    $("#typeofpay ").append('<option value=' + 12 + '>' + PaymentCheak[i] + '</option>');
+                }
+
+            }
+
+            else {
+                $('#typeofpay option[value="11"]').remove();
+                $('#typeofpay option[value="22"]').remove();
+
+                $("#typeofpay ").prop('selectedIndex', 0);
+            }
+        })
+
+        $('#typeofpay').change(function () {
+            
+
+            if ($('#typeofpay option:selected').text() != "---Select---")
+            {
+                $('#typeofpay').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#typeofpay').siblings('span.error').css('visibility', 'visible')
+            }
+
+            if ($('#typeofpay option:selected').text() != "---Select---" && $('#Method option:selected').text() != "---Select---") {
+                if ($('#Method option:selected').text() == 'Bank') {
+
+                    $('#Bank').show();
+
+                    //const ContRemv = document.getElementById('ChequeAmt');
+                    //ContRemv.removeAttribute();
+
+                }
+                else if ($('#Method option:selected').text() == 'Cash')
+                {
+
+                    $('#Bank').hide();
+
+                }
+            }
+        })
+
+    </script>
+}

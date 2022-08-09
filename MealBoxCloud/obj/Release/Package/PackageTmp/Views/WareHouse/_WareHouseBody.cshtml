@@ -1,0 +1,11 @@
+﻿@model List<MealBoxCloud.Models.WareHouse>
+@foreach (var item in Model)
+{
+<tr id="row">
+    <td>@(item.WarHouseName != null ? item.WarHouseName : null)</td>
+    <td>@(item.CityName != null ? item.CityName : null)</td>
+    <td>@(item.AreaLength != null ? item.AreaLength : null)</td>
+    
+    <td><button style="width:100%; height:100%;" type="" @*onclick="Edit(this.id)"*@ id="1E" class="Edit" value="@item.WarHouseId-3">Edit</button></td>
+</tr>
+}

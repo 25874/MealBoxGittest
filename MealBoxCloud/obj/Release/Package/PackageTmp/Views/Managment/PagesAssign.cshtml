@@ -1,0 +1,207 @@
+﻿@model MealBoxCloud.Models.LoginSinUpModel
+@{
+    ViewBag.Title = "PagesAssign";
+}
+
+<h2>Assign Pages</h2>
+
+@section Styles {
+
+    <link href="~/Scripts/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+    <style>
+        span.error
+        {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+
+        tr.error {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        @Html.LabelFor(x => x.EmployeeId)
+        @Html.DropDownListFor(x => x.EmployeeId, null, "---Select---", new { @class = "form-control", @placeholder = "Enter Item Name" })
+        <span class="error">Please Write Employee Name...</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        @Html.LabelFor(x => x.Module)
+        @Html.DropDownListFor(x => x.Module, null, "---Select---", new { @class = "form-control", @placeholder = "Enter Item Name" })
+        <span class="error">Please Write Employee Name...</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        @Html.LabelFor(x => x.pages)
+        @Html.DropDownListFor(x => x.pages, null, "---Select---", new { @class = "form-control", @placeholder = "Enter Item Name" })
+        <span class="error">Please Write Employee Name...</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        @Html.LabelFor(x => x.IsActive)
+        @Html.DropDownList("IsActive", new List<SelectListItem>
+         {
+           new SelectListItem {Text="Assign",Value = "1"},
+           new SelectListItem {Text="Not Assign",Value = "0"}
+         }, new { @class = "form-control" })
+        <span class="error">Please Write Employee Name...</span>
+    </div>
+</div>
+<div class="row" style="margin-top:20px;margin-left:20px;">
+
+    <input type="button" class="btn btn-success" value="Assign" id="Save" />
+
+
+</div>
+
+
+@section Scripts
+    {
+    <script src="~/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/dist/js/sweetalert.js"></script>
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+
+    <script type="text/javascript">
+
+
+        $("#Module").change(function ()
+        {
+            debugger;
+
+            if ($('#Module option:selected').text() != "---Select---")
+            {
+                
+                var id = $(this).val();
+                
+                $.ajax({
+                    url: '/Managment/SubMenuddl?id=' + id,
+                    method: 'Get',
+                    contentType: 'application/jsonCharset=utf-8',
+                    success: function (data) {
+                        
+                        debugger;
+
+                        var fill = '<option value="-1" >---Select---</option>'
+                        for (var i = 0; i < data.length; i++)
+                        {
+                            fill += '<option value="' + data[i].SubMenuId + '">' + data[i].SubMenuName + '</option>';
+                        }
+                        $('#pages').html(fill)
+
+                        }
+                    
+                })
+            }
+     })
+
+        $('#Save').click(function () {
+            debugger;
+            var isallvalid = true;
+            isallvalid = Validate();
+            if (isallvalid) {
+                var GetDateTime = new Date();
+                var obj =
+                {
+                    "EmployeeId": $('#EmployeeId').val(),
+                    "Module": $('#Module').val(),
+                    "pages": $('#pages').val(),
+                    "EmployeeName": $('#EmployeeId option:selected').text(),
+                    "IsActive": $('#IsActive').val()
+                }
+                $.ajax({
+                    type: 'Post',
+                    url: '/Managment/PagesAssign',
+                    contentType: "application/json?charset=utf-8",
+                    data: JSON.stringify(obj),
+                    success: function (data) {
+                        Clear();
+                        swal("Data Has Been Save", "success");
+                    },
+                })
+            }
+        })
+
+
+
+        $('#EmployeeId').change(function () {
+            if ($('#EmployeeId option:selected').text() != "---Select---") {
+                $('#EmployeeId').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#EmployeeId').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+       
+
+
+        $('#pages').change(function () {
+            if ($('#pages option:selected').text() != "---Select---") {
+                $('#pages').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#pages').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#Module').change(function () {
+            if ($('#Module option:selected').text() != "---Select---") {
+                $('#Module').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#Module').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+
+
+        function Validate()
+        {
+            debugger;
+            var isallvalid = true;
+           
+            if ($('#EmployeeId option:selected').text() == "---Select---") {
+                $('#EmployeeId').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#EmployeeId').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#Module option:selected').text() == "---Select---") {
+                $('#Module').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#Module').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#pages option:selected').text() == "---Select---") {
+                $('#pages').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#pages').siblings('span.error').css('visibility', 'hidden')
+            }
+
+            return isallvalid;
+        }
+
+        function Clear()
+        {
+            $('input[type="text"]').val("");
+            $('select').each(function () { $(this).val('') })
+
+        }
+
+
+       </script>
+    }
+    

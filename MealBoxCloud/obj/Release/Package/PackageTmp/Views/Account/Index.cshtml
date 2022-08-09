@@ -1,0 +1,582 @@
+﻿@model MealBoxCloud.Models.AccountModel
+<h2>Index</h2>
+@section Styles
+    {
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+    <style>
+    
+        span.error
+        {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+        
+        tr.error
+        {
+            background-color: rgba(255,0,0,0.35);
+        }
+    
+    </style>
+}
+<div class="row">
+    <section class="col-lg-6 connectedSortable">
+        <!-- Custom tabs (Charts with tabs)-->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-pie mr-1"></i>
+                   Account
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class=" btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div><!-- /.card-header -->
+            <div class="card-body">
+                <table border="1" id="WareHouse" class=" table-bordered table-bordered  container  table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">Head Code</th>
+                            <th style="text-align:center">Head Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="WareHouseTbody">
+                        @{
+                            MealBoxesEntities db = new MealBoxesEntities();
+                            var chk = db.AccountHeads.ToList();
+                            if(chk.Count != 0)
+                            {
+                                @Html.Partial("_Account", Model.accountHeads)
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div><!-- /.card-body -->
+        </div>      
+    </section>
+    <section class="col-lg-6 connectedSortable">
+        <!-- Custom tabs (Charts with tabs)-->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-pie mr-1"></i>
+                    Sub HaadAccount
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class=" btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div><!-- /.card-header -->
+            <div class="card-body">
+                <table border="1" id="SubHead" class=" table-bordered table-bordered  container  table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">Head Code</th>
+                            <th style="text-align:center">Head Name</th>
+                            <th style="text-align:center">SubHead Code</th>
+                            <th style="text-align:center">SubHead Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="SubHeadTbody">
+                        @{
+                            MealBoxesEntities db2 = new MealBoxesEntities();
+                            var chk2 = db.SubHeads.ToList();
+                            if (chk2.Count != 0)
+                            {
+                                @Html.Partial("_SubHead", Model.SubHeads)
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div><!-- /.card-body -->
+        </div>
+        <div class="col-md-12">
+            @Html.LabelFor(x => x.AccounId)
+            @Html.DropDownListFor(x => x.AccounId, null, "---Select---", new { @class = "form-control", @placeholder = "Enter Item Name" })
+            <span class="error">Please Select a Account</span>
+        </div>
+        <div class="col-md-12">
+            @Html.LabelFor(x => x.SubHeadName)
+            @Html.TextBoxFor(x => x.SubHeadName, new { @class = "form-control", @placeholder = "Enter Item Name" })
+            <span class="error">Please Insert  a HeadName </span>
+        </div> 
+            @*@Html.HiddenFor(x => x.SubAccounthIdv)*@
+            <button class="btn-success Save " value="Subhead">Save</button>
+    </section>
+    <section class="col-lg-12 connectedSortable">
+        <!-- Custom tabs (Charts with tabs)-->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-pie mr-1"></i>
+                    Account
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class=" btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div><!-- /.card-header -->
+            <div class="card-body">
+                <table border="1" id="Account" class=" table-bordered table-bordered  container-fluid  table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">Account Head</th>
+                            <th style="text-align:center">Sub Head</th>
+                            <th style="text-align:center">Account </th>
+                            <th style="text-align:center">Account Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="AccountTbody">
+                        @{
+                            MealBoxesEntities db3 = new MealBoxesEntities();
+                            var chk3 = db3.Accounts.ToList();
+                            if (chk3.Count != 0)
+                            {
+                                @Html.Partial("_SubHeadAccount", Model.Accounttbl)
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div><!-- /.card-body -->
+        </div>
+        <div class="col-md-12">
+            @Html.LabelFor(x => x.AccounId)
+            @Html.DropDownListFor(x => x.AccounId, null, "---Select---", new { @class = "form-control Accountidc", @placeholder = "Enter Item Name" })
+            <span class="error">Please Select a Account</span>
+        </div>
+        <div class="col-md-12">
+            @Html.LabelFor(x => x.SubAccountId)
+            @Html.DropDownListFor(x => x.SubAccountId, null, "---Select---", new { @class = "form-control ", @placeholder = "Enter Item Name" })
+            <span class="error">Please Select a Account</span>
+        </div>
+        <div class="col-md-12">
+            @Html.LabelFor(x => x.SubAccountName)
+            @Html.TextBoxFor(x => x.SubAccountName, new { @class = "form-control", @placeholder = "Enter Item Name" })
+            <span class="error">Please Insert  a HeadName </span>
+        </div>
+        <button class="btn-success Save " value="Account">Save</button>
+    </section>
+</div>
+@section Scripts
+    {
+    
+    <script src="~/plugins/datatables-autofill/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+
+        //function genRand() {
+        //    return Math.floor(Math.random() * 89999 + 10000);
+        //}
+
+        function HeadClear()
+        {
+            $('#AccountNamev').val('');
+        }
+
+        function SubHeadClear()
+        {
+            $('#SubAccountIdNamev').val('');
+            $('#AccountIDFkv').prop("selectedIndex", 0)
+        }
+
+        function SubHeadCategoryClear() {
+
+            $('.AccountIDFkv2').prop('selectedIndex',0);
+            $('#SubAccountIdfkv').prop("selectedIndex", 0);
+            $('#SubAccountCategoriesNamec').val('');
+        }
+
+        $('#AccounId').change(function () {
+            if ($('#AccounId option:selected').text() != "---Select---")
+            {
+                $('#AccounId').siblings('span.error').css('visibility', 'hidden')
+            }
+            else
+            {
+                $('#AccounId').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#SubHeadName').change(function () {
+
+            if ($('#SubHeadName').val() != "") {
+                $('#SubHeadName').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#SubHeadName').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+
+        function Clear() {
+
+            $('input[type="text"]').val('')
+            $('select').each(function () {
+                $(this).val('')
+            }
+            )
+            $('#Effected').prop('checked', false);
+        }
+
+        //$(document).on('click', '.edit', function () {
+        //    debugger;
+        //    var buttons = document.getElementsByTagName("button");
+        //    var buttonsCount = buttons.length;
+        //    var Id = "";
+        //    var Type = "";
+        //    for (var i = 0; i <= buttonsCount; i += 1) {
+        //        debugger;
+        //        /*try {*/
+        //            buttons[i].onclick = function (e) {
+        //                console.log();
+        //                Id = this.id;
+        //                Type = $(this).val();
+        //                alert(Id);
+        //                alert(Type);
+        //            };
+        //        }
+        //        //catch (érr)
+        //        //{
+
+        //        //}
+
+        function Edit(Type) {
+            debugger;
+            var Id = document.getElementById(Type).value
+            HeadClear();
+            SubHeadClear();
+            SubHeadCategoryClear();
+            $.ajax({
+                type: 'Get',
+                url: '/Account/Index?id=' + Id + '&Type=' + Type,
+                contenttype: "application/json?charset=utf-8",
+                success: function (data) {
+                    debugger;
+                    console.log(data);
+                    var cheak = "head";
+                    var cheak2 = "subhead";
+                    var cheak3 = "subcategory";
+                    if (cheak == Type) {
+                        var HeadID = data.HeadID;
+                        var HeadName = data.HeadName;
+                        $('#AccountNamev').val(HeadName);
+                        $('Accounthid').val(HeadID);
+                    }
+                    else if(cheak2 == Type) {
+                        var SubHeadName = data[0].SubHeadName;
+                        var SubHeadId = data[0].SubHeadID;
+                        $('#SubAccountIdNamev').val(SubHeadName);
+                        $('#SubAccounthIdv').val(SubHeadId);
+                        $('.FillAccountIDFkv').val(data[0].HeadGeneratedID).select();
+                    }
+                    else if(cheak3 == Type)
+                    {
+                        $('.AccountIDFkv2').val(data[0].HeadGeneratedID).select();
+                        $('#SubAccountIdfkv').val(data[0].SubHeadGeneratedID).select();
+                        $('#SubAccountCategoriesNamec').val(data[0].SubHeadCategoriesName);
+                    }
+                },
+            })
+        }
+
+        function clear()
+        {
+            $(['input = "text"'].val(''));
+            $('select').each(function ()
+            {
+                $(this).val('')
+            })
+        }
+
+        $('.Save').click(function ()
+        {
+            debugger;
+            var isallvalid = true;
+            var data = $(this).val();
+            var obj = "";
+            console.log(data);
+            if(data == 'Subhead')
+            {
+
+                isallvalid = ValidateSubHead();
+                if (isallvalid)
+                {
+                    obj =
+                    {
+                        "AccounId": $('#AccounId').val(),
+                        "SubHeadName": $('#SubHeadName').val(),
+                        "Type": data
+
+                    }
+                }
+            }
+            else if (data == 'Account')
+            {
+                isallvalid = Validate2();
+                if (isallvalid)
+                {
+
+                    obj =
+                    {
+                        "AccounId": $('.Accountidc').val(),
+                        "SubAccountId": $('#SubAccountId').val(),
+                        "SubAccountName": $('#SubAccountName').val(),
+                        "Type": data
+                    }
+                }
+            }
+            if (isallvalid)
+            {
+                //var GetDateTime = new Date();
+                $.ajax({
+                    type: 'Post',
+                    url: '/Account/Index',
+                    contentType: "application/json?charset=utf-8",
+                    data: JSON.stringify(obj),
+
+                    success: function (data)
+                    {
+                        debugger;
+                        console.log(data);
+                        var cheakhead = 'Subhead';
+                        var CheakAccount = 'Account'
+                        if (cheakhead == data )
+                        {
+                            $('#SubHead tbody').empty();
+                            SubHeadBody();
+                            Clear();
+                        }
+                        else if (CheakAccount == data)
+                        {
+                            $('#Account tbody').empty();
+                            AccountBody();
+                            Clear();
+
+                        }
+
+                    //},
+                //})
+            }
+        })
+      }
+    })
+        function ValidateSubHead() {
+            debugger;
+            var isallvalid = true;
+            if ($('#AccounId option:selected').text() == "---Select---")
+            {
+                $('#AccounId').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else
+            {
+                $('#AccounId').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#SubHeadName').val() == "") {
+                $('#SubHeadName').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else
+            {
+                $('#SubHeadName').siblings('span.error').css('visibility', 'hidden')
+            }
+
+
+            return isallvalid;
+
+
+
+        }
+
+        function Validate2()
+        {
+            debugger;
+            var isallvalid = true;
+            if ($('.Accountidc option:selected').text() == "---Select---")
+            {
+                $('.Accountidc').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else{
+                $('#Accountidc').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#SubAccountId option:selected').text() == "---Select---") {
+                $('#SubAccountId').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else
+            {
+                $('#SubAccountId').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#SubAccountName').val() == "") {
+                $('#SubAccountName').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#SubAccountName').siblings('span.error').css('visibility', 'hidden')
+            }
+            return isallvalid;
+        }
+
+        //function Validate3() {
+            //debugger;
+            //var isallvalid = true;
+            //if($('.AccountIDFkv option:selected').text() == "---Select---") {
+                //$('.AccountIDFkv').siblings('span.error').css('visibility', 'visible')
+                //isallvalid = false;
+                //alert('AccountIDFkvBypass');
+            //}
+            //else
+            //{
+                //$('#AccountIDFkv').siblings('span.error').css('visibility', 'hidden')
+            //}
+            //if ($('#SubAccountIdfkv option:selected').text() == "---Select---") {
+                //$('#SubAccountIdfkv').siblings('span.error').css('visibility', 'visible')
+                //isallvalid = false;
+                //alert('SubAccountIdfkv');
+            //}
+            //else {
+                //$('#SubAccountIdfkv').siblings('span.error').css('visibility', 'hidden')
+            //}
+            //if ($('#SubAccountIdNamev').val() != "") {
+                //$('#SubAccountIdNamev').siblings('span.error').css('visibility', 'visible')
+                //isallvalid = false;
+                //alert('SubAccountIdfkv');
+            //}
+            //else {
+                //$('#SubAccountIdNamev').siblings('span.error').css('visibility', 'hidden')
+            //}
+
+            ////return isallvalid;
+        ////}
+
+        $('.Accountidc').change(function () {
+            var id = $(this).val();
+
+            debugger;
+            if ($('.Accountid option:selected').text() == "---Select---") {
+               var fill = '<option value="-1" >Select</option>'
+               $('#EmployeeId').html(fill)
+               /*$('#EmployeeTypeId').siblings('span.error').css('visibility', 'visible')*/
+           }
+           else {
+                $.ajax({
+                    type: 'Get',
+                    url: '@Url.Action("SubHeadDDl", "Account")' ,
+                    contentType: "application/json?charset=utf-8",
+                    data: { id: id },
+                    success: function (result) {
+                        console.log(result);
+                        debugger;
+                        var fill = '<option value="-1" >---Select---</option>'
+                        for (var i = 0; i < result.length; i++) {
+                            fill += '<option value="' + result[i].SubAccountId + '">' + result[i].SubAccountName + '</option>';
+                        }
+                        $('#SubAccountId').html(fill)
+                    }
+                })
+            }
+        })
+
+        function HeadDDl()
+        {
+            $.ajax({
+                type: 'Get',
+                url: '/Account/HeadDDl',
+                contentType: "application/json?charset=utf-8",
+                data: JSON.stringify(obj),
+                success: function (result) {
+                    console.log(result);
+                    debugger;
+                    var fill = '<option value="-1" >---Select---</option>'
+                    for (var i = 0; i < result.length; i++)
+                    {
+                        fill += '<option value="' + result[i].HeadGeneratedID + '">' + result[i].HeadName + '</option>';
+                    }
+                    $('.FillAccountIDFkv').html(fill);
+                }
+            })
+        }
+
+        function SubHeadDDl() {
+            $.ajax({
+                type: 'Get',
+                url: '/Account/SubHeadDDl' ,
+                contentType: "application/json?charset=utf-8",
+                data: JSON.stringify(obj),
+                success: function (result)
+                {
+                    var fill = '<option value="-1" >---Select---</option>'
+                    for (var i = 0; i < result.length; i++)
+                    {
+                        fill += '<option value="' + result[i].SubHeadGeneratedID + '">' + result[i].SubHeadName + '</option>';
+                    }
+                    $('#SubAccountIdfkv').html(fill);
+                }
+            })
+        }
+
+        function SubHeadCategoryDDl() {
+            $.ajax({
+                type: 'Get',
+                url: '/Account/SubHeadCategoryDDl' ,
+                contentType: "application/json?charset=utf-8",
+                data: JSON.stringify(obj),
+                success: function (result)
+                {
+                    console.log(result);
+                    debugger;
+                    var fill = '<option value="' + result.HeadID + '">' + result.HeadName + '</option>';
+                    $('#SubAccountIdfkv').html(fill);
+                }
+            })
+        }
+
+
+        function SubHeadBody() {
+            debugger;
+            $.ajax({
+                type: 'Get',
+                url: '/Account/SubAccountBody',
+                contentType: "application/json?charset=utf-8",
+                dataType: 'html',
+                success: function (data) {
+                    debugger;
+                    var dataapend = data.trim();
+                    $("#SubHeadTbody").append(dataapend);
+
+                },
+            })
+        }
+
+        function AccountBody() {
+
+            $.ajax({
+                type: 'Get',
+                url: '/Account/AccountBody',
+                contentType: "application/json?charset=utf-8",
+                dataType: 'html',
+                success: function (data) {
+                    var dataapend = data.trim();
+                    $("#AccountTbody").append(dataapend);
+
+                },
+            })
+        }
+
+
+        function Clear() {
+            $('input[type="text"]').val("");
+            $('select').each(function () { $(this).val('') })
+
+        }
+
+
+    </script>
+
+}
+

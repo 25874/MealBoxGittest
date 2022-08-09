@@ -1,0 +1,9 @@
+﻿@model  List<MealBoxCloud.Models.AccountHeadMOdel>
+    @foreach (var item in Model)
+    {
+        <tr id="row">
+            <td>@(item.HeadGeneratedIdCode != null ? item.HeadGeneratedIdCode : null)</td>
+            <td>@(item.HeadName != null ? item.HeadName : null)</td>
+       </tr>
+    }
+

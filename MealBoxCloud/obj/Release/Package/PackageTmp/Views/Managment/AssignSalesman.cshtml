@@ -1,0 +1,57 @@
+﻿@model MealBoxCloud.Models.EmployeeModel
+
+@{
+    ViewBag.Title = "AssignSalesman";
+}
+
+<h2>AssignSalesman</h2>
+
+@section Styles {
+
+<link href="~/Scripts/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+<link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+<style>
+    span.error 
+    {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 100%;
+    }
+
+    tr.error {
+        background-color: rgba(255,0,0,0.35);
+    }
+</style>
+}
+<div class="row">
+    <div class="col-md-4">
+        @Html.LabelFor(x => x.booker)
+        @Html.DropDownListFor(x => x.booker,null,"---Select---" ,new { @class = "form-control", @placeholder = "Enter Item Name" })
+        <span class="error">Please Write Employee Name...</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        @Html.LabelFor(x => x.Salesman)
+        @Html.DropDownListFor(x => x.Salesman, null, "---Select---", new { @class = "form-control", @placeholder = "Enter Item Name" })
+        <span class="error">Please Write Employee Name...</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        
+        @Html.DropDownList("Assign", new List<SelectListItem>
+       {
+         new SelectListItem {Text="---Select---",Value = "-1"},
+         new SelectListItem {Text="Assign",Value = "11"},
+         new SelectListItem {Text="Bank",Value = "12"},
+       }, new { @class = "form-control" })
+    </div>
+</div>
+<div class="row" style="margin-top:20px;margin-left:20px;">
+
+    <input type="button" class="btn btn-success" value="Assign" id="Save" />
+
+
+</div>

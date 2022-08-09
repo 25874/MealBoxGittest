@@ -1,0 +1,219 @@
+﻿@model MealBoxCloud.Models.EmployeeModel
+
+@{
+    ViewBag.Title = "AddEmployee";
+}
+
+@section Styles {
+
+    <link href="~/Scripts/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/dist/css/sweetalert.css" rel="stylesheet" />
+    <style>
+        span.error {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+
+        tr.error {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+}
+
+<h2>Enter Employee</h2>
+
+@using (Html.BeginForm("AddSupplier", "Managment", FormMethod.Post, new { @id = "AddSupplier" }))
+{
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.employeeName)
+            @Html.TextBoxFor(x => x.employeeName, new { @class = "form-control", @placeholder = "Enter Item Name" })
+            <span class="error">Please Write Employee Name...</span>
+            @Html.HiddenFor(x => x.employeeID)
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Address)
+            @Html.TextBoxFor(x => x.Address, new { @class = "form-control", @placeholder = "Enter Item Name" })
+            <span class="error">Please Write Address...</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.designation)
+            @Html.TextBoxFor(x => x.designation, new { @class = "form-control", @placeholder = "Enter Item Name" })
+            <span class="error">Please Select Designation...</span>
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.PhoneNum)
+            @Html.TextBoxFor(x => x.PhoneNum, new { @class = "form-control num", @placeholder = "Enter Item Name" })
+            <span class="error">Please Insert PhoneNum  </span>
+            @Html.ValidationMessageFor(x => x.PhoneNum, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Address1)
+            @Html.TextBoxFor(x => x.Address1, new { @class = "form-control" })
+            <span class="error">Please Write PhoneNo...</span>
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.CellNum)
+            @Html.TextBoxFor(x => x.CellNum, new { @class = "form-control num" })
+            <span class="error">Please Write Mobile No...</span>
+            @Html.ValidationMessageFor(x => x.CellNum, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Email)
+            @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.NetSalary)
+            @Html.TextBoxFor(x => x.NetSalary, new { @class = "form-control num" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3" style="margin-top:10px;">
+            @Html.LabelFor(x => x.IsActive)
+            @Html.CheckBoxFor(x => x.IsActive)
+        </div>
+    </div>
+    <div class="row" style="margin-top:20px;margin-left:20px;">
+
+        <input type="button" class="btn btn-success" value="Create" id="Save" />
+
+        <div class="col-md-3">
+
+            @Html.ActionLink("Return To List", "EmployeeList")
+        </div>
+
+    </div>
+
+}
+@section
+    scripts
+        {
+
+
+    <script src="~/dist/js/sweetalert.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(".num").keypress(function (e) {
+                debugger;
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    return false;
+                }
+            });
+        });
+
+
+        $('#Save').click(function () {
+            debugger;
+            var isallvalid = true;
+            isallvalid = Validate();
+            if (isallvalid) {
+
+                var obj = {
+                    "employeeName": $('#employeeName').val(),
+                    "Address": $('#Address').val(),
+                    "designation": $('#designation').val(),
+                    "CellNum": $('#CellNum').val(),
+                    "phoneno": $('#phoneno').val(),
+                    "Address1": $('#Address1').val(),
+                    "Email": $('#Email').val(),
+                    "IsActive": $('#IsActive').val(),
+                    "NetSalary": $('#NetSalary').val()
+
+                }
+                $.ajax({
+                    type: 'Post',
+                    url: '/Managment/AddEmployee',
+                    contentType: "application/json?charset=utf-8",
+                    data: JSON.stringify(obj),
+                    success: function (data) {
+                        Clear();
+                        swal("", "Data Has Been Save!", "success");
+                    },
+                })
+            }
+        })
+
+
+        $('#employeeName').change(function () {
+            if ($('#employeeName').val().trim() != "") {
+                $('#employeeName').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#employeeName').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#Address').change(function () {
+            if ($('#Address').val().trim() != "") {
+                $('#Address').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#Address').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#designation').change(function () {
+            if ($('#designation').val().trim() != "") {
+                $('#designation').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#designation').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#CellNum').change(function () {
+            if ($('#CellNum').val().trim() != "") {
+                $('#CellNum').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#CellNum').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        function Clear() {
+
+            $('Input[type = "text"]').val("");
+            $('select').each(function () { $(this).val('') })
+            $('#IsActive').prop('checked', false);
+        }
+
+        function Validate() {
+            debugger;
+            var isallvalid = true;
+            if ($('#employeeName').val().trim() == "") {
+                $('#employeeName').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#employeeName').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#Address').val().trim() == "") {
+                $('#Address').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#Address').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#CellNum').val().trim() == "") {
+                $('#CellNum').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#CellNum').siblings('span.error').css('visibility', 'hidden')
+            }
+            return isallvalid;
+        }
+    </script>
+
+}

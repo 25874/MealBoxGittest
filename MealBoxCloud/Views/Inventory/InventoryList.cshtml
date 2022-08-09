@@ -1,0 +1,66 @@
+﻿@model List<MealBoxCloud.Models.InventoryModel>
+
+@{
+    ViewBag.Title = "InventoryList";
+}
+
+<h2>InventoryList</h2>
+
+
+@section Styles 
+    {   
+    
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+}
+
+<div class="card-header">
+    <a style="margin-left:300px;" class="btn btn-primary" href="@Url.Action("AddSupplier","Managment")">Add Customer</a>
+    <a href="@Url.Action("AddSupplier","Managment")" class="btn btn-primary">Add Vendor </a>
+    <a class="btn btn-primary" href="@Url.Action("AddItem","Product")">Add New Product</a>
+    <a class="btn btn-primary" href="@Url.Action("DeductInventory","Inventory")">Deduct Product</a>
+</div>
+<table id="mytable" class="table-bordered ">
+
+    <thead>
+        <tr>
+            <th style="text-align:center">Product Name</th>
+            <th style="text-align:center">Rate</th>
+            <th style="text-align:center">Qty</th>
+            <th style="text-align:center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Product</td>
+                <td>@item.unitprice</td>
+                <td>@item.StockQty</td>
+                <td><a style="width:100%; height:100%" class="btn btn-dropbox" href="@Url.Action("AddItem","Product", new { id = @item.StockID})"><i class="fa fa-fw fa-edit"></i></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a style="float:left;" href="@Url.Action("AddInventory","Inventory")">Back To List</a>
+
+
+@section Scripts
+
+    {
+
+    <script src="~/plugins/datatables-autofill/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+
+
+
+
+        $(document).ready(function () {
+            $('#mytable').DataTable();
+
+            $('#unitprice').attr('readonly', true);
+        });
+
+
+    </script>
+
+}

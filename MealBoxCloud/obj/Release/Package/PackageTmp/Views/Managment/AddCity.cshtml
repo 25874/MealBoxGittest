@@ -1,0 +1,129 @@
+﻿@model MealBoxCloud.Models.AreaModel
+
+@{
+    ViewBag.Title = "AddCity";
+}
+
+<h2>AddCity</h2>
+
+@section Styles {
+
+    <link href="~/Scripts/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <style>
+        span.error {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+
+        tr.error {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+
+}
+
+@using (Html.BeginForm("AddItem", "Master", FormMethod.Post, new { @id = "AddItem" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Label("Province")
+            @Html.DropDownListFor(x => x.PrivinceId, null, "---Select---", new { @class = "form-control" })
+            <span class="error"> Please Select Country Name...</span>
+        </div>
+        @Html.Label("City Name")
+        @Html.TextBoxFor(x => x.CityName, new { @class = "form-control", @placeholder = "Enter Item Name" })
+        <span class="error"> Please Write City Name...</span>
+        @Html.HiddenFor(x => x.CityId)
+
+    </div>
+    <div class="row">
+        <input type="button" class="btn btn-success" value="Save" id="Save" />
+        <div class="col-md-3">
+            @Html.ActionLink("Return To List", "CityList")
+        </div>
+    </div>
+}
+
+
+@section
+       scripts
+        {
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript">
+        $('#Save').click(function () {
+            debugger;
+            var isallvalid = true;
+            isallvalid = Validate();
+            if (isallvalid) {
+                var obj = {
+                    "CityName": $('#CityName').val(),
+                    "CityId": $('#CityId').val(),
+                    "PrivinceId": $('#PrivinceId').val()
+                }
+                $.ajax({
+                    type: 'Post',
+                    url: '/Managment/AddCity',
+                    contentType: "application/json?charset=utf-8",
+                    data: JSON.stringify(obj),
+                    success: function (data) {
+                        Clear();
+                        swal("", "Data Has Been Save!", "success");
+                    },
+                })
+            }
+        })
+
+        $('#CityName').change(function () {
+            if ($('#CityName').val().trim() != "") {
+                $('#CityName').siblings('span.error').css('visibility', 'hidden')
+            }
+            else {
+                $('#CityName').siblings('span.error').css('visibility', 'visible')
+            }
+        })
+
+        $('#PrivinceId').change(function () {
+            if ($('#PrivinceId option:selected').text() == "---Select---") {
+                $('#PrivinceId').siblings('span.error').css('visibility', 'visible')
+            }
+            else {
+                $('#PrivinceId').siblings('span.error').css('visibility', 'hidden')
+            }
+        })
+
+
+        function Clear() {
+            $('input[type="text"]').val("");
+            $('select').each(function () {
+                $(this).val('')
+            })
+        }
+
+
+        function Validate() {
+            debugger;
+            var isallvalid = true;
+            if ($('#PrivinceId option:selected').text() == "---Select---") {
+                $('#PrivinceId').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#PrivinceId').siblings('span.error').css('visibility', 'hidden')
+            }
+
+            if ($('#CityName').val() == "") {
+                $('#CityName').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#CityName').siblings('span.error').css('visibility', 'hidden')
+            }
+            return isallvalid;
+        }
+
+    </script>
+}
+
+

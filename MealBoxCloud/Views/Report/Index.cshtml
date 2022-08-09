@@ -1,0 +1,230 @@
+﻿@model MealBoxCloud.Models.ReportModel
+@{
+    ViewBag.Title = "Index";
+}
+@section Styles
+    {
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+    <style>
+        span.error {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+
+        tr.error {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+}
+<h2>Index</h2>
+@using (Html.BeginForm("Index", "Report", FormMethod.Post, new { @id = "AddItem" }))
+{
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.ReportId)
+            @Html.DropDownList("ReportId", new List<SelectListItem>
+       {
+           new SelectListItem {Text="---Select---",Value = "0"},
+           new SelectListItem {Text="StockSummary",Value = "1"},
+           new SelectListItem {Text="Purchase",Value = "2"},
+           new SelectListItem {Text="Sale",Value = "3"},
+           new SelectListItem {Text="PurchaseCreadit",Value = "4"},
+           new SelectListItem {Text="SaleCreadit",Value = "5"},
+           new SelectListItem {Text="Expence",Value = "6"},
+           new SelectListItem {Text="Profit",Value = "7"},
+           new SelectListItem {Text="Transaction",Value = "8"},
+           new SelectListItem {Text="WareHouse Inventory",Value = "9"},
+       }, new { @class = "form-control" })
+
+            <span class="error">Please Write Supplier Name..</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.ProductId)
+            @Html.DropDownListFor(x => x.ProductId, null, new { @class = "form-control" });
+        </div>
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.SupplierId)
+            @Html.DropDownListFor(x => x.SupplierId, null, new { @class = "form-control" });
+        </div>
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.CustomerId)
+            @Html.DropDownListFor(x => x.CustomerId, null, new { @class = "form-control" });
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label>PaymentMethod</label>
+            @Html.DropDownList("PaymentMethod", new List<SelectListItem>
+           {
+           new SelectListItem {Text="---SelectAll---",Value = "-1"},
+           new SelectListItem {Text="Cheaque",Value = "1"},
+           new SelectListItem {Text="Cash",Value = "2"},
+       }, new { @class = "form-control" })
+
+        </div>
+        <div class="col-md-4">
+            <label>PaymentMethod</label>
+            @Html.DropDownList("PaymentType", new List<SelectListItem>
+           {
+           new SelectListItem {Text="---SelectAll---",Value = "-1"},
+           new SelectListItem {Text="Creadit",Value = "1"},
+           new SelectListItem {Text="Debit",Value = "2"},
+           }, new { @class = "form-control" })
+        </div>
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.AccountId)
+            @Html.TextBoxFor(x => x.AccountId, new { @class = "form-control" });
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.WareHouseId)
+            @Html.DropDownListFor(x => x.WareHouseId, null, new { @class = "form-control" });
+        </div>
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.CityId)
+            @Html.DropDownListFor(x => x.CityId, null, new { @class = "form-control" });
+        </div>
+    </div>
+    <button type="submit" id="Select">Select</button>
+}
+
+@section Scripts
+    {
+    <script type="text/javascript">
+
+
+        $(document).ready(function ()
+        {
+            debugger;
+            ProductIdDDl();
+            WareHouseDDl();
+            CityDDl();
+            SupplierDDl();
+            CustomerIdDDl();
+
+        })
+
+
+
+        function ProductIdDDl()
+        {
+
+            debugger;
+
+            $.ajax({
+                type: 'Get',
+                url: '/Report/ProductidDDl',
+                contentType: "application/json?charset=utf-8",
+                success: function (result) {
+                    console.log(result);
+                    var fill = '<option value="-1" >---SelectAll---</option>'
+                    for (var i = 0; i < result.length; i++) {
+                        fill += '<option value="' + result[i].ProductId + '">' + result[i].ProductName + '</option>';
+                    }
+                    $('#ProductId').html(fill);
+                }
+            })
+        }
+
+
+        function WareHouseDDl()
+        {
+
+            debugger;
+
+            $.ajax({
+                type: 'Get',
+                url: '/Report/WareHouseDDl',
+                contentType: "application/json?charset=utf-8",
+                success: function (result)
+                {
+                    console.log(result);
+                    var fill = '<option value="-1" >---SelectAll---</option>'
+                    for (var i = 0; i < result.length; i++)
+                    {
+                        fill += '<option value="' + result[i].WareHouseId + '">' + result[i].WareHousName + '</option>';
+                    }
+                    $('#WareHouseId').html(fill);
+                }
+            })
+        }
+
+        function CityDDl()
+        {
+
+            debugger;
+
+            $.ajax({
+                type: 'Get',
+                url: '/Report/CityDDl',
+                contentType: "application/json?charset=utf-8",
+                success: function (result) {
+                    debugger;
+                    console.log(result);
+                    var fill = '<option value="-1" >---SelectAll---</option>'
+                    for (var i = 0; i < result.length; i++)
+                    {
+                        fill += '<option value="' + result[i].CityId + '">' + result[i].CityName + '</option>';
+                    }
+                    $('#CityId').html(fill);
+                }
+            })
+        }
+
+
+        function SupplierDDl()
+        {
+            $.ajax({
+                type: 'Get',
+                url: '/Report/SupplierDDl',
+                contentType: "application/json?charset=utf-8",
+                success: function (result) {
+                    var fill = '<option value="-1" >---Select---</option>'
+                    for (var i = 0; i < result.length; i++) {
+                        fill += '<option value="' + result[i].SupplierId + '">' + result[i].SupplieName + '</option>';
+                    }
+                    $('#SupplierId').html(fill);
+                }
+            })
+        }
+
+        function CustomerIdDDl()
+        {
+            $.ajax({
+                type: 'Get',
+                url: '/Report/CustomerDDl',
+                contentType: "application/json?charset=utf-8",
+                success: function (result) {
+                    var fill = '<option value="-1" >---Select---</option>'
+                    for (var i = 0; i < result.length; i++) {
+                        fill += '<option value="' + result[i].CustomersId + '">' + result[i].CustomersName + '</option>';
+                    }
+                    $('#CustomerId').html(fill);
+                }
+            })
+        }
+
+        function AccountIdDDl()
+        {
+            $.ajax({
+                type: 'Get',
+                url: '/Account/SubHeadDDl',
+                contentType: "application/json?charset=utf-8",
+                success: function (result)
+                {
+                    var fill = '<option value="-1" >---Select---</option>'
+                    for (var i = 0; i < result.length; i++) {
+                        fill += '<option value="' + result[i].SubHeadGeneratedID + '">' + result[i].SubHeadName + '</option>';
+                    }
+                    $('#SubAccountIdfkv').html(fill);
+                }
+            })
+        }
+
+    </script>
+}

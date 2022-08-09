@@ -1,0 +1,431 @@
+﻿@model MealBoxCloud.Models.WareHouseModel
+@{
+    ViewBag.Title = "Index";
+    var SessionID = Convert.ToInt32(Session["EmployeeId"]);
+}
+
+@section Styles
+    {
+    <link href="~/plugins/datatables-autofill/css/jquery.dataTables.css" rel="stylesheet" />
+    <style>
+       
+        span.error 
+        {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 100%;
+        }
+    
+        tr.error 
+        {
+            background-color: rgba(255,0,0,0.35);
+        }
+    
+    </style>
+}
+<div class="row">
+    <section class="col-lg-6 connectedSortable">
+        <!-- Custom tabs (Charts with tabs)-->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fa-solid fa-warehouse"></i>
+                    Add WareHouse
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class=" btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div><!-- /.card-header -->
+            <div class="card-body">
+                <table border="1" id="WareHouse" class=" table-bordered table-bordered   table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">WareHouse  </th>
+                            <th style="text-align:center">City</th>
+                            <th style="text-align:center">Area Lenght</th>
+
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="WareHouseTbody">
+                        @{
+                            MealBoxesEntities db = new MealBoxesEntities();
+                            var chk = db.tbl_WareHouse.ToList();
+                            if (chk.Count != 0)
+                            {
+                                @Html.Partial("_WareHouseBody", Model.WareHousesList)
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div><!-- /.card-body -->
+        </div>
+        @Html.HiddenFor(x => x.EditId)
+        <!-- /.card -->
+
+        @Html.Label("City")
+        @Html.DropDownListFor(x => x.CityID, null, "--Select---", new { @class = "form-control" })
+        <span id="CityIDv" style="color:red;display:none">Please Select City</span>
+        @Html.Label("WareHouse")
+        @Html.TextBoxFor(x => x.WarHouseName, new { @class = "form-control ", @placeholder = "Enter Item Name" })
+        <span id="WarHouseNamev" style="color:red;display:none">Please insert Ware House Name </span>
+        @Html.Label("AreaLength")
+        @Html.DropDownListFor(x => x.AreaLenght, null, "--Select---", new { @class = "form-control" })
+        <span id="AreaLenghtv" style="color:red;display:none">Please Select City</span>
+        @Html.LabelFor(x => x.Description)
+        @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Enter Item Name" })
+        <button type="button" class="btn btn-success Save" value="1" style="margin-top:20px;">Save</button>
+        @Html.HiddenFor(x => x.WarHouseId)
+    </section>
+    <section class="col-lg-6 connectedSortable">
+        <!-- Custom tabs (Charts with tabs)-->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fa-solid fa-cart-flatbed"></i>
+                    WareHouse Inventory
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class=" btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div><!-- /.card-header -->
+            <div class="card-body">
+                <table border="1" id="WareHouseInventory" class=" table-bordered table-bordered  table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">WareHouse</th>
+                            <th style="text-align:center">Product</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="WareHouseInvTbody">
+                        @{
+                            MealBoxesEntities db2 = new MealBoxesEntities();
+                            var chk2 = db.tbl_WareHouseInventory.ToList();
+                            if (chk2.Count != 0)
+                            {
+                                @Html.Partial("WareHouseInvbody", Model.WareHousesInvList)
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div><!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+        @Html.Label("WarHouse")
+        @Html.DropDownListFor(x => x.WarHouseIdFk, null, "--Select---", new { @class = "form-control" })
+        <span class="error">Please Select City</span>
+        @Html.Label("Product")
+        @Html.DropDownListFor(x => x.ProductId, null, "--Select---", new { @class = "form-control" })
+        <span class="error">Please Select City</span>
+        <button type="button" class="btn btn-success Save" value="2" style="margin-top:20px;">Save</button>
+        @Html.HiddenFor(x => x.WareHouseInventoryId)
+        <input type="hidden" value=@Session["EmployeeId"] id="SessionId" />
+    </section>
+</div>
+
+@section Scripts
+    {
+    <script src="~/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/dist/js/sweetalert.js"></script>
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+    <script src="~/plugins/datatables-autofill/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+
+
+        $(document).ready(function ()
+        {
+
+            $('#WareHouse').DataTable();
+            $('#WareHouseInventory').DataTable();
+
+            $(".num").keypress(function (e)
+            {
+                debugger;
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
+                {
+                    return false;
+                }
+
+            })
+        })
+
+
+        $('.Save').click(function ()
+        {
+            debugger;
+
+            var id = $(this).val();
+
+
+            var isallvalid = true;
+
+           
+            //var Acc = id;
+            //Acc = Acc.split('-')
+            //var id = Acc[1];
+            //var Editid = Acc[0];
+
+
+            if(id == 1)
+            {
+
+                    isallvalid = Validate();
+                    if (isallvalid)
+                    {
+                        obj =
+                        {
+                            "CityID": $('#CityID').val(),
+                            "WarHouseName": $('#WarHouseName').val().toUpperCase(),
+                            "AreaLength": $('#AreaLenght option:selected').text(),
+                            "Type": id,
+                            "CreatedBy": $('#SessionId').val(),
+                            "WarHouseIdFk": $('#EditId').val(),
+                            "Description": $('#Description').val()
+                        }
+                    }
+                
+            }
+            else if (id == 2)
+            {
+                isallvalid = Validate2();
+                if (isallvalid)
+                {
+                    obj =
+                    {
+                        "WarHouseId": $('#WarHouseIdFk').val(),
+                        "ProductId": $('#ProductId').val(),
+                        "Type": id,
+                        "WareHouseInventoryId": $('#WareHouseInventoryId').val(),
+                        "CreatedBy": $('#SessionId').val()
+                    }
+                }
+            }
+            if (isallvalid)
+            {
+                $.ajax({
+                    type: 'Post',
+                    url: '/WareHouse/Index',
+                    contentType: "application/json?charset=utf-8",
+                    data: JSON.stringify(obj),
+                    success: function (data)
+                    {
+                        debugger;
+                        var cheak = data;
+                        Clear();
+                        console.log(cheak);
+                        if (cheak == '1')
+                        {
+                            $('#WareHouse tbody').empty();
+                            WareHouseBody();
+                            $('#EditId').val('')
+                            /*location.reload();*/
+                        }
+                        else if (cheak == 'Already1')
+                        {
+                            $(function () {
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'bottom',
+                                    showConfirmButton: false,
+                                    timer: 5000
+                                })
+                                Toast.fire({
+                                   type: 'error',
+                                    title: 'WareHouse Alread Exist '
+                                });
+                            })
+                        }
+                        else if (cheak == 'Already2')
+                        {
+                               $(function ()
+                                {
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'bottom',
+                                    showConfirmButton: false,
+                                    timer: 5000
+                                })
+                                Toast.fire({
+                                    type: 'error',
+                                    title: 'Product Is Alread Exist In This WareHouse'
+                               });
+                            })
+                        }
+                        else
+                        {
+                            $('#WareHouseInventory tbody').empty();
+                            WareHouseInventoryBody()
+                            /*location.reload();*/
+                        }
+                    },
+                })
+            }
+        })
+
+        $('body').on('click', '.Edit', function () {
+       
+            debugger;
+
+            var Acc = $(this).val();
+            Acc = Acc.split('-')
+            var id = Acc[0];
+
+
+            $.ajax({
+                type: 'Get',
+                url: '/WareHouse/Index?id=' + id,
+                contentType: "application/json?charset=utf-8",
+                success: function (data) {
+                    console.log(data);
+                    var data = JSON.parse(data);
+                    console.log(data);
+                    $('#WarHouseName').val(data.WarHouseName);
+                    $('#AreaLength').val(data.AreaLength);
+                    $('#Description').val(data.Description);
+                    $('#CityID').val(data.CityID).select();
+                    $('#EditId').val(data.EditId)
+                    
+                }
+
+            })
+        })
+
+        function Clear()
+        {
+            $('input[type="text"]').val("");
+            $('select').each(function () {
+                $(this).val('')
+            }
+            )
+            $("#Description").val("");
+        }
+
+        function WareHouseBody() {
+            debugger;
+            $.ajax({
+                type: 'Get',
+                url: '/WareHouse/WarHouseBody',
+                contentType: "application/json?charset=utf-8",
+                dataType: 'html',
+                success: function (data)
+                {
+                    var dataapend = data.trim();
+                    $("#WareHouseTbody").append(dataapend);
+                },
+            })
+        }
+
+        function WareHouseInventoryBody()
+        {
+            debugger;
+            $.ajax({
+                type: 'Get',
+                url: '/WareHouse/WarHouseInventoryBody',
+                contentType: "application/json?charset=utf-8",
+                dataType: 'html',
+                success: function (data) {
+                    var dataapend = data.trim();
+                    $("#WareHouseInvTbody").append(dataapend);
+                },
+            })
+        }
+
+            $('#WarHouseName').change(function ()
+            {
+                if ($('#WarHouseName').val().trim() != "")
+             {
+                    $('#WarHouseNamev').css('display', 'none');
+            }
+            else
+            {
+                    $('#WarHouseNamev').css('display', 'block');
+            }
+        })
+
+        $('#CityID').change(function () {
+            if ($('#CityID').val().trim() != '--Select---')
+            {
+                $('#CityIDv').css('display', 'none');
+            }
+            else {
+                $('#CityIDv').css('display', 'block');
+            }
+        })
+
+
+        //    $('#AreaLenght').change(function ()
+        //{   
+        //    debugger;
+        //    if ($('#AreaLenght option:selected').text() != "---Select---")
+        //    {
+        //        $('#AreaLengthv').css('display', 'block');
+        //    }
+        //    else {
+        //        $('#AreaLengthv').css('display', 'none');
+        //    }
+        //})
+
+
+            function Validate2()
+            {
+            var isallvalid = true;
+            if ($('#WarHouseIdFk option:selected').text() == '--Select---') {
+                $('#WarHouseIdFk').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#WarHouseIdFk').siblings('span.error').css('visibility', 'hidden')
+            }
+            if ($('#ProductId option:selected').text() == '--Select---') {
+                $('#ProductId').siblings('span.error').css('visibility', 'visible')
+                isallvalid = false;
+            }
+            else {
+                $('#ProductId').siblings('span.error').css('visibility', 'hidden')
+            }
+            return isallvalid;
+        }
+
+
+        function Validate()
+        {
+            debugger;
+
+            var isallvalid = true;
+            if ($('#CityID option:selected').text() == '--Select---')
+            {
+                $('#CityIDv').css('display', 'block');
+                isallvalid = false;
+            }
+            else {
+                $('#CityIDv').css('display', 'none');
+            }
+            //if ($('#AreaLenght option:selected').text() == "--Select---")
+            //{
+            //    $('#AreaLenghtv').css('display', 'block');
+            //    isallvalid = false;
+            //}
+            //else {
+            //    $('#AreaLenghtv').css('display', 'none');
+            //}
+            
+            if ($('#WarHouseName').val() == "") {
+                $('#WarHouseNamev').css('display', 'block');
+                isallvalid = false;
+            }
+            else {
+                $('#WarHouseName').css('display', 'none');
+            }
+            return isallvalid;
+        }
+
+    </script>
+}
