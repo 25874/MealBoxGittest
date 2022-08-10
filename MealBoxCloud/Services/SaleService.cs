@@ -1,11 +1,9 @@
 ﻿
 using MealBoxCloud;
 using MealBoxCloud.Models;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 
 
 
@@ -31,7 +29,7 @@ namespace MealBox.Services
                              MSal_dat = a.MSal_dat,
                              CustomerName = b.CustomerName,
                              CustomerID = b.CustomerID,
-                             MSal_sono = a.MSal_sono                        
+                             MSal_sono = a.MSal_sono
                          }).ToList();
 
             return query;
@@ -73,7 +71,7 @@ namespace MealBox.Services
         {
             return Db.tbl_DSal.Where(w => w.MSal_id == Msalid && w.ProductID == Prdid).FirstOrDefault();
         }
-        public List<Sp_SaleInvoice_Result> GetSaleInvoice(int id) 
+        public List<Sp_SaleInvoice_Result> GetSaleInvoice(int id)
         {
             var data = Db.Sp_SaleInvoice(id).ToList();
             return data;
@@ -97,7 +95,7 @@ namespace MealBox.Services
 
             var amovar = Db.tbl_CB.OrderByDescending(o => o.CB_id).Select(s => s.AmountVar).FirstOrDefault();
 
-            if(amovar != null)
+            if (amovar != null)
             {
                 return amovar.Value;
             }
@@ -110,7 +108,7 @@ namespace MealBox.Services
 
         }
 
-        public object GetAccNo(int id) 
+        public object GetAccNo(int id)
         {
             var Data = Db.Accounts.Where(w => w.PersonId == id).Select(s => s.AccountGeneratedCodeId).FirstOrDefault();
             return Data;
@@ -141,7 +139,7 @@ namespace MealBox.Services
             return Db.tbl_WareHouseInventory.Where(w => w.Productid == id).FirstOrDefault();
         }
 
-        
+
         //public void AddPurchases(PurchaseModel Model)
         //{
         //    try

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace MealBoxCloud.Models
 {
@@ -56,7 +54,7 @@ namespace MealBoxCloud.Models
         public Nullable<double> NetTotal { get; set; }
 
         public Nullable<double> hNetTotal { get; set; }
- 
+
         public Nullable<double> Amount { get; set; }
 
         public Nullable<double> PurchaseTotal { get; set; }
@@ -80,7 +78,7 @@ namespace MealBoxCloud.Models
         public int DpurHid { get; set; }
         public int Itemhid { get; set; }
         public List<ItemChild> ItemChild { get; set; }
-    
+
         public List<DeleteItemChild2> deleteItems { get; set; }
     }
 
@@ -104,6 +102,6 @@ namespace MealBoxCloud.Models
         public Nullable<double> Amount { get; set; }
 
     }
-    
+
 
 }

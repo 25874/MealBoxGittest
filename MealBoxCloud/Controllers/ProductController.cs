@@ -1,15 +1,11 @@
-﻿using System;
+﻿using AutoMapper;
+using MealBoxCloud.Infrastructure;
+using MealBoxCloud.Models;
+using MealBoxCloud.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using AutoMapper;
-using MealBox.Services;
-
-using MealBoxCloud.Infrastructure;
-using MealBoxCloud.Services;
-
-using MealBoxCloud.Models;
 
 namespace MealBoxCloud.Controllers
 {
@@ -18,17 +14,17 @@ namespace MealBoxCloud.Controllers
         // GET: Product
 
         private readonly ProductServices _productServices;
-        
-        private readonly IMapper  _mapper;
+
+        private readonly IMapper _mapper;
         public ProductController()
         {
             _productServices = new ProductServices();
             _mapper = AutoMapperProfile.Mapper;
         }
-        
-        public ActionResult AddItem(int ? id)
+
+        public ActionResult AddItem(int? id)
         {
-            using(var db = new MealBoxesEntities())
+            using (var db = new MealBoxesEntities())
             {
                 var ProductTypeList = db.tbl_producttype.ToList();
                 ViewBag.ProductTypeID = new SelectList(ProductTypeList, "ProductTypeID", "ProductTypeName");
@@ -42,15 +38,15 @@ namespace MealBoxCloud.Controllers
                     var ModalData = _mapper.Map<ProductModel>(data);
                     return View(ModalData);
                 }
-                
+
             }
             return View();
         }
-        
+
         [HttpPost]
         public ActionResult AddItem(ProductModel Model)
         {
-            using(var db = new MealBoxesEntities())
+            using (var db = new MealBoxesEntities())
             {
                 try
                 {
@@ -74,10 +70,10 @@ namespace MealBoxCloud.Controllers
                         var olditem = _productServices.GetStockId(obj.ProductID);
                         var stockref = db.stockIns.Count();
                         stockIn obj2 = new stockIn();
-                        obj2.StockInID  = olditem.ProductID;
-                        obj2.StockRef   = stockref;
-                        obj2.StockQty   = 0;
-                        obj2.create_at =  DateTime.Now;
+                        obj2.StockInID = olditem.ProductID;
+                        obj2.StockRef = stockref;
+                        obj2.StockQty = 0;
+                        obj2.create_at = DateTime.Now;
                         obj2.created_by = "Sajid";
                         obj2.Units = Model.Unit;
                         obj2.StockQty = 0;
@@ -105,10 +101,10 @@ namespace MealBoxCloud.Controllers
                         db.SaveChanges();
                         return Json("Success", JsonRequestBehavior.AllowGet);
                     }
-                  
+
                 }
-                  
-                catch (Exception ex) 
+
+                catch (Exception ex)
                 {
 
                 }
@@ -118,13 +114,13 @@ namespace MealBoxCloud.Controllers
         }
         public ActionResult ItemList()
         {
-                var Model = _productServices.ProductList();
-                
-                return View(Model);
+            var Model = _productServices.ProductList();
+
+            return View(Model);
         }
-        public ActionResult AddItemCategory(int? id) 
+        public ActionResult AddItemCategory(int? id)
         {
-            if(id > 0)
+            if (id > 0)
             {
                 var data = _productServices.GetProductType(id.Value);
                 var ModalData = _mapper.Map<ProductModel>(data);
@@ -148,26 +144,26 @@ namespace MealBoxCloud.Controllers
             }
             return Json("Success", JsonRequestBehavior.AllowGet);
         }
-        public ActionResult ItemTypeList() 
+        public ActionResult ItemTypeList()
         {
             var List = _productServices.ProductTypeList();
             var Model = _mapper.Map<List<ProductModel>>(List);
             return View(Model);
         }
 
-        public ActionResult Itemprice(int? id) 
+        public ActionResult Itemprice(int? id)
         {
             var data = _productServices.GetProductBYId(id.Value);
-            
-            return Json(data,JsonRequestBehavior.AllowGet);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        
+
         //Get Product for Inventory
         public ActionResult GetProductType(int id)
         {
-                var data = _productServices.GetProductType(id);
-                return Json (data, JsonRequestBehavior.AllowGet);
+            var data = _productServices.GetProductType(id);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ProductList(int id)

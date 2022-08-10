@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace MealBoxCloud.Models
 {
     public class Transactionmodel
     {
         public string Expenseremarks { get; set; }
-        public int EmployeeId { get; set;}
-        public string PayAccount { get; set;}
-        public string RecAccount { get; set;}
+        public int EmployeeId { get; set; }
+        public string PayAccount { get; set; }
+        public string RecAccount { get; set; }
         public string type { get; set; }
         public int expenceid { get; set; }
         public string acctitle { get; set; }
@@ -23,7 +20,7 @@ namespace MealBoxCloud.Models
         public Nullable<int> CashBnk_id { get; set; }
         public string CashBnk_nam { get; set; }
         public string BankId { get; set; }
-        public int SaleReturn { get; set;}
+        public int SaleReturn { get; set; }
         public int PurchaseReturn { get; set; }
         public Nullable<double> bankamt { get; set; }
         public Nullable<double> PaymentIn { get; set; }

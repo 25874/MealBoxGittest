@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace MealBoxCloud.Models
 {
     public class SalesModel
     {
-        public int MSaleid {get; set;}
+        public int MSaleid { get; set; }
         public string MSal_sono { get; set; }
         public Nullable<System.DateTime> MSal_dat { get; set; }
         public string MSal_Rmk { get; set; }
@@ -44,13 +42,13 @@ namespace MealBoxCloud.Models
         public Nullable<double> Balance { get; set; }
 
         public ICollection<Sp_SaleInvoice_Result> SaleInvoice { get; set; }
-        public string  ProductName { get; set; }
+        public string ProductName { get; set; }
         public Nullable<bool> Effected { get; set; }
         public Nullable<double> gst { get; set; }
         public Nullable<double> othtax { get; set; }
         public Nullable<double> Amt { get; set; }
         public Nullable<double> hAmt { get; set; }
-        
+
         public Nullable<double> GTtl { get; set; }
         public Nullable<double> Dis { get; set; }
         public Nullable<double> sdis { get; set; }
@@ -60,8 +58,8 @@ namespace MealBoxCloud.Models
         public Nullable<double> DSal_salcst { get; set; }
         public Nullable<double> DSal_ItmQty { get; set; }
         public Nullable<int> ProductID { get; set; }
-        public int DSalHid { get; set;}
-        public List<SalesChild> saleschilds {get; set;}
+        public int DSalHid { get; set; }
+        public List<SalesChild> saleschilds { get; set; }
         public List<DeleteSalesChild> SaleDele { get; set; }
         public Nullable<double> DSal_netttl { get; set; }
 
@@ -70,7 +68,7 @@ namespace MealBoxCloud.Models
     public class SalesChild
     {
         public Nullable<int> ItemId { get; set; }
-        public Nullable<int>    ItemQty { get; set; }
+        public Nullable<int> ItemQty { get; set; }
         public Nullable<Double> ItemCost { get; set; }
         public Nullable<Double> ItemTotalAmount { get; set; }
         public Nullable<int> MSalChildID { get; set; }
@@ -89,7 +87,7 @@ namespace MealBoxCloud.Models
         public int ItemDelQty { get; set; }
         public Nullable<Double> ItemCost { get; set; }
         public int SaleReturnId { get; set; }
-    
+
         public Nullable<Double> ItemTotalAmount { get; set; }
     }
 

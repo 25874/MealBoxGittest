@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 
 namespace MealBoxCloud.Models
@@ -9,7 +6,7 @@ namespace MealBoxCloud.Models
     public class CustomerModel
     {
         public int CustomerID { get; set; }
-        [Display(Name ="Name")]
+        [Display(Name = "Name")]
         public string CustomerName { get; set; }
         public string GST { get; set; }
         public string category { get; set; }
@@ -63,7 +60,7 @@ namespace MealBoxCloud.Models
         public string LCyl { get; set; }
         public string LAsix { get; set; }
         public string LAdd { get; set; }
-        public Double PreviousBalance { get; set; }       
+        public Double PreviousBalance { get; set; }
         public string cust_acc { get; set; }
     }
 }

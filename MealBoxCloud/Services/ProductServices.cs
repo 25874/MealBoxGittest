@@ -1,9 +1,8 @@
-﻿using System;
+﻿using MealBoxCloud.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Data.Entity;
-using MealBoxCloud.Models;
+using System.Linq;
 
 namespace MealBoxCloud.Services
 {
@@ -24,7 +23,7 @@ namespace MealBoxCloud.Services
                              ProductTypeName = b.ProductTypeName,
                              ProductID = a.ProductID,
                              ProductName = a.ProductName
-                         }).OrderByDescending(o=> o.ProductID).ToList();
+                         }).OrderByDescending(o => o.ProductID).ToList();
 
             return query;
         }
@@ -49,26 +48,26 @@ namespace MealBoxCloud.Services
             var StockList = Db.stockIns.ToList();
 
             var query = (from a in ProductList
-                        join b in StockList
-                        on a.ProductID equals b.StockInID
+                         join b in StockList
+                         on a.ProductID equals b.StockInID
                          where (b.StockInID == Id)
-                         select new 
-                        { 
+                         select new
+                         {
 
-                         PurchasePrice = a.PurchasePrice,
-                         Limit = a.Limit,
-                         SalePrice = a.SalePrice,
-                         UnitId = a.Unit,
-                         ProductName = a.ProductName,
-                         Quantity = b.StockQty
-            
-               }).FirstOrDefault();
-                
+                             PurchasePrice = a.PurchasePrice,
+                             Limit = a.Limit,
+                             SalePrice = a.SalePrice,
+                             UnitId = a.Unit,
+                             ProductName = a.ProductName,
+                             Quantity = b.StockQty
+
+                         }).FirstOrDefault();
+
 
             return query;
         }
-      
-        public Product GetProduct(int id) 
+
+        public Product GetProduct(int id)
         {
             var data = Db.Products.Where(w => w.ProductID == id).FirstOrDefault();
             return data;
@@ -81,21 +80,21 @@ namespace MealBoxCloud.Services
                 Db.Products.Add(Model);
                 Db.SaveChanges();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 Console.ReadLine();
             }
         }
 
-        public void UpdateProduct(Product model) 
+        public void UpdateProduct(Product model)
         {
 
             try
             {
 
-            Db.Entry(model).State = EntityState.Modified;
-            Db.SaveChanges();
+                Db.Entry(model).State = EntityState.Modified;
+                Db.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -106,10 +105,10 @@ namespace MealBoxCloud.Services
 
         public List<tbl_producttype> ProductTypeList()
         {
-            return Db.tbl_producttype.OrderByDescending(o=> o.ProductTypeID).ToList();
+            return Db.tbl_producttype.OrderByDescending(o => o.ProductTypeID).ToList();
         }
 
-        public object  GetProductType(int Id)
+        public object GetProductType(int Id)
         {
             var product = Db.Products.ToList();
             var _Producttypes = Db.tbl_producttype.ToList();
@@ -128,7 +127,7 @@ namespace MealBoxCloud.Services
             return query;
         }
 
-        public Product GetStockId(int id) 
+        public Product GetStockId(int id)
         {
             return Db.Products.Find(id);
         }
@@ -146,13 +145,13 @@ namespace MealBoxCloud.Services
                 Console.ReadLine();
             }
         }
-        
+
         public void UpdateProductType(tbl_producttype model)
         {
             Db.Entry(model).State = EntityState.Modified;
             Db.SaveChanges();
         }
 
-        
+
     }
 }

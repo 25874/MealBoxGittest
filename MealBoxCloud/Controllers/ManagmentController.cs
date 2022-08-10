@@ -1,14 +1,10 @@
-﻿using System;
-using System;
+﻿using AutoMapper;
+using MealBoxCloud.Infrastructure;
+using MealBoxCloud.Models;
+using MealBoxCloud.Services;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using AutoMapper;
-using MealBox.Services;
-using MealBoxCloud.Models;
-using MealBoxCloud.Infrastructure;
-using MealBoxCloud.Services;
 
 namespace MealBoxCloud.Controllers
 {
@@ -24,17 +20,17 @@ namespace MealBoxCloud.Controllers
         {
             managmentService = new ManagmentService();
             _mapper = AutoMapperProfile.Mapper;
-        } 
+        }
         public ActionResult AddSupplier(int? id)
         {
             var CitiesList = managmentService.CityList();
             ViewBag.City_ = new SelectList(CitiesList, "CityId", "CityName");
-              if(id > 0)
-                {
-                    var data = managmentService.Getsupplier(id.Value);
-                    var ModalData = _mapper.Map<SupplierModel>(data);
-                    return View(ModalData);
-                }
+            if (id > 0)
+            {
+                var data = managmentService.Getsupplier(id.Value);
+                var ModalData = _mapper.Map<SupplierModel>(data);
+                return View(ModalData);
+            }
             return View();
         }
         [HttpPost]
@@ -44,14 +40,14 @@ namespace MealBoxCloud.Controllers
             ViewBag.City_ = new SelectList(CitiesList, "CityId", "CityName");
 
             var id = Model.supplierId;
-            if(id == 0) 
-            { 
-            
-            var Modeldata = _mapper.Map<supplier>(Model);
-            managmentService.Addsupplier(Modeldata);
-            managmentService.CreateSupplierAccount();
+            if (id == 0)
+            {
+
+                var Modeldata = _mapper.Map<supplier>(Model);
+                managmentService.Addsupplier(Modeldata);
+                managmentService.CreateSupplierAccount();
             }
-            else 
+            else
             {
                 var modeldata = _mapper.Map<supplier>(Model);
                 managmentService.Updatesupplier(modeldata);
@@ -69,7 +65,7 @@ namespace MealBoxCloud.Controllers
             if (id > 0)
             {
                 var CitiesList = managmentService.CityList();
-                
+
                 var data = managmentService.GetArea(id.Value);
                 ViewBag.ProvinceIdFk = new SelectList(ProvinceList, "PrivinceId", "ProvinceName", data.ProvinceIdFk);
                 ViewBag.CityIdFk = new SelectList(CitiesList, "CityId", "CityName", data.CityIdFk);
@@ -103,8 +99,8 @@ namespace MealBoxCloud.Controllers
             var List = managmentService.AreaList();
             var AreaModel = _mapper.Map<List<AreaModel>>(List);
 
-            
-         
+
+
 
 
             return View(AreaModel);
@@ -140,9 +136,9 @@ namespace MealBoxCloud.Controllers
             if (id > 0)
             {
                 var data = managmentService.GetBank(id.Value);
-                
+
                 var ModalData = _mapper.Map<BankModel>(data);
-               
+
                 return View(ModalData);
             }
             return View();
@@ -152,7 +148,7 @@ namespace MealBoxCloud.Controllers
         public ActionResult AddBank(BankModel Model)
         {
             var id = Model.CashBnk_id;
-            if(id == 0)
+            if (id == 0)
             {
                 var Modeldata = _mapper.Map<tbl_CashBnk>(Model);
                 managmentService.AddBank(Modeldata);
@@ -196,7 +192,7 @@ namespace MealBoxCloud.Controllers
         }
 
 
-            public ActionResult SupplierList() 
+        public ActionResult SupplierList()
         {
             var List = managmentService.supplierList();
             var Model = _mapper.Map<List<SupplierModel>>(List);
@@ -212,15 +208,15 @@ namespace MealBoxCloud.Controllers
             ViewBag.Area = new SelectList(AreaList, "areaid", "area_");
 
             if (id > 0)
-                {
-                    var data = managmentService.GetCustomers(id.Value);
-                    var ModalData = _mapper.Map<CustomerModel>(data);
-                    return View(ModalData);
-                }
-
-            
-            return View();
+            {
+                var data = managmentService.GetCustomers(id.Value);
+                var ModalData = _mapper.Map<CustomerModel>(data);
+                return View(ModalData);
             }
+
+
+            return View();
+        }
 
 
         public ActionResult SubMenuddl(int id)
@@ -229,7 +225,7 @@ namespace MealBoxCloud.Controllers
             {
                 SubMenuId = s.SubMenuId,
                 SubMenuName = s.SubMenuNam,
-                
+
             }).ToList();
 
             return Json(SubMenuList, JsonRequestBehavior.AllowGet);
@@ -246,7 +242,7 @@ namespace MealBoxCloud.Controllers
                 var Modeldata = _mapper.Map<Customers_>(Model);
                 managmentService.AddCustomers(Modeldata);
                 managmentService.CreateCustomerAccount();
-                
+
             }
             else
             {
@@ -254,7 +250,7 @@ namespace MealBoxCloud.Controllers
                 managmentService.UpdateCustomers(modeldata);
             }
             return Json("Success", JsonRequestBehavior.AllowGet);
-            
+
         }
 
         public ActionResult CustomerList()
@@ -264,7 +260,7 @@ namespace MealBoxCloud.Controllers
             return View(Model);
         }
 
-        public ActionResult AddEmployee(int ? id)
+        public ActionResult AddEmployee(int? id)
         {
             if (id > 0)
             {
@@ -300,15 +296,15 @@ namespace MealBoxCloud.Controllers
             return Json(Data, JsonRequestBehavior.AllowGet);
         }
 
-            public ActionResult AssignSalesman(int? id) 
+        public ActionResult AssignSalesman(int? id)
         {
-           var BookerList = Db.tbl_User.Where(w => w.UserTypeId == 2).Select(s => new
-           {
+            var BookerList = Db.tbl_User.Where(w => w.UserTypeId == 2).Select(s => new
+            {
 
-               Bookerid = s.EmployeeId,
-               BookerName = s.Name
+                Bookerid = s.EmployeeId,
+                BookerName = s.Name
 
-           }).ToList();
+            }).ToList();
 
             var SalesmanList = Db.tbl_User.Where(w => w.UserTypeId == 3).Select(s => new
             {
@@ -322,8 +318,8 @@ namespace MealBoxCloud.Controllers
 
 
             ViewBag.Salesman = new SelectList(SalesmanList, "Salesmanid", "SalesmanName");
-            
-            
+
+
             return View();
         }
 
@@ -333,14 +329,14 @@ namespace MealBoxCloud.Controllers
             return View();
         }
 
-        public ActionResult EmployeeList() 
+        public ActionResult EmployeeList()
         {
-            var List =  managmentService.EmployeeList();
+            var List = managmentService.EmployeeList();
             var Model = _mapper.Map<List<EmployeeModel>>(List);
             return View(Model);
         }
 
-        public ActionResult AddProvince(int? id) 
+        public ActionResult AddProvince(int? id)
         {
             if (id > 0)
             {
@@ -357,7 +353,7 @@ namespace MealBoxCloud.Controllers
         public ActionResult AddProvince(AreaModel Model)
         {
             var id = Model.PrivinceId;
-            if(id == 0)
+            if (id == 0)
             {
                 var Modeldata = _mapper.Map<Province>(Model);
                 managmentService.AddProvince(Modeldata);
@@ -410,15 +406,15 @@ namespace MealBoxCloud.Controllers
             return Json("Success", JsonRequestBehavior.AllowGet);
 
         }
-        
-        public ActionResult SaleDis(int id) 
+
+        public ActionResult SaleDis(int id)
         {
             var data = managmentService.GetSaleDiscount(id);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         public ActionResult CityList()
         {
-            var Model = managmentService.CityList();            
+            var Model = managmentService.CityList();
             return View(Model);
         }
     }

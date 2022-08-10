@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MealBoxCloud.Models;
 using MealBox.Services;
 using MealBoxCloud;
-using MealBoxCloud.Models;
-using MealBoxCloud.Services;
 
-namespace MealBoxCloud.Controllers
+namespace MealBox.Controllers
 {
     public class DSRController : Controller
     {
@@ -99,7 +98,7 @@ namespace MealBoxCloud.Controllers
         [HttpPost]
         public ActionResult AddDsr(DSRModel model)
         {
-            using (var db = new MealBoxesEntities())
+            using (var db = new MealBoxesEntities1())
             {
 
                 var AreaList = db.tbl_area.ToList();
@@ -272,7 +271,7 @@ namespace MealBoxCloud.Controllers
 
         public ActionResult Customerddl(int id)
         {
-            using (var db = new MealBoxesEntities())
+            using (var db = new MealBoxesEntities1())
             {
 
 

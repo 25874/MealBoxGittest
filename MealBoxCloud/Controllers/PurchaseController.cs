@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using AutoMapper;
-using System.Web.Script.Serialization;
-using MealBoxCloud.Class;
-using MealBoxCloud.Services;
-using MealBoxCloud.Infrastructure;
+﻿using AutoMapper;
 using MealBoxCloud;
+using MealBoxCloud.Class;
+using MealBoxCloud.Infrastructure;
 using MealBoxCloud.Models;
+using MealBoxCloud.Services;
+using System;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace MealBox.Controllers
 {
@@ -288,7 +286,7 @@ namespace MealBox.Controllers
 
                                 var WareHouseStockUpdate2 = _PurchaseServices.GetWareHouseStock(WareHouse.Value, Model.ItemChild[item].ItemId.Value);
                                 WareHouseStockUpdate2.Qty = WareHouseStockUpdate2.Qty + Model.ItemChild[item].ItemQty;
-                               
+
                                 _PurchaseServices.UpdateWareHouseStock(WareHouseStockUpdate2);
 
                             }
@@ -317,11 +315,11 @@ namespace MealBox.Controllers
             }
 
         }
-        
-    
 
 
-    public ActionResult PurchaseList()
+
+
+        public ActionResult PurchaseList()
         {
             var Model = _PurchaseServices.PurchaseList();
             return View(Model);

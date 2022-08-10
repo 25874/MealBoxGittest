@@ -1,13 +1,10 @@
-﻿using System;
+﻿using AutoMapper;
+using MealBoxCloud.Infrastructure;
+using MealBoxCloud.Models;
+using MealBoxCloud.Services;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using MealBox.Services;
-using MealBoxCloud.Models;
-using AutoMapper;
-using MealBoxCloud.Infrastructure;
-using MealBoxCloud.Services;
 
 namespace MealBoxCloud.Controllers
 {
@@ -67,12 +64,12 @@ namespace MealBoxCloud.Controllers
             if (Type == "Subhead")
             {
                 AccountService.AddSubHead(Model);
-                    
+
                 msg = "Subhead";
 
                 return Json(msg, JsonRequestBehavior.AllowGet);
             }
-            else if(Type == "Account") 
+            else if (Type == "Account")
             {
                 AccountService.AddAccount(Model);
 
@@ -105,38 +102,38 @@ namespace MealBoxCloud.Controllers
         public ActionResult HeadDDl()
         {
             var HeadList = AccountService.GetHeadsList();
-            
+
             return Json(HeadList, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult SubHeadDDl(string id)
         {
-        
-         var SubHeeadDDl = AccountService.SubHeadDDl(id);
-        
-         return Json(SubHeeadDDl, JsonRequestBehavior.AllowGet);
-        
+
+            var SubHeeadDDl = AccountService.SubHeadDDl(id);
+
+            return Json(SubHeeadDDl, JsonRequestBehavior.AllowGet);
+
         }
 
-            public ActionResult Transaction() 
-          {
+        public ActionResult Transaction()
+        {
 
-            ViewBag.PayAccount = new  SelectList("", "");
+            ViewBag.PayAccount = new SelectList("", "");
 
             ViewBag.RecAccount = new SelectList("", "");
 
             var BankList = db.tbl_CashBnk.ToList();
-            ViewBag.CashBnk_id = new SelectList(BankList , "CashBnk_id", "CashBnk_nam");
+            ViewBag.CashBnk_id = new SelectList(BankList, "CashBnk_id", "CashBnk_nam");
 
-            ViewBag.SaleReturn =   new SelectList("", "");
+            ViewBag.SaleReturn = new SelectList("", "");
             ViewBag.PurchaseReturn = new SelectList("", "");
 
             return View();
-          }
+        }
 
         [HttpPost]
-        
-        public ActionResult PayAccouvtddl() 
+
+        public ActionResult PayAccouvtddl()
         {
             var PayList = db.Accounts.Where(w => w.headGeneratedIdCode == "003" && w.AccountName != null).Select(s => new
             {
@@ -146,8 +143,8 @@ namespace MealBoxCloud.Controllers
                 EmpId = s.PersonId
 
             }).ToList();
-            
-            return Json(PayList,JsonRequestBehavior.AllowGet);
+
+            return Json(PayList, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult RecAccouvtddl()
@@ -185,11 +182,11 @@ namespace MealBoxCloud.Controllers
             return Json(SaleList, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult OpeningBalance() 
+        public ActionResult OpeningBalance()
         {
-           
+
             var openbala = AccountService.GetOpeningBalance();
-            
+
             return Json(openbala, JsonRequestBehavior.AllowGet);
 
         }

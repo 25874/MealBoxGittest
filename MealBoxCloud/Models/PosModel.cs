@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace MealBoxCloud.Models
 {
@@ -10,7 +8,7 @@ namespace MealBoxCloud.Models
         public string ItemCode { get; set; }
         public string ItemName { get; set; }
 
-        public ICollection<Sp_PosInvoice_Result>  sp_PosInvoice   { get; set; }
+        public ICollection<Sp_PosInvoice_Result> sp_PosInvoice { get; set; }
 
         public int EmployeeId { get; set; }
 

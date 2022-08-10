@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using AutoMapper;
-using System.Web.Script.Serialization;
-using MealBoxCloud.Services;
+﻿using AutoMapper;
 using MealBoxCloud.Infrastructure;
 using MealBoxCloud.Models;
+using MealBoxCloud.Services;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace MealBoxCloud.Controllers
 {
@@ -24,8 +22,8 @@ namespace MealBoxCloud.Controllers
             _wareHouseService = new WareHouseService();
             _mapper = AutoMapperProfile.Mapper;
         }
-             public ActionResult Index(int? id)
-            {
+        public ActionResult Index(int? id)
+        {
 
             var area = _wareHouseService.GetAreaLenth();
             ViewBag.AreaLenght = new SelectList(area, "AreaLenghtid", "AreaLenght1");
@@ -33,7 +31,7 @@ namespace MealBoxCloud.Controllers
 
             if (id > 0)
             {
-                
+
                 WareHouseModel Model = new WareHouseModel();
 
                 using (var db = new MealBoxesEntities())
@@ -50,9 +48,9 @@ namespace MealBoxCloud.Controllers
             }
 
 
-            using (var Db = new MealBoxesEntities()) 
+            using (var Db = new MealBoxesEntities())
             {
-                var CityList =  Db.Cities.ToList();
+                var CityList = Db.Cities.ToList();
                 ViewBag.CityID = new SelectList(CityList, "CityId", "CityName");
 
                 var WarHouseList = Db.tbl_WareHouse.ToList();
@@ -67,7 +65,7 @@ namespace MealBoxCloud.Controllers
 
 
                 var WareHouseData = _mapper.Map<List<WareHouse>>(WareHouseList);
-                
+
                 Model.WareHousesList = WareHouseData;
 
                 var WareHouseInvList = _wareHouseService.GetWareHousInveList();
@@ -83,34 +81,34 @@ namespace MealBoxCloud.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Index(WareHouseModel Model ) 
+        public ActionResult Index(WareHouseModel Model)
         {
 
             var type = Model.Type;
             if (type == 1)
             {
 
-                var data2 =   _wareHouseService.AddWareHouse(Model);
+                var data2 = _wareHouseService.AddWareHouse(Model);
 
-                 return Json(data2, JsonRequestBehavior.AllowGet);
+                return Json(data2, JsonRequestBehavior.AllowGet);
             }
-            else 
+            else
             {
-               
-                var data =  _wareHouseService.AddWareHouseInventory(Model);
+
+                var data = _wareHouseService.AddWareHouseInventory(Model);
                 return Json(data, JsonRequestBehavior.AllowGet);
             }
-            
+
         }
 
         public ActionResult WarHouseBody()
         {
 
-          var WareHouseList = _wareHouseService.GetWareHousList();
+            var WareHouseList = _wareHouseService.GetWareHousList();
 
-          var WareHousedata = _mapper.Map<List<WareHouse>>(WareHouseList);
+            var WareHousedata = _mapper.Map<List<WareHouse>>(WareHouseList);
 
-          return PartialView("_WareHouseBody", WareHousedata);
+            return PartialView("_WareHouseBody", WareHousedata);
         }
 
         public ActionResult WarHouseInventoryBody()

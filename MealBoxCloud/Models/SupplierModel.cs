@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 
 namespace MealBoxCloud.Models
@@ -10,13 +7,13 @@ namespace MealBoxCloud.Models
     {
 
         public int supplierId { get; set; }
-        
+
         [Display(Name = "Name")]
         public string suppliername { get; set; }
-        
+
         [Display(Name = "Contact Person")]
         public string contactperson { get; set; }
-        
+
         [Display(Name = "BackUp Contact")]
         public string BackUpContact { get; set; }
         [Display(Name = "City")]
@@ -47,7 +44,7 @@ namespace MealBoxCloud.Models
         public string Url { get; set; }
         [Display(Name = "Business Nature")]
         public string BusinessNature { get; set; }
-        
+
         [DataType(DataType.EmailAddress, ErrorMessage = "E-mail is not valid")]
         [EmailAddress]
         public string Email { get; set; }

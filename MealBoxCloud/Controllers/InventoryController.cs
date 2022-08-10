@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using AutoMapper;
+﻿using AutoMapper;
 using MealBoxCloud.Infrastructure;
 using MealBoxCloud.Models;
 using MealBoxCloud.Services;
+using System;
+using System.Web.Mvc;
 
 namespace MealBoxCloud.Controllers
 {
@@ -28,7 +25,7 @@ namespace MealBoxCloud.Controllers
             ViewBag.StockCount = _inventoryService.StockCount();
             var ProductList = _ProductService.ProductTypeList();
             ViewBag.ProductTypeID = new SelectList(ProductList, "ProductTypeID", "ProductTypeName");
-            ViewBag.Product = new SelectList("");            
+            ViewBag.Product = new SelectList("");
             return View();
         }
 
@@ -46,7 +43,7 @@ namespace MealBoxCloud.Controllers
         }
 
 
-        public ActionResult DeductInventory() 
+        public ActionResult DeductInventory()
         {
             var ProductList = _ProductService.ProductTypeList();
             ViewBag.ProductTypeID = new SelectList(ProductList, "ProductTypeID", "ProductTypeName");
@@ -56,7 +53,7 @@ namespace MealBoxCloud.Controllers
 
 
         [HttpPost]
-        public ActionResult DeductInventory(InventoryModel Model) 
+        public ActionResult DeductInventory(InventoryModel Model)
         {
             var ProductId = Model.StockInID;
 
@@ -70,22 +67,22 @@ namespace MealBoxCloud.Controllers
         }
 
 
-        public ActionResult InventoryList() 
+        public ActionResult InventoryList()
         {
-            var model = _inventoryService.StockList();            
+            var model = _inventoryService.StockList();
             return View(model);
         }
 
-        public ActionResult StockById(int id) 
+        public ActionResult StockById(int id)
         {
             var Data = _inventoryService.GetStock(id);
             return Json(Data.StockQty, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult GetQuantityAvail(int id) 
+        public ActionResult GetQuantityAvail(int id)
         {
             var Data = _inventoryService.GetQuantityAvail(id);
             return Json(Data, JsonRequestBehavior.AllowGet);
-        } 
+        }
 
     }
 }

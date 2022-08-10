@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 
 namespace MealBoxCloud.Models
@@ -9,7 +6,7 @@ namespace MealBoxCloud.Models
     public class EmployeeModel
     {
         public int employeeID { get; set; }
-        [Display(Name ="Name")]
+        [Display(Name = "Name")]
         public string employeeName { get; set; }
         public string employeeLastName { get; set; }
         public string employeeFatherName { get; set; }
@@ -27,11 +24,11 @@ namespace MealBoxCloud.Models
         [StringLength(11, MinimumLength = 11, ErrorMessage = "Contact Number Must Contain 11 digits")]
         public string PhoneNum { get; set; }
         [Display(Name = "Mobile No")]
-        
+
         [StringLength(11, MinimumLength = 11, ErrorMessage = "Contact Number Must Contain 11 digits")]
         public string CellNum { get; set; }
         [Display(Name = "Fax NO")]
-        
+
         public string Address1 { get; set; }
         public string Address2 { get; set; }
         public string Passport { get; set; }
@@ -50,7 +47,7 @@ namespace MealBoxCloud.Models
         public string SalesPercentage { get; set; }
 
         [Display(Name = "Salary")]
-        
+
         public int booker { get; set; }
 
         public int Salesman { get; set; }
@@ -69,7 +66,7 @@ namespace MealBoxCloud.Models
         public string Created_By { get; set; }
         [Display(Name = "Designation")]
         public string designation { get; set; }
-        
+
         public string Address { get; set; }
         public Nullable<double> income_tax { get; set; }
         public string others { get; set; }

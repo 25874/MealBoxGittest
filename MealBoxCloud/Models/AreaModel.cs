@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace MealBoxCloud.Models
 {
@@ -15,8 +12,8 @@ namespace MealBoxCloud.Models
         public int PrivinceId { get; set; }
         public string CityName { get; set; }
         public Nullable<int> ProvinceIdFk { get; set; }
-        public string ProvinceName { get; set;}
-        public Nullable<int> CityIdFk { get; set;}
+        public string ProvinceName { get; set; }
+        public Nullable<int> CityIdFk { get; set; }
 
     }
 }

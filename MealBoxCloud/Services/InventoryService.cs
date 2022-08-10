@@ -1,5 +1,4 @@
-﻿using MealBoxCloud;
-using MealBoxCloud.Models;
+﻿using MealBoxCloud.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -13,7 +12,7 @@ namespace MealBoxCloud.Services
     {
         MealBoxesEntities Db = new MealBoxesEntities();
 
-        public List<Product>  GetProductList() 
+        public List<Product> GetProductList()
         {
             return Db.Products.ToList();
         }
@@ -26,17 +25,17 @@ namespace MealBoxCloud.Services
             }
             catch (Exception ex)
             {
-                 Console.WriteLine(ex);
+                Console.WriteLine(ex);
                 Console.ReadLine();
             }
         }
-        public int StockCount() 
+        public int StockCount()
         {
-            var data =  Db.stockIns.Count();
+            var data = Db.stockIns.Count();
             return data;
         }
 
-        public List<InventoryModel> StockList() 
+        public List<InventoryModel> StockList()
         {
             var StockList = Db.stockIns.ToList();
             var ProductList = Db.Products.ToList();
@@ -44,15 +43,15 @@ namespace MealBoxCloud.Services
             var query = (from a in ProductList
                          join b in StockList
                          on a.ProductID equals b.StockInID
-            
+
                          select new InventoryModel
                          {
                              Product = a.ProductName,
                              unitprice = b.unitprice,
                              StockQty = b.StockQty,
                              StockID = b.StockID
-                         }).OrderByDescending(o=> o.StockID).ToList();
-            
+                         }).OrderByDescending(o => o.StockID).ToList();
+
             return query;
         }
 
@@ -68,24 +67,24 @@ namespace MealBoxCloud.Services
                 Db.Entry(model).State = EntityState.Modified;
                 Db.SaveChanges();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
         }
 
-        public object GetQuantityAvail(int id) 
+        public object GetQuantityAvail(int id)
         {
-           
-              var  quantavail = Db.stockIns.Where(w => w.StockInID == id).Select(s => new
-                {
-                    PurchaseDate = s.Date.ToString(),
-                    RemainingQuantity = s.StockQty
-                }).FirstOrDefault();
+
+            var quantavail = Db.stockIns.Where(w => w.StockInID == id).Select(s => new
+            {
+                PurchaseDate = s.Date.ToString(),
+                RemainingQuantity = s.StockQty
+            }).FirstOrDefault();
             return quantavail;
         }
 
-          
-    
+
+
     }
 }

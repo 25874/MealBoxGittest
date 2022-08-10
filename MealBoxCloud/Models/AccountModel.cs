@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace MealBoxCloud.Models
 {
@@ -32,7 +29,7 @@ namespace MealBoxCloud.Models
         public string SubAccountCategoriesNamec { get; set; }
         public string AccountDate { get; set; }
         public int PayAccount { get; set; }
-        
+
         public int RecAccount { get; set; }
         public int VoucherType { get; set; }
         public int paymentType { get; set; }
@@ -43,7 +40,7 @@ namespace MealBoxCloud.Models
 
         public string HeadGeneratedID { get; set; }
 
-        public string  SubHeadGeneratedID { get; set; }
+        public string SubHeadGeneratedID { get; set; }
 
         public string SubHeadCategoriesGeneratedID { get; set; }
     }
@@ -86,7 +83,7 @@ namespace MealBoxCloud.Models
         public string SubHeadName { get; set; }
         public string SubHeadGeneratedID { get; set; }
         public string HeadGeneratedID { get; set; }
-        
+
         public int SubHeadCategorieId { get; set; }
 
     }

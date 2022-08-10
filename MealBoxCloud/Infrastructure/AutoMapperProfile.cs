@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using AutoMapper;
-using MealBoxCloud;
+﻿using AutoMapper;
 using MealBoxCloud.Models;
 
 namespace MealBoxCloud.Infrastructure
@@ -14,7 +9,8 @@ namespace MealBoxCloud.Infrastructure
 
         public static void Run()
         {
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.CreateMap<Product, ProductModel>().ReverseMap();
                 cfg.CreateMap<supplier, SupplierModel>().ReverseMap();
                 cfg.CreateMap<tbl_employee, EmployeeModel>().ReverseMap();
@@ -34,9 +30,9 @@ namespace MealBoxCloud.Infrastructure
                 cfg.CreateMap<tbl_WareHouseInventory, WareHouseModel>().ReverseMap();
                 cfg.CreateMap<Mpos, Postable>().ReverseMap();
             });
-            
+
             Mapper = config.CreateMapper();
         }
-        
+
     }
 }

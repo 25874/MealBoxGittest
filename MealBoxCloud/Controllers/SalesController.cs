@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using AutoMapper;
-using MealBoxCloud.Infrastructure;
+﻿using AutoMapper;
 using MealBox.Services;
+using MealBoxCloud.Infrastructure;
 using MealBoxCloud.Models;
-using System.Web.Script.Serialization;
 using MealBoxCloud.Services;
+using System;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace MealBoxCloud.Controllers
 {
@@ -25,8 +23,8 @@ namespace MealBoxCloud.Controllers
             _InventoryService = new InventoryService();
         }
         public ActionResult AddSales(int? id)
-            {
-            using(var db = new MealBoxesEntities())
+        {
+            using (var db = new MealBoxesEntities())
             {
                 var ProductList = db.Products.ToList();
                 ViewBag.ProductID = new SelectList(ProductList, "ProductID", "ProductName");
@@ -42,10 +40,10 @@ namespace MealBoxCloud.Controllers
                 ViewBag.SalNo = db.tbl_MSal.Count() + 1;
 
                 SalesModel Model = new SalesModel();
-              
-                if(id > 0) 
+
+                if (id > 0)
                 {
-                    var MsalId = _SaleServices.GetSale(id.Value); 
+                    var MsalId = _SaleServices.GetSale(id.Value);
                     ViewBag.CustomerID = new SelectList(CustomerList, "CustomerID", "CustomerName", MsalId.CustomerID);
                     Model.MSal_dat = MsalId.MSal_dat;
                     Model.Dis = MsalId.Dis;
@@ -58,26 +56,26 @@ namespace MealBoxCloud.Controllers
                     Model.hAmt = MsalId.Amt;
                     Model.ApplyDis = MsalId.ApplyDis;
                     Model.Effected = MsalId.Effected.Value;
-                    Model.wareHouseID = MsalId.WareHouseId.Value;                 
-                        Model.saleschilds = db.tbl_DSal.Where(w => w.MSal_id == MsalId.MSal_id).                                              
-                        Select(s => new SalesChild                
-                          {
-                              DSalId = s.DSal_id,
-                              ItemQty = s.DSal_ItmQty,
-                              ItemCost = s.DSal_salcst,
-                              ItemName = s.Product.ProductName,
-                              ItemTotalAmount = s.Amt,
-                              ItemId = s.ProductID,
-                              MSalChildID = s.MSal_id
-                          }).ToList();
-                   
+                    Model.wareHouseID = MsalId.WareHouseId.Value;
+                    Model.saleschilds = db.tbl_DSal.Where(w => w.MSal_id == MsalId.MSal_id).
+                    Select(s => new SalesChild
+                    {
+                        DSalId = s.DSal_id,
+                        ItemQty = s.DSal_ItmQty,
+                        ItemCost = s.DSal_salcst,
+                        ItemName = s.Product.ProductName,
+                        ItemTotalAmount = s.Amt,
+                        ItemId = s.ProductID,
+                        MSalChildID = s.MSal_id
+                    }).ToList();
+
                     return View(Model);
                 }
 
                 Model.saleschilds = null;
                 Model.Effected = false;
                 return View(Model);
-            
+
             }
         }
         [HttpPost]
@@ -193,7 +191,7 @@ namespace MealBoxCloud.Controllers
 
                 if (Model.SaleDele != null)
                 {
-                    
+
                     foreach (var itemdel in Model.SaleDele)
                     {
                         var del = db.tbl_DSal.Where(w => w.DSal_id == itemdel.DSaleId).FirstOrDefault();
@@ -264,16 +262,16 @@ namespace MealBoxCloud.Controllers
                             db.SaveChanges();
                         }
                     }
-                    
+
                 }
                 return Json(CursalNo, JsonRequestBehavior.AllowGet);
             }
         }
-        
+
         public ActionResult SalesList()
         {
             var Model = _SaleServices.SaleList();
-            
+
             return View(Model);
         }
 
@@ -490,7 +488,7 @@ namespace MealBoxCloud.Controllers
             }
         }
         public ActionResult CustomerView()
-        {          
+        {
 
             return PartialView("_ViewBill");
         }
@@ -504,9 +502,9 @@ namespace MealBoxCloud.Controllers
         }
 
         [HttpPost]
-        public ActionResult Hold(SalesModel model) 
+        public ActionResult Hold(SalesModel model)
         {
-            using (var db = new MealBoxesEntities()) 
+            using (var db = new MealBoxesEntities())
             {
                 //tbl_HoldMPso obj = new tbl_HoldMPso();
                 //obj.BillNo = model.BillNo;
@@ -522,9 +520,9 @@ namespace MealBoxCloud.Controllers
                 //db.tbl_HoldMPso.Add(obj);
                 //db.SaveChanges();
 
-                if (model.saleschilds != null) 
+                if (model.saleschilds != null)
                 {
-                    foreach(var item in model.saleschilds) 
+                    foreach (var item in model.saleschilds)
                     {
                         //tbl_HoldDPso obj2 = new tbl_HoldDPso();
                         //obj2.ProductId = item.ItemId;
@@ -538,7 +536,7 @@ namespace MealBoxCloud.Controllers
                 }
             }
 
-            return Json("success",JsonRequestBehavior.AllowGet);
+            return Json("success", JsonRequestBehavior.AllowGet);
 
         }
         public ActionResult GetSaleCredit(int id)
@@ -547,7 +545,7 @@ namespace MealBoxCloud.Controllers
             return Json(Data, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult SaleInvoice(int id) 
+        public ActionResult SaleInvoice(int id)
         {
             SalesModel Model = new SalesModel();
             var Data = _SaleServices.GetSaleInvoice(id);
@@ -555,8 +553,8 @@ namespace MealBoxCloud.Controllers
             return View(Model);
         }
 
-       
 
-        
+
+
     }
 }

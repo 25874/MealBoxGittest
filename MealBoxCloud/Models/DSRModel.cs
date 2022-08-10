@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace MealBoxCloud.Models
 {
@@ -10,19 +8,19 @@ namespace MealBoxCloud.Models
 
         public ICollection<Sp_DsrView_Result> DsrInvoice { get; set; }
 
-        public ICollection<SP_BookingSheet_Result>  sP_BookingSheet { get; set; }
+        public ICollection<SP_BookingSheet_Result> sP_BookingSheet { get; set; }
 
         public ICollection<VerifyBooking_Result> verifyBooking_Results { get; set; }
 
         public ICollection<ViewFinalDsr_Result> ViewFinalDsr_ { get; set; }
 
 
-        public Nullable<int> CustomerID { get; set;}
-        public Nullable<int> Salesman { get; set;}
-        public Nullable<int> areaid { get; set;}
-        public Nullable<double> furout { get; set;}
+        public Nullable<int> CustomerID { get; set; }
+        public Nullable<int> Salesman { get; set; }
+        public Nullable<int> areaid { get; set; }
+        public Nullable<double> furout { get; set; }
         public Nullable<int> ProductID { get; set; }
-        public Nullable<int> untid { get; set;}
+        public Nullable<int> untid { get; set; }
         public Nullable<double> Qty { get; set; }
         public Nullable<double> salrat { get; set; }
         public Nullable<double> salrturn { get; set; }
@@ -66,19 +64,19 @@ namespace MealBoxCloud.Models
     }
 
 
-    public class DsrChild 
+    public class DsrChild
     {
-     public Nullable<int>    ChildProductID { get; set; }
-     public Nullable<int>      Childuntid    { get; set; }
-     public string ChildUnitName { get; set; }
-     public Nullable<int>      ChildQty   { get; set; }
-     public Nullable<double>   Childsalrat   { get; set; }
-     public Nullable<double>   Childsalrturn { get; set; }    
-     public Nullable<double>   ChildAmt      { get; set; }
-     public Nullable<double>   saleper       { get; set; }
-     public int Ddsridchild { get; set; }
+        public Nullable<int> ChildProductID { get; set; }
+        public Nullable<int> Childuntid { get; set; }
+        public string ChildUnitName { get; set; }
+        public Nullable<int> ChildQty { get; set; }
+        public Nullable<double> Childsalrat { get; set; }
+        public Nullable<double> Childsalrturn { get; set; }
+        public Nullable<double> ChildAmt { get; set; }
+        public Nullable<double> saleper { get; set; }
+        public int Ddsridchild { get; set; }
 
-     public string ChildProductName { get; set; }
+        public string ChildProductName { get; set; }
 
     }
 }

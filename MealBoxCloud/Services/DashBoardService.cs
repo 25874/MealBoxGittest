@@ -1,9 +1,5 @@
-﻿using MealBoxCloud;
-using MealBoxCloud.Models;
-using System;
-using System.Collections.Generic;
+﻿using MealBoxCloud.Models;
 using System.Linq;
-using System.Web;
 
 namespace MealBoxCloud.Services
 {
@@ -25,19 +21,19 @@ namespace MealBoxCloud.Services
                              ProductID = a.ProductID,
                              ProductName = a.ProductName,
                              Limit = a.Limit,
-                             Qty = b.StockQty 
+                             Qty = b.StockQty
 
                          }).ToList();
 
             return query;
 
         }
-        public int GetCustomerNo() 
+        public int GetCustomerNo()
         {
             var data = Db.Customers_.Where(w => w.IsActive == true).Count();
             return data;
         }
-        public int GetBookerNo() 
+        public int GetBookerNo()
         {
             var data = Db.tbl_bkr.Where(w => w.IsActive == true).Count();
             return data;

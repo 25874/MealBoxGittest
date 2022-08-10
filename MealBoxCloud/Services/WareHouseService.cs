@@ -1,11 +1,8 @@
-﻿using System;
+﻿using MealBoxCloud.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel;
-using MealBoxCloud.Models;
 using System.Data.Entity;
-using MealBoxCloud;
+using System.Linq;
 
 namespace MealBoxCloud.Services
 {
@@ -13,7 +10,7 @@ namespace MealBoxCloud.Services
     {
         MealBoxesEntities Db = new MealBoxesEntities();
 
-        public string AddWareHouse(WareHouseModel WarehouseModel) 
+        public string AddWareHouse(WareHouseModel WarehouseModel)
         {
 
             var msg = "";
@@ -21,21 +18,21 @@ namespace MealBoxCloud.Services
             try
             {
 
-                    if (EditId != 0)
-                    {
-                        var Warehouse = Db.tbl_WareHouse.Where(w => w.WarHouseId == EditId).FirstOrDefault();
-                        Warehouse.CityID = WarehouseModel.CityID;
-                        Warehouse.AreaLength = WarehouseModel.AreaLength;
-                        Warehouse.WareHouseCode = Warehouse.WareHouseCode;
-                        Warehouse.WarHouseName = WarehouseModel.WarHouseName;
-                        Warehouse.CreatedBy = WarehouseModel.CreatedBy;
-                        Warehouse.Description = WarehouseModel.Description;
-                        Warehouse.CreateAt = DateTime.Now;
-                        UpdateWareHouse(Warehouse);
-                        msg = "1";
-                    }
-                    else 
-                    {
+                if (EditId != 0)
+                {
+                    var Warehouse = Db.tbl_WareHouse.Where(w => w.WarHouseId == EditId).FirstOrDefault();
+                    Warehouse.CityID = WarehouseModel.CityID;
+                    Warehouse.AreaLength = WarehouseModel.AreaLength;
+                    Warehouse.WareHouseCode = Warehouse.WareHouseCode;
+                    Warehouse.WarHouseName = WarehouseModel.WarHouseName;
+                    Warehouse.CreatedBy = WarehouseModel.CreatedBy;
+                    Warehouse.Description = WarehouseModel.Description;
+                    Warehouse.CreateAt = DateTime.Now;
+                    UpdateWareHouse(Warehouse);
+                    msg = "1";
+                }
+                else
+                {
                     var ProductExist = Db.tbl_WareHouse.Where(w => w.CityID == WarehouseModel.CityID && w.WarHouseName == WarehouseModel.WarHouseName).FirstOrDefault();
                     if (ProductExist == null)
                     {
@@ -62,12 +59,12 @@ namespace MealBoxCloud.Services
                     }
 
                 }
-                
-                
+
+
             }
-            catch(Exception) 
+            catch (Exception)
             {
-                
+
             }
             return msg;
         }
@@ -82,10 +79,10 @@ namespace MealBoxCloud.Services
             var msg = "Save";
             try
             {
-              
+
                 var Productid = Model.ProductId;
                 var ProductExist = Db.tbl_WareHouseInventory.Where(w => w.WareHouseID == Model.WarHouseId && w.Productid == Productid).FirstOrDefault();
-                if(ProductExist == null)
+                if (ProductExist == null)
                 {
                     tbl_WareHouseInventory obj = new tbl_WareHouseInventory();
                     obj.Productid = Productid;
@@ -97,34 +94,34 @@ namespace MealBoxCloud.Services
                     Db.SaveChanges();
 
                 }
-                else 
+                else
                 {
                     msg = "Already2";
                 }
 
             }
-            catch(Exception)
+            catch (Exception)
             {
 
             }
             return msg;
         }
-        public List<WareHouse> GetWareHousList() 
+        public List<WareHouse> GetWareHousList()
         {
-         var warhouse = Db.tbl_WareHouse.ToList();
-         var city = Db.Cities.ToList();
+            var warhouse = Db.tbl_WareHouse.ToList();
+            var city = Db.Cities.ToList();
 
-          var query = (from a in warhouse
-                       join b in city
-                       on a.CityID equals b.CityId
-                       select new WareHouse
-                       {
-                           WarHouseName = a.WarHouseName,
-                          AreaLength = a.AreaLength,
-                           CityName = b.CityName,
-                           WarHouseId = a.WarHouseId
-                       }).OrderByDescending(o=> o.WarHouseId).ToList();
-          return query;
+            var query = (from a in warhouse
+                         join b in city
+                         on a.CityID equals b.CityId
+                         select new WareHouse
+                         {
+                             WarHouseName = a.WarHouseName,
+                             AreaLength = a.AreaLength,
+                             CityName = b.CityName,
+                             WarHouseId = a.WarHouseId
+                         }).OrderByDescending(o => o.WarHouseId).ToList();
+            return query;
         }
 
 
@@ -148,11 +145,11 @@ namespace MealBoxCloud.Services
                              Qty = a.Qty.Value
 
                          }).ToList();
-           
+
             return query;
         }
 
-        public tbl_WareHouse GetWarehouse(int id) 
+        public tbl_WareHouse GetWarehouse(int id)
         {
             var Data = Db.tbl_WareHouse.Where(w => w.WarHouseId == id).FirstOrDefault();
             return Data;

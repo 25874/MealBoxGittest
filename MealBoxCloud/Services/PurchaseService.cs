@@ -1,13 +1,11 @@
 ﻿using MealBoxCloud.Models;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 
 namespace MealBoxCloud.Services
 {
-    public class PurchaseService 
+    public class PurchaseService
     {
         MealBoxesEntities Db = new MealBoxesEntities();
         //public List<PurchaseModel> PurchaseList()
@@ -15,7 +13,7 @@ namespace MealBoxCloud.Services
         //    var Purchase = Db.MPurchases.ToList();
         //    var Supplier = Db.suppliers.ToList();
         //    var PurchaseD = Db.DPurchases.ToList();
-              
+
 
         //    var query = (from a in Purchase
         //                 join b in Supplier
@@ -32,7 +30,7 @@ namespace MealBoxCloud.Services
         //                     ProductName = c.Product1.ProductName.ToString(),
         //                     Effected = a.Effected.GetValueOrDefault()                             
         //                 }).ToList();            
-            
+
         //    return query;
         //}
         public List<PurchaseModel> PurchaseList()
@@ -46,23 +44,23 @@ namespace MealBoxCloud.Services
                          join b in Supplier
                          on a.ven_id equals b.supplierId
                          orderby a.MPurID descending
-                       //  join c in PurchaseD
-                       //  on a.MPurID equals c.MPurID
-                       //  join d in Account
-                       //  on b.supplierId equals d.PersonId
+                         //  join c in PurchaseD
+                         //  on a.MPurID equals c.MPurID
+                         //  join d in Account
+                         //  on b.supplierId equals d.PersonId
                          select new PurchaseModel
                          {
                              VndrNam = b.suppliername,
                              MPurDate = a.MPurDate,
                              MPurID = a.MPurID,
                              PurNo = a.PurNo,
-                         //    Qty = c.Qty,
-                         //    ProductName = c.Product1.ProductName.ToString(),
+                             //    Qty = c.Qty,
+                             //    ProductName = c.Product1.ProductName.ToString(),
                              Effected = a.Effected.GetValueOrDefault(),
 
                          }).ToList();
 
-            
+
             return query;
         }
 
@@ -71,12 +69,12 @@ namespace MealBoxCloud.Services
             return Db.MPurchases.Find(Id);
         }
 
-        public stockIn GetStock(int id ) 
+        public stockIn GetStock(int id)
         {
             return Db.stockIns.Where(w => w.StockInID == id).FirstOrDefault();
         }
 
-        public DPurchase GetPurStock(int Purid ,int Prdid)
+        public DPurchase GetPurStock(int Purid, int Prdid)
         {
             return Db.DPurchases.Where(w => w.MPurID == Purid && w.ProductID == Prdid).FirstOrDefault();
         }
@@ -115,11 +113,11 @@ namespace MealBoxCloud.Services
             var Data = Db.Accounts.Where(w => w.PersonId == id).Select(s => s.AccountGeneratedCodeId).FirstOrDefault();
             return Data;
         }
-        public tbl_Purcredit SupllierExist(string id) 
+        public tbl_Purcredit SupllierExist(string id)
         {
             var SupplierId = Db.tbl_Purcredit.Where(w => w.supplierId == id).FirstOrDefault();
             return SupplierId;
-                
+
         }
         public string GetAccountCode(int? id)
         {
@@ -135,7 +133,7 @@ namespace MealBoxCloud.Services
             return Query;
         }
 
-        public List<Sp_PurchaseInvoice_Result>  PurchaseInvoice(int id) 
+        public List<Sp_PurchaseInvoice_Result> PurchaseInvoice(int id)
         {
             var data = Db.Sp_PurchaseInvoice(id).ToList();
             return data;

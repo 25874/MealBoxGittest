@@ -1,16 +1,15 @@
-﻿using System;
+﻿using MealBoxCloud.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Data.Entity;
-using MealBoxCloud.Models;
+using System.Linq;
 
 namespace MealBoxCloud.Services
 {
     public class AccountService : PurchaseService
     {
         MealBoxesEntities db = new MealBoxesEntities();
-        public List<SubHeadCategoriesModel> Accounttbl()        
+        public List<SubHeadCategoriesModel> Accounttbl()
         {
             var headlist = db.AccountHeads.ToList();
             var SubHead = db.SubHeads.ToList();
@@ -24,37 +23,37 @@ namespace MealBoxCloud.Services
                          where (c.AccountName != null)
                          select new SubHeadCategoriesModel
                          {
-                             HeadName = a.HeadName, 
+                             HeadName = a.HeadName,
                              SubHeadName = b.SubHeadName,
                              AccountName = c.AccountName,
                              AccountGeneratedCodeeID = c.AccountGeneratedCodeId,
-                         
+
                          }).ToList();
-           
+
             return Query;
         }
-        public List<SubHeadModel>  SubHeadtbl() 
+        public List<SubHeadModel> SubHeadtbl()
         {
-            var   headlist = db.AccountHeads.ToList();
-          
-            var   SubHead = db.SubHeads.ToList();
-          
-            var Query = (from a in headlist
-                   join b in SubHead
-                   on a.HeadGeneratedIdCode equals b.HeadGeneratedIdCode
-                     
-                      select new SubHeadModel
-                      {
-                       SubHeadGeneratedIdCode = b.SubHeadGeneratedIDCode,
-                       SubHeadName = b.SubHeadName,
-                       HeadGeneratedIdCodeID = a.HeadGeneratedIdCode,
-                       HeadName = a.HeadName
-                   }).ToList();
+            var headlist = db.AccountHeads.ToList();
 
-          return Query;
+            var SubHead = db.SubHeads.ToList();
+
+            var Query = (from a in headlist
+                         join b in SubHead
+                         on a.HeadGeneratedIdCode equals b.HeadGeneratedIdCode
+
+                         select new SubHeadModel
+                         {
+                             SubHeadGeneratedIdCode = b.SubHeadGeneratedIDCode,
+                             SubHeadName = b.SubHeadName,
+                             HeadGeneratedIdCodeID = a.HeadGeneratedIdCode,
+                             HeadName = a.HeadName
+                         }).ToList();
+
+            return Query;
         }
 
-        public object   PayAccount() 
+        public object PayAccount()
         {
             var PayList = db.Accounts.Where(w => w.headGeneratedIdCode == "003" && w.AccountName != null).Select(s => new
             {
@@ -123,15 +122,15 @@ namespace MealBoxCloud.Services
         //}
 
 
-        public List<AccountHead> GetHeadsList() 
+        public List<AccountHead> GetHeadsList()
         {
             return db.AccountHeads.ToList();
         }
 
 
-        public void AddSubHead(AccountModel Model) 
+        public void AddSubHead(AccountModel Model)
         {
-           
+
             var HeadGenerateCode = Model.AccounId;
 
             var SubHeadcount = db.SubHeads.Count() + 1;
@@ -149,18 +148,18 @@ namespace MealBoxCloud.Services
 
 
 
-            SubHead obj = new SubHead();  
+            SubHead obj = new SubHead();
             obj.HeadGeneratedIdCode = HeadGenerateCode.ToString();
             obj.SubHeadName = Model.SubHeadName;
             obj.SubHeadGeneratedIDCode = SubHeadCode.ToString();
             db.SubHeads.Add(obj);
 
 
-           tbl_Prefernce obj3 = new tbl_Prefernce();
-           obj3.Headkey = SubHeadCode.ToString();
-           obj3.headValue = Model.SubHeadName;
-           db.tbl_Prefernce.Add(obj3);
-           db.SaveChanges();
+            tbl_Prefernce obj3 = new tbl_Prefernce();
+            obj3.Headkey = SubHeadCode.ToString();
+            obj3.headValue = Model.SubHeadName;
+            db.tbl_Prefernce.Add(obj3);
+            db.SaveChanges();
 
 
             Account obj2 = new Account();
@@ -168,13 +167,13 @@ namespace MealBoxCloud.Services
             obj2.SubheadGeneratedIdCode = SubHeadCode.ToString();
             obj2.AccountGeneratedCodeId = AccountCode.ToString();
             obj2.CreateBy = 2;
-            obj2.CreatedAt = DateTime.Now ;
+            obj2.CreatedAt = DateTime.Now;
             db.Accounts.Add(obj2);
             db.SaveChanges();
 
         }
 
-        public void AddAccount(AccountModel model) 
+        public void AddAccount(AccountModel model)
         {
             var Account = "";
 
@@ -211,58 +210,58 @@ namespace MealBoxCloud.Services
         public void UpdateSalesCreadit(SaleCreadit model)
         {
             db.Entry(model).State = EntityState.Modified;
-            
+
             db.SaveChanges();
         }
 
         public void UpdateHead(Head Model)
         {
-            db.Entry(Model).State = EntityState.Modified ;
+            db.Entry(Model).State = EntityState.Modified;
             db.SaveChanges();
-        
+
         }
 
-        public double GetOpeningBalance() 
+        public double GetOpeningBalance()
         {
 
             var amovar = db.tbl_CB.OrderByDescending(o => o.CB_id).Select(s => s.AmountVar).FirstOrDefault();
-            
-            if(amovar != null)
+
+            if (amovar != null)
             {
                 return amovar.Value;
             }
-            else 
+            else
             {
-                amovar = 0; 
+                amovar = 0;
             }
-            
+
             return amovar.Value;
 
         }
 
-        public object GetWalkin() 
+        public object GetWalkin()
         {
             var Walkin = db.Accounts.Where(w => w.PersonId == 3003).Select(s => new
             {
                 HeadCode = s.headGeneratedIdCode,
                 SubheadCode = s.headGeneratedIdCode,
                 AccountCode = s.AccountGeneratedCodeId,
-                Personid = s.PersonId ,
-                AccountName =s.AccountName 
+                Personid = s.PersonId,
+                AccountName = s.AccountName
             })
             .FirstOrDefault();
 
             return Walkin;
         }
 
-        public void AddHead(Head Model) 
+        public void AddHead(Head Model)
         {
             try
             {
                 db.Heads.Add(Model);
                 db.SaveChanges();
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
 
             }

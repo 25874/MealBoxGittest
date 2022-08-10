@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MealBoxCloud.Models;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using MealBoxCloud.Models;
 
 
 namespace MealBoxCloud.Controllers
@@ -77,9 +74,9 @@ namespace MealBoxCloud.Controllers
             }
             else if (ReportId == 9)
             {
-                TempData["ProductId"]   = model.ProductId;
-                TempData["WareHouseId"]  = model.WareHouseId;
-                TempData["CityId"]       =     model.CityId;
+                TempData["ProductId"] = model.ProductId;
+                TempData["WareHouseId"] = model.WareHouseId;
+                TempData["CityId"] = model.CityId;
                 return RedirectToAction("Transaction", "Report");
             }
             return View();
@@ -166,7 +163,7 @@ namespace MealBoxCloud.Controllers
             return View(Data);
         }
 
-        
+
         public ActionResult ProductidDDl()
         {
             var ProductId = Db.Products.Select(s => new

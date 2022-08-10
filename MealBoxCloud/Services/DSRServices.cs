@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.Entity;
+﻿using MealBoxCloud;
 using MealBoxCloud.Models;
-using MealBoxCloud;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace MealBox.Services
 {
     public class DSRServices
     {
         MealBoxesEntities Db = new MealBoxesEntities();
-        public void CheakDate(int id ,DateTime date) 
+        public void CheakDate(int id, DateTime date)
         {
             var Data = Db.DsrStocks.Where(w => w.ProductId == id && w.PurchaseDate == date).FirstOrDefault();
         }
@@ -20,28 +19,28 @@ namespace MealBox.Services
         {
             return Db.DsrStocks.Where(w => w.ProductId == id).FirstOrDefault();
         }
-        public void UpdateDsrStock(DsrStock model) 
+        public void UpdateDsrStock(DsrStock model)
         {
             Db.Entry(model).State = EntityState.Modified;
             Db.SaveChanges();
         }
-        public List<DSRModel> GetDsrList() 
+        public List<DSRModel> GetDsrList()
         {
-            var BookList     =        Db.tbl_User.ToList();
-            var MDsr         =        Db.tbl_Mdsr.ToList();
-            var areaList     =        Db.tbl_area.ToList();
-            var CustomerList =        Db.Customers_.ToList();
-            var ProductList  =        Db.Products.ToList();
-            var Ddsr         =        Db.tbl_ddsrbk.ToList();
+            var BookList = Db.tbl_User.ToList();
+            var MDsr = Db.tbl_Mdsr.ToList();
+            var areaList = Db.tbl_area.ToList();
+            var CustomerList = Db.Customers_.ToList();
+            var ProductList = Db.Products.ToList();
+            var Ddsr = Db.tbl_ddsrbk.ToList();
 
             var query = (from a in MDsr
                          join b in BookList
                          on a.BookerId equals b.EmployeeId
                          join c in CustomerList
                          on a.CustomerID equals c.CustomerID
-                         join y in areaList 
+                         join y in areaList
                          on a.areaid equals y.areaid
-                         where(b.UserTypeId == 2)
+                         where (b.UserTypeId == 2)
                          //join e in ProductList
                          //on d.ProductID equals e.ProductID into left
                          //from leftdata in left.DefaultIfEmpty()
@@ -71,7 +70,7 @@ namespace MealBox.Services
             return data;
         }
 
-        public List<SP_BookingSheet_Result> BookingSheet(int id , string date)
+        public List<SP_BookingSheet_Result> BookingSheet(int id, string date)
         {
             var data = Db.SP_BookingSheet(date, id).ToList();
             return data;
@@ -79,7 +78,7 @@ namespace MealBox.Services
 
         public List<VerifyBooking_Result> VerifyBookingSheet(int id, string date)
         {
-            var data = Db.VerifyBooking(id,date).ToList();
+            var data = Db.VerifyBooking(id, date).ToList();
             return data;
         }
 
@@ -96,7 +95,7 @@ namespace MealBox.Services
             }
         }
 
-        public List<ViewFinalDsr_Result> Finaldsr() 
+        public List<ViewFinalDsr_Result> Finaldsr()
         {
             var Data = Db.ViewFinalDsr().ToList();
             return Data;

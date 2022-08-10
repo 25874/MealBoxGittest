@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using MealBox.Services;
-
-using MealBoxCloud;
-using MealBoxCloud.Class;
+﻿using MealBoxCloud.Class;
 using MealBoxCloud.Models;
 using MealBoxCloud.Services;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace MealBoxCloud.Controllers
 {
@@ -24,11 +18,11 @@ namespace MealBoxCloud.Controllers
         }
         public ActionResult Index()
         {
-            ViewBag.BufferStock= _dashBoardService.GetBufferStock();
+            ViewBag.BufferStock = _dashBoardService.GetBufferStock();
             ViewBag.CustomerNo = _dashBoardService.GetCustomerNo();
-            ViewBag.BookerNO   = _dashBoardService.GetBookerNo();
+            ViewBag.BookerNO = _dashBoardService.GetBookerNo();
             ViewBag.SupplierNo = _dashBoardService.GetSupplier();
-            
+
             return View();
         }
 
@@ -37,7 +31,7 @@ namespace MealBoxCloud.Controllers
 
             PosModel Model = new PosModel();
 
-            using(var db = new MealBoxesEntities())
+            using (var db = new MealBoxesEntities())
             {
                 var ProductList = db.Products.ToList();
                 ViewBag.ProductID = new SelectList(ProductList, "ProductID", "ProductName");
@@ -101,4 +95,4 @@ namespace MealBoxCloud.Controllers
             return RedirectToAction("Index", "Login");
         }
     }
- }
+}

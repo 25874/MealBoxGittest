@@ -1,10 +1,8 @@
-﻿using MealBox;
-using MealBoxCloud.Models;
+﻿using MealBoxCloud.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 
 
 namespace MealBoxCloud.Services
@@ -14,7 +12,7 @@ namespace MealBoxCloud.Services
         MealBoxesEntities Db = new MealBoxesEntities();
         public List<supplier> supplierList()
         {
-            return Db.suppliers.OrderByDescending(o=> o.supplierId).ToList();
+            return Db.suppliers.OrderByDescending(o => o.supplierId).ToList();
         }
         public supplier Getsupplier(int Id)
         {
@@ -64,7 +62,7 @@ namespace MealBoxCloud.Services
 
 
 
-        public void AssignPage(LoginSinUpModel Model) 
+        public void AssignPage(LoginSinUpModel Model)
         {
 
             tbl_UserMenu obj = new tbl_UserMenu();
@@ -108,7 +106,7 @@ namespace MealBoxCloud.Services
 
         }
 
-        public object Booker() 
+        public object Booker()
         {
             var BookerList = Db.tbl_User.Where(w => w.UserTypeId == 2).Select(s => new
             {
@@ -186,15 +184,15 @@ namespace MealBoxCloud.Services
             var query = (from a in CityList
                          join b in ProvinceList
                          on a.PrivinceId equals b.PrivinceId
-                         
+
                          select new AreaModel
                          {
                              CityId = a.CityId,
                              CityName = a.CityName,
                              ProvinceName = b.ProvinceName
 
-                         }).OrderByDescending(o=> o.CityId).ToList();
-           
+                         }).OrderByDescending(o => o.CityId).ToList();
+
             return query;
         }
         public City GetCity(int Id)
@@ -208,7 +206,7 @@ namespace MealBoxCloud.Services
 
         }
 
-        public object GetSaleDiscount(int id) 
+        public object GetSaleDiscount(int id)
         {
             var query = Db.Customers_.Where(w => w.CustomerID == id).Select(s => new
             {
@@ -221,7 +219,7 @@ namespace MealBoxCloud.Services
 
         public List<Province> ProvinceList()
         {
-            return Db.Provinces.OrderByDescending(o=> o.PrivinceId).ToList();
+            return Db.Provinces.OrderByDescending(o => o.PrivinceId).ToList();
         }
 
         public void AddProvince(Province Model)
@@ -258,7 +256,7 @@ namespace MealBoxCloud.Services
                 Db.suppliers.Add(Model);
                 Db.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 Console.ReadLine();
@@ -271,7 +269,7 @@ namespace MealBoxCloud.Services
                 Db.Entry(model).State = EntityState.Modified;
                 Db.SaveChanges();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
@@ -279,7 +277,7 @@ namespace MealBoxCloud.Services
 
         public List<tbl_area> AreaList()
         {
-            return Db.tbl_area.OrderByDescending(o=> o.areaid).ToList();
+            return Db.tbl_area.OrderByDescending(o => o.areaid).ToList();
         }
         public tbl_area GetArea(int Id)
         {
@@ -308,7 +306,7 @@ namespace MealBoxCloud.Services
 
         public List<Customers_> CustomersList()
         {
-            return Db.Customers_.OrderByDescending(o=> o.CustomerID).ToList();
+            return Db.Customers_.OrderByDescending(o => o.CustomerID).ToList();
         }
         public Customers_ GetCustomers(int Id)
         {
@@ -328,7 +326,7 @@ namespace MealBoxCloud.Services
                 Console.ReadLine();
             }
         }
-        public void AddBank(tbl_CashBnk Model) 
+        public void AddBank(tbl_CashBnk Model)
         {
             Db.tbl_CashBnk.Add(Model);
             Db.SaveChanges();
@@ -353,7 +351,7 @@ namespace MealBoxCloud.Services
         }
         public List<tbl_employee> EmployeeList()
         {
-            return Db.tbl_employee.OrderByDescending(o=> o.employeeID).ToList();
+            return Db.tbl_employee.OrderByDescending(o => o.employeeID).ToList();
         }
         public tbl_employee GetEmployee(int Id)
         {
@@ -361,9 +359,9 @@ namespace MealBoxCloud.Services
         }
 
         public void AddEmployee(tbl_employee Model)
-        {            
-                Db.tbl_employee.Add(Model);
-                Db.SaveChanges();
+        {
+            Db.tbl_employee.Add(Model);
+            Db.SaveChanges();
         }
         public void UpdateEmployee(tbl_employee model)
         {
